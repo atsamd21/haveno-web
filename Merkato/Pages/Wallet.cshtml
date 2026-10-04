@@ -1,0 +1,139 @@
+﻿@page
+@inject IWebHostEnvironment WebHostEnvironment;
+@inject IWalletService WalletService;
+@inject IPriceService PriceService;
+@model WalletModel
+@{
+    ViewData["Title"] = "Wallet";
+
+    var xmrBalanceInfo = await WalletService.GetBalancesAsync();
+    var primaryAddress = await WalletService.GetXmrPrimaryAddressAsync();
+    var price = await PriceService.GetMarketPriceAsync(Request.Cookies["currency"]!);
+    decimal availableFiat = price * xmrBalanceInfo.AvailableBalance.ToMonero();
+    decimal pendingFiat = price * xmrBalanceInfo.PendingBalance.ToMonero();
+
+    // TODO Can probably be cached
+    using var qrGenerator = new QRCodeGenerator();
+    var qrCodeData = qrGenerator.CreateQrCode($"monero:{primaryAddress}", QRCodeGenerator.ECCLevel.Default);
+    Base64QRCode base64QRCode = new(qrCodeData);
+
+    var base64 = base64QRCode.GetGraphic(1);
+}
+
+<div class="wallet-main">
+    <div class="top">
+        <div class="monero-card">
+            <div class="monero-card-top ">
+                <div class="logo"></div>
+                <p class="wallet-title">Monero Wallet</p>
+            </div>
+            <div class="monero-card-bottom">
+                <div class="monero-card-bottom-available">
+                    <p class="wallet-balance-fiat">@(availableFiat.ToString("C", CultureInfo.CurrentUICulture.NumberFormat))</p>
+                    <p class="wallet-pending-balance-fiat">@(pendingFiat.ToString("C", CultureInfo.CurrentUICulture.NumberFormat)) pending</p>
+                </div>
+                <div class="monero-card-bottom-pending">
+                    <p class="wallet-balance-crypto">XMR @(xmrBalanceInfo.AvailableBalance.ToMonero().ToString("0.0000########")) </p>
+                    <p class="wallet-pending-balance-crypto">XMR @(xmrBalanceInfo.PendingBalance.ToMonero().ToString("0.0000########")) pending</p>
+                    <p class="wallet-reserved-balance-crypto">XMR @((xmrBalanceInfo.ReservedTradeBalance + xmrBalanceInfo.ReservedOfferBalance).ToMonero().ToString("0.0000########")) reserved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs-container">
+        <partial name="_Tabs" model="Model.Tabs" />
+    </div>
+
+    @switch (Model.TabIndex)
+    {
+        case 0:
+            <div class="receive" b-91xa8jysmm>
+                <a class="qr-container" href="@($"monero:{primaryAddress}")">
+                    <img class="qr" src=@($"data:image/png;base64,{base64}") />
+                    <img class="monero-icon" src="/img/monero-icon-small.png" />
+                </a>
+                <partial name="_InfoRow" model="@(new InfoRow("Address", primaryAddress, true))" />
+                <form method="post" b-91xa8jysmm>
+                    @* ? *@
+                    <input name="TabIndex" value="@Model.TabIndex" hidden />
+                    <button class="button-primary" asp-page-handler="ShowSeed" b-91xa8jysmm>Show seed</button>
+                </form>
+            </div>
+            break;
+        case 1:
+            <form class="send" method="post" b-91xa8jysmm>
+                <label>Destination address</label>
+                <input class="input-text" minlength="95" required name="DestinationAddress" value="@Model.DestinationAddress" />
+                <label>Amount</label>
+                <div class="amount-container">
+                    <input class="input-number" step="0.000000000001" type="number" name="Amount" value="@Model.Amount" max="@xmrBalanceInfo.AvailableBalance.ToMonero()" required />
+                    <button class="button-tertiary" asp-page-handler="SetMax" type="submit" formnovalidate b-91xa8jysmm>Max</button>
+                </div>
+                @* ? *@
+                <input name="TabIndex" value="@Model.TabIndex" hidden />
+                <button class="button-primary" asp-page-handler="CreateTransaction" type="submit" b-91xa8jysmm>Send</button>
+            </form>
+            break;
+        case 2:
+            <ul class="transaction-list">
+                @foreach (var transaction in Model.Transactions.OrderByDescending(x => x.Timestamp == DateTime.UnixEpoch).ThenByDescending(x => x.Timestamp))
+                {
+                    <li class="transaction">
+                        @if (transaction.IncomingTransfers?.Count > 0)
+                        {
+                            <img src="icons/arrow-right.svg" class="in" />
+                            <p class="transaction-amount">
+                                @transaction.IncomingTransfers.Aggregate(ulong.MinValue, (x, y) => x + y.Amount).ToMonero().ToString("0.0000")ɱ
+                            </p>
+                        }
+                        else
+                        {
+                            <img src="icons/arrow-right.svg" class="out" />
+                            <p class="transaction-amount">
+                                @transaction.OutgoingTransfer?.Amount.ToMonero().ToString("0.0000")ɱ
+                            </p>
+                        }
+                        <div>
+                            @transaction.Timestamp.ToLocalTime()
+                        </div>
+                        <div class="confirmations">
+                        @if (transaction.IsLocked)
+                        {
+                            if (transaction.Height > 0)
+                            {
+                                <i tooltip="@(Model.Height - (long)transaction.Height) confirmations" class="bi bi-hourglass-split tooltip"></i>
+                            }
+                            else
+                            {
+                                <i tooltip="0 confirmations" class="bi bi-hourglass-split tooltip"></i>
+                            }
+                        }
+                        else
+                        {
+                            if ((Model.Height - (long)transaction.Height) >= 10)
+                            {
+                                <i tooltip="@(Model.Height - (long)transaction.Height) confirmations" class="bi bi-check-circle tooltip"></i>
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        </div>
+                    </li>
+                }
+            </ul>
+            break;
+    }
+</div>
+<modal title="Seedphrase" is-open="IsSeedModalOpen" buttons="@ModalButtonOptions.CANCEL" b-91xa8jysmm>
+    <p class="seedphrase">@Model.Seed</p>
+</modal>
+<modal title="Confirm" is-open="IsSendModalOpen" submit-method="RelayTx" submit-text="Send" b-91xa8jysmm>
+    <p class="address">Destination address: @Model.DestinationAddress</p>
+    <p>Amount: @(Model.Amount!.Value.ToString("0.000000000000"))ɱ</p>
+    <p>Fee: @(Model.Fee)ɱ</p>
+    <input name="Metadata" value="@(string.Join(',', Model.Metadata))" hidden />
+    <input name="TabIndex" value="@Model.TabIndex" hidden />
+</modal>

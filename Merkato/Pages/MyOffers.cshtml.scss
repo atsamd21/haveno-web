@@ -1,0 +1,96 @@
+.my-offers-main {
+    position: relative;
+
+    .tab {
+
+
+        ul {
+
+
+            li {
+                /*height: 100px;*/
+                background-color: #EEF0EB;
+                border: 2px solid #284B63;
+                margin-bottom: 10px;
+                border-radius: 8px;
+                padding: 8px;
+                display: flex;
+                flex-direction: column;
+
+                .view-info {
+                    display: flex;
+
+                    button {
+                        border: none;
+                        display: flex;
+                        align-items: center;
+                        color: #000;
+                        width: fit-content;
+                        background-color: transparent;
+
+                        i {
+                            margin-right: 4px;
+                        }
+
+                        &:hover {
+                            background-color: transparent;
+                        }
+                    }
+
+                    .payment-method {
+                        margin-left: auto;
+                    }
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                .offer-body {
+                    margin: 10px 0 10px;
+                }
+
+                .buttons {
+                    margin-top: auto;
+                    display: flex;
+
+                    a {
+                        margin-right: 8px;
+                    }
+
+                    button {
+                    }
+                }
+            }
+        }
+    }
+
+    .create-offer-button {
+        position: sticky;
+        bottom: 0;
+        margin-top: 4px;
+    }
+}
+
+.passphrase {
+    margin-top: 10px;
+
+    .challenge {
+        background-color: #778DA9;
+        border-radius: 8px;
+        padding: 8px;
+    }
+}
+
+.no-deposit {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+
+    img {
+        height: 18px;
+        width: 18px;
+        filter: invert(1);
+        margin-right: 4px;
+    }
+}

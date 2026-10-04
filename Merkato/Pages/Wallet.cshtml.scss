@@ -1,0 +1,277 @@
+﻿.wallet-main {
+/*    display: flex;
+    flex-direction: column;*/
+
+    .top {
+        width: 100%;
+        /*background-color: #fff;*/
+        /*padding: 10px;*/
+        /*border-radius: 8px;*/
+        margin-bottom: 4px;
+        display: flex;
+
+        img {
+            width: 200px;
+            image-rendering: pixelated;
+        }
+
+        .balances {
+
+            .wallet-balance {
+                margin-bottom: 10px;
+                /*font-size: 16px;*/
+                font-weight: bold;
+            }
+
+            .balance-row {
+                width: 250px;
+                justify-content: space-between;
+                display: flex;
+            }
+        }
+    }
+
+    .tabs-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 4px;
+    }
+}
+
+.address {
+    line-break: anywhere;
+}
+
+.receive {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    /*    img {
+        width: 100%;
+        max-width: 420px;
+        image-rendering: pixelated;
+        border: 2px solid #153243;
+        border-radius: 8px;
+    }*/
+
+    .qr-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        /*width: 100%;*/
+
+        .qr {
+            /*width: 100%;*/
+            width: 400px;
+            max-width: 420px;
+            image-rendering: pixelated;
+            border: 2px solid #153243;
+            border-radius: 8px;
+        }
+
+        .monero-icon {
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    button {
+        margin-top: 4px;
+    }
+
+    /*?*/
+    form {
+        width: 100%;
+    }
+}
+
+.send {
+    display: flex;
+    flex-direction: column;
+
+    .amount-container {
+        display: flex;
+        margin-bottom: 10px;
+
+        button {
+            width: 60px;
+            margin-left: 4px;
+        }
+    }
+}
+
+.transaction-list {
+    overflow-y: auto;
+    list-style: none;
+    /*max-height: 400px;*/
+
+    li {
+        margin-bottom: 4px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .transaction {
+        display: flex;
+/*        padding: 6px;
+        padding-left: 16px;
+        padding-right: 16px;*/
+        padding: 6px 10px 6px;
+
+        position: relative;
+        align-items: center;
+        background-color: #EEF0EB;
+        border: 2px solid #153243;
+        border-radius: 8px;
+
+        img {
+            margin-right: 8px;
+            filter: invert(1);
+        }
+
+        .in {
+        }
+
+        .out {
+            transform: rotate(180deg);
+        }
+
+        .transaction-amount {
+            margin-right: 30px;
+            width: 80px;
+            white-space: nowrap;
+            font-weight: 400;
+        }
+
+        .confirmations {
+            /*margin-left: 10px;*/
+            margin-left: auto;
+        }
+    }
+}
+
+.seedphrase {
+    white-space: preserve-spaces;
+}
+
+/*.container {
+    min-width: 400px;
+    width: 60%;
+    min-height: 200px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+}*/
+
+.monero-card {
+    height: 186px;
+    /*max-width: 380px;*/
+    width: 100%;
+    background-image: url(../img/wallet-background.svg);
+    background-size: cover;
+    /*border-radius: 20px;*/
+    padding: 14px;
+    display: flex;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    flex-direction: column;
+
+    /*border: 1px solid;*/
+    position: relative;
+    border-radius: 8px;
+
+/*    max-width: 420px;
+    margin: auto;*/
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        padding: 1px;
+        border-radius: inherit;
+
+        background: linear-gradient(to right, grey, orange);
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    .monero-card-top {
+        display: flex;
+        align-items: center;
+
+        .logo {
+            background-image: url(../img/monero-wallet-icon.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            /*filter: invert(100%);*/
+            height: 44px;
+            aspect-ratio: 1;
+        }
+
+        .wallet-title {
+            font-weight: 500;
+            font-size: 18px;
+            text-align: center;
+            margin-left: 12px;
+        }
+    }
+
+    p {
+        color: #fff;
+    }
+
+    .monero-card-bottom {
+
+        .monero-card-bottom-available {
+            /*display: flex;*/
+            align-items: flex-end;
+            margin: 10px 0 6px;
+
+            .wallet-balance-fiat {
+                font-size: 18px;
+                line-height: 22px;
+                font-weight: 500;
+                margin-bottom: 4px;
+            }
+
+            .wallet-pending-balance-fiat {
+                opacity: 0.8;
+                line-height: 14px;
+                font-size: 12px;
+            }
+        }
+
+        .monero-card-bottom-pending {
+
+            .wallet-balance-crypto {
+                font-size: 18px;
+                font-weight: 500;
+                margin-top: 10px;
+                line-height: 22px;
+            }
+
+            .wallet-pending-balance-crypto {
+                opacity: 0.8;
+                line-height: 14px;
+                font-size: 12px;
+                display: inline-block;
+            }
+
+            .wallet-reserved-balance-crypto {
+                opacity: 0.8;
+                line-height: 14px;
+                font-size: 12px;
+            }
+        }
+    }
+}

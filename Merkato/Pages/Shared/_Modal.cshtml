@@ -1,0 +1,67 @@
+﻿@model Modal
+@{
+    System.Text.StringBuilder stringBuilder = new();
+
+    var dict = Context.Request.Query.ToDictionary();
+
+    // Overwrite if query already contains parameters
+    foreach (var param in Model.CloseParameters)
+    {
+        dict.Remove(param.Key, out var removed);
+        dict.Add(param.Key, param.Value);
+    }
+
+    QueryCollection query = new(dict);
+
+    for (int i = 0; i < query.Count; i++)
+    {
+        char separator;
+        if (i == 0)
+        {
+            separator = '?';
+        }
+        else
+        {
+            separator = '&';
+        }
+
+        var param = query.ElementAt(i);
+
+        stringBuilder.Append(separator);
+        stringBuilder.Append($"{param.Key}={param.Value}");
+    }
+
+    var url = Url.RouteUrl(ViewContext.RouteData.Values) + stringBuilder.ToString();
+}
+
+@* should isclosed be part of this? *@
+
+<a class="modal-background" href=@url></a>
+<div class="modal">
+    <div class="modal-top">
+        <p class="title">@Model.Title</p>
+        <a href=@url>
+            <i class="bi bi-x"></i>
+        </a>
+    </div>
+    <div class="modal-content">
+        @foreach (var text in Model.Information)
+        {
+            <p>@text</p>
+        }
+    </div>
+    <form method="post" class="modal-buttons" b-5nmrn7byic>
+        @foreach (var param in Model.PostParameters)
+        {
+            <input name="@param.Key" value="@param.Value" hidden />
+        }
+        @if (Model.ModalButtonOptions.HasFlag(ModalButtonOptions.OK) && !string.IsNullOrEmpty(Model.SubmitMethodName))
+        {
+            <button asp-page-handler=@Model.SubmitMethodName type="submit" b-5nmrn7byic>@Model.SubmitButtonText</button>
+        }
+        @if (Model.ModalButtonOptions.HasFlag(ModalButtonOptions.CANCEL))
+        {
+            <a href=@url>@Model.CloseButtonText</a>
+        }
+    </form>
+</div>

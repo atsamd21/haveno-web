@@ -1,0 +1,102 @@
+.settings-main {
+
+    .info {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 8px;
+        margin-bottom: 8px;
+        box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);
+
+        .support-links-container {
+
+            .support-links-title {
+            }
+
+            .link-container {
+                display: flex;
+                align-items: center;
+                margin-bottom: 4px;
+                /*border-bottom: 1px solid #c7c7c7;*/
+
+                a {
+                    color: #000;
+                }
+
+                img {
+                    height: 16px;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}
+
+.url-connections {
+    max-height: 100px;
+    overflow-y: auto;
+
+    .connection {
+        /*background-color: #121212;*/
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        padding: 6px 10px 6px;
+        /*border-radius: 4px;*/
+        border-radius: 8px;
+        height: 40px;
+        border: 2px solid #000000;
+
+        button {
+            background-color: transparent;
+            border: none;
+        }
+
+        .url {
+            margin-right: auto;
+        }
+
+        .remove-node {
+        }
+
+        .connect-node {
+            margin-left: auto;
+            margin-right: 4px;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        p {
+            text-overflow: ellipsis;
+            overflow-x: hidden;
+        }
+
+        .online-status {
+            height: 10px;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+
+        .online {
+            background-color: #0CB952;
+        }
+
+        .offline {
+            background-color: #ff4025;
+        }
+
+        .unknown {
+            background-color: #414141;
+        }
+    }
+
+    .connected {
+        border: 2px solid #0CB952;
+    }
+}
+
+.add-node {
+    margin-top: 8px;
+}

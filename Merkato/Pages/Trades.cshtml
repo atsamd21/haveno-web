@@ -1,0 +1,148 @@
+﻿@page
+@inject ITradeService TradeService;
+@model TradesModel
+@{
+    ViewData["Title"] = "Trades";
+}
+<div class="trades-main">
+    @if (Model.Disputes.Any(x => x.State > Haveno.Shared.Enums.DisputeState.NeedsUpgrade && x.State < Haveno.Shared.Enums.DisputeState.Closed))
+    {
+        <div class="dispute-notification">
+            @Model.Disputes.Count(x => x.State > Haveno.Shared.Enums.DisputeState.NeedsUpgrade && x.State < Haveno.Shared.Enums.DisputeState.Closed)
+        </div>
+    }
+    @if (Model.OpenTrades.Any())
+    {
+        <div class="trade-notification">
+            @Model.OpenTrades.Count
+        </div>
+    }
+    <eagertabs tab-index="@Model.TabIndex">
+        <ul title="Open">
+            @foreach (var trade in Model.OpenTrades)
+            {
+                var hashAsInt = BitConverter.ToInt32(System.Security.Cryptography.SHA1.HashData(System.Text.Encoding.UTF8.GetBytes(trade.Offer.OwnerNodeAddress)));
+
+                var tradeCount = await MiscHelper.GetTradedWithPeerCount(TradeService, trade.Offer.OwnerNodeAddress);
+
+                var tradeRoleAndStep = Haveno.Api.Helpers.TradeHelper.GetTradeRoleAndStep(trade);
+
+                <li>
+                    <div class="top">
+                        <p class="trade-id">@trade.ShortId</p>
+                        @if (tradeRoleAndStep.Role == Haveno.Api.Helpers.Role.Buyer)
+                        {
+                            if (tradeRoleAndStep.Step == 2)
+                            {
+                                <p class="action-required">Action required</p>
+                            }
+                        }
+                        else
+                        {
+                            if (tradeRoleAndStep.Step == 3)
+                            {
+                                <p class="action-required">Action required</p>
+                            }
+                        }
+                        <p class="date">@trade.Date.ToShortDateString()</p>
+                    </div>
+                    <div class="trade-body">
+                        <div class="body-left">
+                            @if (trade.Offer.IsMyOffer)
+                            {
+                                <p class="direction">@(trade.Offer.Direction == OfferDirection.SELL ? "Selling" : "Buying") XMR (@trade.Offer.PaymentMethodShortName)</p>
+                            }
+                            else
+                            {
+                                <p class="direction">@(trade.Offer.Direction == OfferDirection.BUY ? "Selling" : "Buying") XMR (@trade.Offer.PaymentMethodShortName)</p>
+                            }
+
+                            <p>XMR amount: @trade.Amount.ToMonero().ToString("0.0000")ɱ</p>
+                            <p>@trade.Offer.CounterCurrencyCode amount: @trade.TradeVolume @trade.Offer.CounterCurrencyCode</p>
+                        </div>
+                        <div class="body-right">
+                            <div tooltip="@trade.Offer.OwnerNodeAddress" class="tooltip avatar-container">
+                                <img style=@($"background-color:#{new Random(hashAsInt).Next(16777215).ToString("x")}")
+                                     class="avatar"
+                                     asp-append-version="true"
+                                     src=@($"~/img/avatars/avatar_{new Random(hashAsInt).Next(15)}.png") b-vp4rournme />
+                                @if (tradeCount > 0)
+                                {
+                                    <div class="trade-count">
+                                        @tradeCount
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <a class="button-primary" href=@($"Trade/{trade.TradeId}")>View trade</a>
+                </li>
+            }
+        </ul>
+        <ul title="Closed">
+ 
+        </ul>
+        <ul title="Failed">
+ 
+        </ul>
+        <ul title="Disputes">
+            @foreach (var dispute in Model.Disputes)
+            {
+                NodeAddress peerAddress;
+                if (dispute.IsOpener)
+                {
+                    if (dispute.DisputeOpenerIsBuyer)
+                    {
+                        peerAddress = dispute.Contract.SellerNodeAddress;
+                    }
+                    else
+                    {
+                        peerAddress = dispute.Contract.BuyerNodeAddress;
+                    }
+                }
+                else
+                {
+                    if (dispute.DisputeOpenerIsBuyer)
+                    {
+                        peerAddress = dispute.Contract.BuyerNodeAddress;
+                    }
+                    else
+                    {
+                        peerAddress = dispute.Contract.SellerNodeAddress;
+                    }
+                }
+
+                var hashAsInt = BitConverter.ToInt32(System.Security.Cryptography.SHA1.HashData(System.Text.Encoding.UTF8.GetBytes(peerAddress.ToString())));
+                var tradeCount = await MiscHelper.GetTradedWithPeerCount(TradeService, peerAddress.ToString());
+
+                <li>
+                    <div class="top">
+                        <p class="trade-id">@dispute.TradeId.Split("-").First()</p>
+                        <p class="dispute-state">@dispute.State</p>
+                        <p class="date">@dispute.OpeningDate.ToShortDateString()</p>
+                    </div>
+                    <div class="trade-body">
+                        <div class="body-left">
+
+                        </div>
+                        <div class="body-right">
+                            <div tooltip="@peerAddress.ToString()" class="tooltip avatar-container">
+                                <img style=@($"background-color:#{new Random(hashAsInt).Next(16777215).ToString("x")}")
+                                     class="avatar"
+                                     asp-append-version="true"
+                                     src=@($"~/img/avatars/avatar_{new Random(hashAsInt).Next(15)}.png") b-vp4rournme />
+                                @if (tradeCount > 0)
+                                {
+                                    <div class="trade-count">
+                                        @tradeCount
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <a class="button-primary" href=@($"Messages/{dispute.TradeId}?isDispute=true")>Dispute chat</a>
+                </li>
+            }
+        </ul>
+    </eagertabs>
+</div>

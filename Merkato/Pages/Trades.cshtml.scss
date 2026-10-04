@@ -1,0 +1,123 @@
+﻿.trades-main {
+    position: relative;
+
+    ul {
+
+        li {
+            display: flex;
+            flex-direction: column;
+            /*height: 120px;*/
+            padding: 6px;
+            background-color: #EEF0EB;
+            border: 2px solid #284B63;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            color: #000;
+
+            .top {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+
+                .trade-id, .dispute-state, .action-required {
+                    padding: 4px;
+                    background-color: #c4c4c4;
+                    height: fit-content;
+                    border-radius: 4px;
+                    font-size: 12px;
+                }
+
+                .dispute-state, .action-required {
+                    margin-left: 4px;
+                }
+
+                .date {
+                    margin-left: auto;
+                }
+            }
+
+            a {
+                margin-top: 10px;
+            }
+        }
+    }
+}
+
+.trade-body {
+    display: flex;
+    justify-content: space-between;
+
+    .body-left {
+    }
+
+    .body-right {
+        width: 10%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}
+
+.avatar-container {
+    position: relative;
+    width: fit-content;
+
+    .avatar {
+        height: 30px;
+        border-radius: 100%;
+        border: 2px solid #153243;
+    }
+
+    .trade-count {
+        position: absolute;
+        background-color: #f00;
+        width: 16px;
+        /*padding: 0 5px 0;*/
+        height: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        color: #fff;
+        top: -5px;
+        right: -5px;
+        font-size: 10px;
+    }
+}
+
+.notification {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    z-index: 1;
+    background-color: #f00;
+    border-radius: 10px;
+    font-size: 9px;
+    line-height: 9px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -2px;
+    /*animation: fade 1s ease-in-out infinite alternate;*/
+}
+
+.dispute-notification {
+    @extend .notification;
+    left: 314px;
+}
+
+.trade-notification {
+    @extend .notification;
+    left: 72px;
+}
+
+@keyframes fade {
+    from {
+        background-color: #fff;
+    }
+
+    to {
+        background-color: #f00;
+    }
+}

@@ -1,0 +1,202 @@
+﻿@page
+@inject ITradeService TradeService
+@inject IPriceService PriceService
+@model OffersModel
+@{
+    ViewData["Title"] = "Offers";
+}
+
+<div class="offers-main">
+    <form method="get" class="controls" b-jttn2k19df>
+        <div class="text-search">
+            <div class="input-container">
+                <label>Search</label>
+                <input class="input-text" type="text" name="TextSearch" id="TextSearch" value="@Model.TextSearch" />
+            </div>
+            <div class="input-container">
+                <label>Direction</label>
+                <select class="select" name="OfferDirection">
+                    @foreach (var direction in Enum.GetValues<OfferDirection>())
+                    {
+                        <option selected="@(Model.OfferDirection == direction)" value="@direction" b-jttn2k19df>
+                            @direction
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="currency-search">
+            <div class="input-container">
+                <label for="currencies">Currency</label>
+                <input class="input-text" list="currencies" name="Currency" value="@Model.Currency">
+                <datalist id="currencies">
+                    @foreach (var currency in Enum.GetValues<Haveno.Api.Helpers.CurrencyCode>())
+                    {
+                        <option value="@currency" b-jttn2k19df>@currency</option>
+                    }
+                </datalist>
+            </div>
+            <div class="input-container">
+                <label>Private offers</label>
+                <toggle method="get" is-toggled="ShowPrivateOffers"></toggle>
+            </div>
+            <div class="input-container">
+                <label>Matching offers</label>
+                <toggle method="get" is-toggled="ShowMatchingOffers"></toggle>
+            </div>
+        </div>
+        <button class="button-primary" type="submit">Search</button>
+    </form>
+    <ul class="offers-list">
+        @foreach (var offer in Model.Offers)
+        {
+            var canTakeOffer = Model.PaymentAccounts
+            .Exists(x => x.PaymentMethod.Id == offer.PaymentMethodId && x.TradeCurrencies.Select(x => x.Code).Contains(offer.CounterCurrencyCode));
+
+            if (Model.ShowMatchingOffers && !canTakeOffer)
+                continue;
+
+            if (Model.ShowPrivateOffers && !offer.IsPrivateOffer)
+                continue;
+
+            if (!string.IsNullOrEmpty(Model.TextSearch) && (!offer.Id.Contains(Model.TextSearch) && !offer.ExtraInfo.ToLower().Contains(Model.TextSearch)))
+                continue;
+
+            var hashAsInt = BitConverter.ToInt32(System.Security.Cryptography.SHA1.HashData(System.Text.Encoding.UTF8.GetBytes(offer.OwnerNodeAddress)));
+
+            var tradeCount = await MiscHelper.GetTradedWithPeerCount(TradeService, offer.OwnerNodeAddress);
+
+            if (!offer.UseMarketBasedPrice)
+            {
+                offer.MarketPriceMarginPercent = (double)(await offer.GetFixedPricePercentageAsync(PriceService));
+            }
+
+            <li class="@(canTakeOffer ? "offer" : "offer offer-disabled")">
+                <form method="post" b-jttn2k19df>
+                    <div class="offer-top">
+                        <button class="id-info-button" asp-route-ShowMatchingOffers="@Model.ShowMatchingOffers" asp-route-ShowPrivateOffers="@Model.ShowPrivateOffers" asp-page-handler="ViewOfferInfo" b-jttn2k19df>
+                            <i class="bi bi-info-circle"></i>
+                            <p>@offer.Id.Split("-").First()</p>
+                        </button>
+                        <div class="divider">|</div>
+                        @if (offer.PaymentMethodId == PaymentMethodId.BLOCK_CHAINS || offer.PaymentMethodId == PaymentMethodId.BLOCK_CHAINS_INSTANT)
+                        {
+                            <p>@offer.Price.ToString("0.00000000") @offer.CounterCurrencyCode (@((offer.MarketPriceMarginPercent * 100).ToString("0.00"))%)</p>
+                        }
+                        else
+                        {
+                            <p>@offer.Price.ToString("0.0000") @offer.CounterCurrencyCode (@((offer.MarketPriceMarginPercent * 100).ToString("0.00"))%)</p>
+                        }
+                        <div class="currency-code">
+                            @if (offer.PaymentMethodId == PaymentMethodId.BLOCK_CHAINS || offer.PaymentMethodId == PaymentMethodId.BLOCK_CHAINS_INSTANT)
+                            {
+                                <p>@offer.CounterCurrencyCode</p>
+                            }
+                            else
+                            {
+                                if (offer.PaymentMethodId == PaymentMethodId.F2F)
+                                {
+                                    <p>@offer.PaymentMethodShortName - (@($"{offer.AcceptedCountryCodes.FirstOrDefault()}, {offer.City}"))</p>
+                                }
+                                else
+                                {
+                                    <p>@offer.PaymentMethodShortName</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="offer-body">
+                        <div class="body-left">
+                            <p>XMR amount: @(offer.MinAmount != offer.Amount ? $"{offer.MinAmount.ToMonero().ToString("0.0000")}ɱ -" : "") @offer.Amount.ToMonero().ToString("0.0000")ɱ</p>
+                            <p>@offer.CounterCurrencyCode amount: @(offer.FiatVolume != offer.FiatMinVolume ? $"{offer.FiatMinVolume} -" : "") @offer.FiatVolume @offer.CounterCurrencyCode</p>
+                            @if (offer.BuyerSecurityDepositPercent == 0)
+                            {
+                                <div class="no-deposit">
+                                    <img src="icons/warning.svg" />
+                                    <p>No deposit offer</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Deposit: @Math.Round(offer.GetTakerDepositAmount().ToMonero(), 6)ɱ (@Math.Round(offer.GetTakerDepositPercent() * 100f)%)</p>
+                            }
+                            @if (offer.IsPrivateOffer && offer.BuyerSecurityDepositPercent != 0)
+                            {
+                                <div class="no-deposit">
+                                    <img src="icons/warning.svg" />
+                                    <p>Passphrase required</p>
+                                </div>
+                            }
+                            @* <p></p> *@
+                        </div>
+                        <div class="body-right">
+                            <div tooltip="@offer.OwnerNodeAddress" class="tooltip avatar-container">
+                                <img style=@($"background-color:#{new Random(hashAsInt).Next(16777215).ToString("x")}")
+                                     class="avatar"
+                                     asp-append-version="true"
+                                     src=@($"~/img/avatars/avatar_{new Random(hashAsInt).Next(15)}.png") b-jttn2k19df />
+                                @if (tradeCount > 0)
+                                {
+                                    <div class="trade-count">
+                                        @tradeCount
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <input name="OfferId" value="@offer.Id" hidden />
+                    <button class="button-primary button-bottom" asp-page-handler=@(canTakeOffer ? "RedirectToOfferPage" : "NoPaymentAccount") b-jttn2k19df>
+                        @(offer.Direction == OfferDirection.BUY ? "Sell" : "Buy") XMR
+                    </button>
+                </form>
+            </li>
+        }
+    </ul>
+    <div class="buttons">
+        <a href="MyOffers" class="button-tertiary">My offers</a>
+        <a href="CreateOffer" class="button-primary">Create offer</a>
+    </div>
+</div>
+<modal title="No matching payment account"
+       is-open="@Model.IsPaymentAccountModalOpen"
+       submit-method="RedirectToAccountPage"
+       submit-text="Go to Account">
+    <p>This offer uses a payment method you haven't set up yet.</p>
+    <p>Would you like to set up a new payment account now?</p>
+</modal>
+<modal title="@($"Offer {Model.OfferInfo?.Id.Split("-").First()}")" is-open="IsOfferInfoModalOpen">
+    @{
+        var offer = Model.OfferInfo;
+
+        if (offer is not null && !offer.UseMarketBasedPrice)
+        {
+            offer.MarketPriceMarginPercent = (double)(await offer.GetFixedPricePercentageAsync(PriceService));
+        }
+    }
+    @if (offer is not null)
+    {
+        <div class="offer-body">
+            <p>Offer maker is @(offer.Direction == OfferDirection.BUY ? "buying XMR" : "selling XMR")</p>
+            <p>XMR amount: @(offer.Amount != offer.MinAmount ? $"{offer.MinAmount.ToMonero().ToString("0.0000########")}ɱ -" : "") @offer.Amount.ToMonero().ToString("0.0000########")ɱ</p>
+            <p>@offer.CounterCurrencyCode amount: @(offer.FiatVolume != offer.FiatMinVolume ? $"{offer.FiatMinVolume} -" : "") @offer.FiatVolume @offer.CounterCurrencyCode</p>
+            <p>Price: @offer.Price.ToString("0.0000") (@Math.Round(offer.MarketPriceMarginPercent * 100, 2).ToString("0.00")%)</p>
+            <p>Maker's address: @offer.OwnerNodeAddress</p>
+            <p>Buyer deposit: @offer.BuyerSecurityDepositPercent%</p>
+            <p>Seller deposit: @offer.SellerSecurityDepositPercent%</p>
+            @if (offer.BuyerSecurityDepositPercent == 0)
+            {
+                <div class="no-deposit">
+                    <img src="icons/warning.svg" />
+                    <p>No deposit offer</p>
+                </div>
+            }
+            else if (offer.IsPrivateOffer)
+            {
+                <div class="no-deposit">
+                    <img src="icons/warning.svg" />
+                    <p>Passphrase required</p>
+                </div>
+            }
+        </div>        
+    }
+</modal>

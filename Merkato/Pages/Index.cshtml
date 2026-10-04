@@ -1,0 +1,104 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<form class="inputs" b-xqsj3zk850 method="post">
+    <button class="button-primary">Primary</button>
+    <button class="button-secondary">Secondary</button>
+    <button class="button-tertiary">Tertiary</button>
+
+    <button class="button-continue">Continue</button>
+
+    <input required class="input-text" placeholder="text" type="text" />
+    <input required class="input-number" placeholder="number" type="number" />
+    <input required class="input-password" placeholder="password" type="password" />
+    <input placeholder="checkbox" type="checkbox" />
+    <input placeholder="radio" type="radio" />
+    <textarea spellcheck="false" class="textarea" placeholder="textarea"></textarea>
+    <select class="select">
+        <option b-xqsj3zk850>1</option>
+        <option b-xqsj3zk850>test</option>
+        <option b-xqsj3zk850>2321414143</option>
+    </select>
+    <toggle method="get" submit-method="@Model.OnPostTestAsync" is-toggled="IsToggled"></toggle>
+    <button>Submit</button>
+</form>
+
+<div>
+    <label>Test values</label>
+    <dropdown value="@Model.TestValue" values="@Model.TestValues"></dropdown>
+</div>
+
+<div class="">
+    adsadaadasdsadsdsadsdsadaaaaaaasdaaaadddaddd 122
+</div>
+
+<form method="post">
+    <input name="TestString" type="text" />
+    <input name="TestInt"  type="number" />
+    <input name="TestBool" type="checkbox" />
+    <button asp-page-handler="Test" type="submit">Test</button>
+</form>
+
+@* @if (Model.Modal is not null)
+{
+    <partial name="_Modal" model="Model.Modal" />
+} *@
+
+<form method="post">
+    <button asp-page-handler="OpenModal" type="submit">Open modal</button>
+</form>
+
+<eagertabs tab-index="@Model.TabIndex">
+    <div title="test">
+        <p>some text1</p>
+        <p>some text1</p>
+        <p>some text1</p>
+        <p>some text1</p>
+        <p>some text1</p>
+        <p>some text1</p>
+        <p>some text1</p>
+    </div>
+    <p title="test1">test2</p>
+    <p title="test2">test3</p>
+</eagertabs>
+
+<div class="table-wrapper">
+    <table class="trades">
+        <tr class="head">
+            <th>Date</th>
+            <th>Market</th>
+            <th>Price</th>
+            <th>XMR</th>
+        </tr>
+        @foreach (var trade in Model.FilterTradeStatistics())
+        {
+            <tr>
+                <td>
+                    @trade.Date.ToShortDateString()
+                </td>
+                <td>
+                    @trade.Currency
+                </td>
+                <td>
+                    @(((decimal)trade.Price / 100_000_000).ToString("0.0000"))
+                </td>
+                <td>
+                    @(((ulong)trade.Amount).ToMonero().ToString("0.0000"))
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<form method="get" class="nav-buttons">
+    <button name="CurrentPage" value="@(Model.CurrentPage - 1)">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+    <p>@(Model.CurrentPage + 1)/@(Model.PageCount + 1)</p>
+    <button name="CurrentPage" value="@(Model.CurrentPage + 1)">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+</form>

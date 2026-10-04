@@ -1,0 +1,27 @@
+﻿@model Tabs
+@{
+    // Issue with this is that params that depend on tab index don't reset
+    // PaymentAccountId for example should probably reset
+    QueryCollection GetQueryCollectionWithoutTabIndex()
+    {
+        var dict = Context.Request.Query.ToDictionary();
+        dict.Remove("TabIndex", out var removed);
+        QueryCollection queryCollection = new(dict);
+        return queryCollection;
+    }
+}
+
+@* TODO forms or anchors? current implementation cannot be nested in forms...  *@
+<div class="tabs">
+    @for (int i = 0; i < Model.TabNames.Count; i++)
+    {
+        <form method="get" class="@(Model.TabIndex == i ? "tab active" : "tab")" b-azbrh5y0yc>
+            <input name="TabIndex" value="@i" hidden />
+            @foreach(var query in GetQueryCollectionWithoutTabIndex())
+            {
+                <input name="@query.Key" value="@query.Value" hidden />
+            }
+            <button type="submit">@Model.TabNames[i]</button>
+        </form>
+    }
+</div>

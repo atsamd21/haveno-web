@@ -1,0 +1,84 @@
+﻿.trade-main {
+  position: relative;
+  height: 100%;
+}
+.trade-main .trade-info {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);
+}
+.trade-main .trade-info .row {
+  display: flex;
+  border-bottom: 1px solid #c7c7c7;
+  margin-bottom: 12px;
+}
+.trade-main .trade-info .row:last-child {
+  margin-bottom: 0;
+}
+.trade-main .trade-info .row p:first-child {
+  /*width: 100px;*/
+  width: 50%;
+}
+.trade-main .process {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);
+}
+.trade-main .process .process-step {
+  display: flex;
+  /*margin-bottom: 10px;*/
+  margin-bottom: 16px;
+  position: relative;
+  color: #737373;
+}
+.trade-main .process .process-step:last-child {
+  margin-bottom: 0;
+}
+.trade-main .process .process-step .completed-step {
+  /*color: #fff;*/
+  color: #000;
+}
+.trade-main .process .process-step i {
+  margin-right: 10px;
+  /*position: relative;*/
+}
+.trade-main .process .process-step:not(:last-child)::after {
+  content: "";
+  width: 1px;
+  height: 12px;
+  background-color: #000;
+  background-color: #c7c7c7;
+  position: absolute;
+  /*top: 16px;*/
+  top: 18px;
+  left: 6.5px;
+  color: #000;
+}
+.trade-main .payment-info {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);
+}
+.trade-main .buttons {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.trade-main .buttons a {
+  margin-right: 4px;
+  width: 50%;
+}
+.trade-main .buttons form {
+  width: 50%;
+}
+.trade-main h6 {
+  border-bottom: 1px solid #c7c7c7;
+  margin-bottom: 4px;
+}

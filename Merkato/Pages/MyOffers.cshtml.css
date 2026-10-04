@@ -1,0 +1,72 @@
+﻿.my-offers-main {
+  position: relative;
+}
+.my-offers-main .tab ul li {
+  /*height: 100px;*/
+  background-color: #EEF0EB;
+  border: 2px solid #284B63;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+.my-offers-main .tab ul li .view-info {
+  display: flex;
+}
+.my-offers-main .tab ul li .view-info button {
+  border: none;
+  display: flex;
+  align-items: center;
+  color: #000;
+  width: fit-content;
+  background-color: transparent;
+}
+.my-offers-main .tab ul li .view-info button i {
+  margin-right: 4px;
+}
+.my-offers-main .tab ul li .view-info button:hover {
+  background-color: transparent;
+}
+.my-offers-main .tab ul li .view-info .payment-method {
+  margin-left: auto;
+}
+.my-offers-main .tab ul li:last-child {
+  margin-bottom: 0;
+}
+.my-offers-main .tab ul li .offer-body {
+  margin: 10px 0 10px;
+}
+.my-offers-main .tab ul li .buttons {
+  margin-top: auto;
+  display: flex;
+}
+.my-offers-main .tab ul li .buttons a {
+  margin-right: 8px;
+}
+.my-offers-main .create-offer-button {
+  position: sticky;
+  bottom: 0;
+  margin-top: 4px;
+}
+
+.passphrase {
+  margin-top: 10px;
+}
+.passphrase .challenge {
+  background-color: #778DA9;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.no-deposit {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+.no-deposit img {
+  height: 18px;
+  width: 18px;
+  filter: invert(1);
+  margin-right: 4px;
+}

@@ -1,0 +1,76 @@
+﻿.settings-main .info {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);
+}
+.settings-main .info .support-links-container .link-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  /*border-bottom: 1px solid #c7c7c7;*/
+}
+.settings-main .info .support-links-container .link-container a {
+  color: #000;
+}
+.settings-main .info .support-links-container .link-container img {
+  height: 16px;
+  margin-right: 10px;
+}
+
+.url-connections {
+  max-height: 100px;
+  overflow-y: auto;
+}
+.url-connections .connection {
+  /*background-color: #121212;*/
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px 6px;
+  /*border-radius: 4px;*/
+  border-radius: 8px;
+  height: 40px;
+  border: 2px solid #000000;
+}
+.url-connections .connection button {
+  background-color: transparent;
+  border: none;
+}
+.url-connections .connection .url {
+  margin-right: auto;
+}
+.url-connections .connection .connect-node {
+  margin-left: auto;
+  margin-right: 4px;
+}
+.url-connections .connection:last-child {
+  margin-bottom: 0;
+}
+.url-connections .connection p {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+.url-connections .connection .online-status {
+  height: 10px;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.url-connections .connection .online {
+  background-color: #0CB952;
+}
+.url-connections .connection .offline {
+  background-color: #ff4025;
+}
+.url-connections .connection .unknown {
+  background-color: #414141;
+}
+.url-connections .connected {
+  border: 2px solid #0CB952;
+}
+
+.add-node {
+  margin-top: 8px;
+}

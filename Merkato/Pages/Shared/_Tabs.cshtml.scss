@@ -1,0 +1,40 @@
+.tabs {
+    display: flex;
+    border: 2px solid #153243;
+    border-radius: 8px;
+    width: fit-content;
+
+    .tab {
+        background-color: #EEF0EB;
+
+        button {
+            padding: 4px;
+            border: none;
+            background-color: none;
+            outline: none;
+            cursor: pointer;
+            color: #000;
+            background-color: transparent;
+            width: 90px;
+            height: 30px;
+        }
+
+        &:first-child {
+            border-start-start-radius: 6px;
+            border-end-start-radius: 6px;
+        }
+
+        &:last-child {
+            border-start-end-radius: 6px;
+            border-end-end-radius: 6px;
+        }
+    }
+
+    .active {
+        background-color: #778da9;
+
+        button {
+            color: #fff;
+        }
+    }
+}

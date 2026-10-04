@@ -1,0 +1,202 @@
+﻿@page
+@model CreateOfferModel
+@{
+    ViewData["Title"] = "Create offer";
+}
+
+<div class="create-offer-main">
+    @switch (Model.Step)
+    {
+        case 0:
+            <form method="get" class="first-step step-container" b-2yg7byafkq>
+                <div>
+                    <p>I want to</p>
+                    <label>Buy</label>
+                    <input type="radio" name="OfferDirection" value="BUY" checked="@(Model.OfferDirection == OfferDirection.BUY)" />
+                    <label>Sell</label>
+                    <input type="radio" name="OfferDirection" value="SELL" checked="@(Model.OfferDirection == OfferDirection.SELL)" />
+                </div>
+                <input name="Step" value="1" hidden />
+                <button class="button-continue" b-2yg7byafkq>
+                    Continue
+                </button>
+            </form>
+            break;
+        case 1:
+            <div class="second-step step-container">
+                <p>Select payment account</p>
+                <partial model="Model.Tabs" name="_Tabs" b-2yg7byafkq />
+                <form method="get" b-2yg7byafkq>
+                    <div class="payment-accounts">
+                        <partial model="@Model.PaymentAccountsDropdown" name="_Dropdown" />
+                        <select name="CurrencyCode" class="select">
+                            @if (Model.PaymentAccount is not null)
+                            {
+                                foreach (var tradeCurrency in Model.PaymentAccount.TradeCurrencies)
+                                {
+                                    <option selected="@(tradeCurrency.Code == Model.CurrencyCode)" value="@tradeCurrency.Code" b-2yg7byafkq>
+                                        @tradeCurrency.Name
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <input name="Step" value="2" hidden />
+                    <input name="OfferDirection" value="@Model.OfferDirection" hidden />
+                    <input name="PaymentAccountId" value="@Model.PaymentAccountId" hidden />
+                    <button class="button-continue" disabled="@(Model.PaymentAccounts.Count == 0)" b-2yg7byafkq>
+                        Continue
+                    </button>
+                </form>
+            </div>
+            break;
+        case 2:
+            <form method="post" class="third-step step-container" b-2yg7byafkq>
+                <div class="inputs">
+                    <div class="amounts">
+                        <div class="input-container">
+                            <label>Minimum amount</label>
+                            <input class="input-number" placeholder="Enter amount in XMR" step="0.000000000001" type="number" min="0.05" name="MinAmount" value="@Model.MinAmount" />
+                            <div class="dash"></div>
+                        </div>
+                        <div class="dash-container">
+                            <div class="dash"></div>
+                        </div>
+                        <div class="input-container">
+                            <label>Amount of XMR to @Model.OfferDirection.ToString().ToLower()</label>
+                            <input class="input-number" placeholder="Enter amount in XMR" step="0.000000000001" type="number" min="0.05" name="MaxAmount" value="@Model.MaxAmount" required />
+                        </div>
+                    </div>
+
+                    <label>@((Model.OfferDirection == OfferDirection.BUY ? "Below" : "Above") + " % from market price")</label>
+                    <input step="0.01" class="input-number" placeholder="Enter % value" type="number" min="-50" max="50" name="MarketPriceMarginPercent" value="@Model.MarketPriceMarginPercent" required="@Model.UseMarketBasedPrice" readonly="@(!Model.UseMarketBasedPrice)" />
+
+                    <label>Fixed price in @Model.CurrencyCode for 1 XMR</label>
+                    <input step="0.0001" class="input-number" placeholder="Enter price" type="number" name="PriceForOneXMR" value="@Model.PriceForOneXMR" required="@(!Model.UseMarketBasedPrice)" readonly="@Model.UseMarketBasedPrice" />
+
+                    <label>Use market based price</label>
+                    <toggle method="get" is-toggled="@Model.UseMarketBasedPrice"></toggle>
+
+                    <label>Amount in @Model.CurrencyCode to @(Model.OfferDirection == OfferDirection.BUY ? "spend" : "receive")</label>
+                    <div class="fiat-amount">
+                        <input readonly class="input-number" min="0" name="FiatPriceForAmount" value="@Model.PriceForTotalAmount" />
+                        <button 
+                            class="button-primary" 
+                            type="submit"
+                            asp-page-handler="Calculate" b-2yg7byafkq>
+                            Calculate
+                        </button>
+                    </div>
+                    <label>Use exact amount</label>
+                    <toggle method="get" is-toggled="@Model.UseExactReceiveAmount"></toggle>
+
+                    @if (Model.OfferDirection == OfferDirection.SELL)
+                    {
+                        <label>Require passphrase to take this offer</label>
+                        <toggle method="get" is-toggled="@Model.IsPrivateOffer"></toggle>
+                        <label>No deposit required from buyer</label>
+                        <toggle method="get" is-toggled="@Model.IsNoDepositOffer"></toggle>
+                    }
+
+                    <label>Reserve only the necessary funds</label>
+                    <toggle method="get" is-toggled="@Model.ReserveExactAmount"></toggle>
+                    <p class="note">Requires a mining fee & takes ~20 minutes</p>
+
+                    <label>Security deposit</label>
+                    <dropdown value="@Model.SecurityDepositPercent" values="@Model.SecurityDepositPercentDict"></dropdown>
+                    <div class="fees">
+                        <partial name="_InfoRow" model="@(new InfoRow("Trade fee", $"{Model.TradeFee.ToMonero()} XMR (~{Model.TradeFeeInCounterCurrency} {Model.CurrencyCode})"))" />
+                        <partial name="_InfoRow" model="@(new InfoRow("Deposit amount", Model.SecurityDepositAmount.ToMonero() + " XMR"))" />
+                        <partial name="_InfoRow" model="@(new InfoRow("Required funds", Model.RequiredFunds.ToMonero() + " XMR"))" />
+                    </div>
+
+                    <label>Deactivate offer if market price is @(Model.OfferDirection == OfferDirection.BUY ? "above" : "below")</label>
+                    <input placeholder="Trigger price (optional)" class="input-number" min="0" type="number" name="TriggerPrice" value="@Model.TriggerPrice" disabled="@(!Model.UseMarketBasedPrice)" />
+
+                    <label>Extra information</label>
+                    <textarea class="textarea" name="ExtraInfo" placeholder="Any extra information">@Model.ExtraInfo</textarea>
+                </div>
+                <input name="Step" value="2" hidden />
+                <input name="OfferDirection" value="@Model.OfferDirection" hidden />
+                <input name="PaymentAccountId" value="@Model.PaymentAccountId" hidden />
+                <input name="CurrencyCode" value="@Model.CurrencyCode" hidden />
+
+                <button class="button-continue" type="submit" asp-page-handler="LastStep" b-2yg7byafkq>
+                    Continue
+                </button>
+            </form>
+            break;
+        case 3:
+            <form method="post" class="fourth-step step-container" b-2yg7byafkq>
+                <input name="Step" value="2" hidden />
+                <input name="OfferDirection" value="@Model.OfferDirection" hidden />
+                <input name="PaymentAccountId" value="@Model.PaymentAccountId" hidden />
+                <input name="CurrencyCode" value="@Model.CurrencyCode" hidden />
+
+                <input name="MaxAmount" value="@Model.MaxAmount" hidden />
+                <input name="MinAmount" value="@Model.MinAmount" hidden />
+                <input name="MarketPriceMarginPercent" value="@Model.MarketPriceMarginPercent" hidden />
+                <input name="PriceForOneXMR" value="@Model.PriceForOneXMR" hidden />
+                <input name="ExtraInfo" value="@Model.ExtraInfo" hidden />
+                <input name="SecurityDepositPercent" value="@Model.SecurityDepositPercent" hidden />
+                <input name="TriggerPrice" value="@Model.TriggerPrice" hidden />
+                <input name="PriceForTotalAmount" value="@Model.PriceForTotalAmount" hidden />
+
+                <input asp-for="UseMarketBasedPrice" hidden />
+                <input asp-for="IsNoDepositOffer" hidden />
+                <input asp-for="ReserveExactAmount" hidden />
+                <input asp-for="IsPrivateOffer" hidden />
+
+                <p>Review offer</p>
+                <div class="review-top">
+                    <partial name="_InfoRow" model="@(new InfoRow("Payment account", Model.PaymentAccount.AccountName ))" />
+                    <div class="currency-code">
+                        <partial name="_InfoRow" model="@(new InfoRow("Currency", Model.CurrencyCode ))" />
+                    </div>
+                </div>
+                <div class="review-offer-row">
+                    @if (Model.MinAmount == Model.MaxAmount)
+                    {
+                        <partial name="_InfoRow" model="@(new InfoRow($"Amount of XMR to {(Model.OfferDirection == OfferDirection.BUY ? "buy" : "sell")}", Model.MaxAmount.Value.ToString()))" />
+                    }
+                    else
+                    {
+                        <partial name="_InfoRow" model="@(new InfoRow($"Amount of XMR to {(Model.OfferDirection == OfferDirection.BUY ? "buy" : "sell")}", Model.MinAmount.Value.ToString() + " - " + Model.MaxAmount.Value.ToString()))" />
+                    }
+                    @if (Model.UseMarketBasedPrice)
+                    {
+                        @* <partial name="_InfoRow" model="@(new InfoRow("% ", Model.MarketPriceMarginPercent.Value.ToString()))" /> *@
+                    }
+                    else
+                    {
+                        
+                    }
+
+                    <partial name="_InfoRow" model="@(new InfoRow("Total", Model.PriceForTotalAmount.Value.ToString()))" />
+                </div>
+                <div>
+                    <partial name="_InfoRow" model="@(new InfoRow("Security deposit", ""))" />
+                    <partial name="_InfoRow" model="@(new InfoRow("Trade wallet balance", ""))" />
+                </div>
+                <div class="fees">
+                    <partial name="_InfoRow" model="@(new InfoRow("Trade fee", $"{Model.TradeFee.ToMonero()} XMR (~{Model.TradeFeeInCounterCurrency} {Model.CurrencyCode})"))" />
+                    <partial name="_InfoRow" model="@(new InfoRow("Deposit amount", Model.SecurityDepositAmount.ToMonero() + " XMR"))" />
+                    <partial name="_InfoRow" model="@(new InfoRow("Required funds", Model.RequiredFunds.ToMonero() + " XMR"))" />
+                </div>
+                <div class="buttons">
+                    <button class="button-primary" asp-page-handler="CreateOffer" b-2yg7byafkq>
+                        Post offer
+                    </button>
+                    <button class="button-secondary" asp-page-handler="PreviousStep" b-2yg7byafkq>
+                        Go back
+                    </button>
+                </div>
+            </form>
+            break;
+    }
+</div>
+
+@if (Model.NoPaymentAccountsModal is not null)
+{
+    <partial model="Model.NoPaymentAccountsModal" name="_Modal" />
+}

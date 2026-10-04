@@ -1,0 +1,22 @@
+﻿.dropdown {
+  height: 100px;
+  overflow-y: auto;
+  background-color: #808080;
+  margin-bottom: 10px;
+}
+.dropdown li a {
+  color: #000;
+}
+.dropdown li button {
+  background-color: #ffffff;
+  border: none;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+}
+.dropdown li button:hover {
+  background-color: #c6c6c6;
+}
+.dropdown li .active {
+  background-color: #c6c6c6;
+}

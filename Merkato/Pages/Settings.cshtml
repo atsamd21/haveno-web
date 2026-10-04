@@ -1,0 +1,103 @@
+﻿@page
+@model SettingsModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="settings-main">
+    <h5>About</h5>
+    <div class="info">
+        <p>Haveno version: @Model.HavenoVersion</p>
+        <p>App version: @AppConstants.ApplicationVersion</p>
+        <div class="support-links-container">
+            <p class="support-links-title">Support links</p>
+            @if (!string.IsNullOrEmpty(AppConstants.GitHubLink))
+            {
+                <div class="link-container">
+                    <img src="icons/github.svg" />
+                    <a href="@AppConstants.GitHubLink">Source code</a>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(AppConstants.MatrixLink))
+            {
+                <div class="link-container">
+                    <img src="icons/matrix.svg" />
+                    <a href="@AppConstants.MatrixLink">Matrix</a>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(AppConstants.SimplexLink))
+            {
+                <div class="link-container">
+                    <img src="icons/simplex.svg" />
+                    <a href="@AppConstants.SimplexLink">SimpleX</a>
+                </div>
+            }
+        </div>
+    </div>
+    <h5>Monero nodes</h5>
+    <ul class="url-connections">
+        @foreach (var urlConnection in Model.UrlConnections.OrderByDescending(x => x.Url == Model.CurrentUrlConnection.Url).ThenBy(x => x.Priority))
+        {
+            <li class="@(urlConnection.Url == Model.CurrentUrlConnection.Url ? "connection connected" : "connection")">
+                @switch (urlConnection.OnlineStatus)
+                {
+                    case Haveno.Shared.Enums.OnlineStatus.UNKNOWN:
+                        <div class="online-status unknown"></div>
+                        break;
+                    case Haveno.Shared.Enums.OnlineStatus.ONLINE:
+                        <div class="online-status online"></div>
+                        break;
+                    case Haveno.Shared.Enums.OnlineStatus.OFFLINE:
+                        <div class="online-status offline"></div>
+                        break;
+                }
+                <p class="url">@urlConnection.Url</p>
+                <form method="post" b-lpv6jm3h2x>
+                    <input name="url" value="@urlConnection.Url" hidden/>
+                    <button asp-page-handler="Connect" b-lpv6jm3h2x>
+                        <i class="bi bi-arrow-right-circle connect-node"></i>
+                    </button>
+                </form>
+                <form method="get">
+                    <input name="NodeUrlToRemove" value="@urlConnection.Url" hidden />
+                    <input name="IsRemoveModalOpen" value="true" hidden />
+                    <button>
+                        <i class="bi bi-x-circle remove-node"></i>
+                    </button>
+                </form>
+            </li>
+        }
+    </ul>
+    <form method="get" b-lpv6jm3h2x>
+        <input name="IsAddModalOpen" value="true" hidden />
+        <button class="button-primary add-node" b-lpv6jm3h2x>Add Monero node</button>
+    </form>
+    <label>Use any Monero node</label>
+    <toggle submit-method="Model.OnPostAutoSwitchToggleAsync" is-toggled="IsAutoSwitchEnabled"></toggle>
+    <h5>Currency</h5>
+    <dropdown value="Currency" values="Model.Currencies"></dropdown>
+    <h5>Language</h5>
+    <dropdown value="Language" values="Model.Languages"></dropdown>
+</div>
+
+<modal title="Add Monero node" submit-method="AddNode" is-open="@Model.IsAddModalOpen">
+    <div>
+        <label>Node url</label>
+        <input type="url" name="MoneroNodeUrl" value="@Model.MoneroNodeUrl" required />
+        <p class="note">Example: http://192.168.0.1:18081</p>
+    </div>
+    <label>Authentication (optional)</label>
+    <div>
+        <label>Username</label>
+        <input name="Username" value="@Model.Username" />
+    </div>
+    <div>
+        <label>Password</label>
+        <input type="password" name="Password" value="@Model.Password" />
+    </div>
+</modal>
+<modal title="Remove Monero node" submit-method="RemoveNode" is-open="@Model.IsRemoveModalOpen">
+    <p class="regular-p-grey">Are you sure you want to remove to this Monero node?</p>
+    <input name="NodeUrlToRemove" value="@Model.NodeUrlToRemove" hidden />
+    <a class="external-link">Url: @Model.NodeUrlToRemove</a>
+</modal>

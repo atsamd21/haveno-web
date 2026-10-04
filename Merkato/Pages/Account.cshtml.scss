@@ -1,0 +1,92 @@
+﻿.account-main {
+
+    .payment-accounts-main {
+
+        .tab {
+
+            a {
+                color: #000;
+            }
+
+            .active {
+                background-color: #808080;
+            }
+        }
+
+        .accounts-list {
+            height: 100px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border: 2px solid #284B63;
+            border-radius: 8px;
+            background-color: #EEF0EB;
+            padding: 8px;
+            list-style: none;
+
+            li {
+                form {
+                    display: flex;
+                    justify-content: space-between;
+
+                    a {
+                        color: #000;
+                    }
+
+                    .active {
+                        /*background-color: #ffffff;*/
+                        text-decoration: underline;
+                    }
+
+                    button {
+                        border: none;
+
+                        &:hover {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        .payment-methods-list {
+            height: 100px;
+            overflow-y: auto;
+            border: 2px solid #284B63;
+            border-radius: 8px;
+            background-color: #EEF0EB;
+            padding: 8px;
+            list-style: none;
+
+            li {
+
+                a {
+                    color: #000;
+                }
+
+                .active {
+                    background-color: #ffffff;
+                }
+            }
+        }
+    }
+
+    .create-account {
+
+        .account-input {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.buttons {
+    display: flex;
+
+    button {
+
+        &:first-child {
+            margin-right: 8px;
+        }
+    }
+}

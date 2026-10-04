@@ -1,0 +1,49 @@
+﻿@model Dropdown
+@{
+    string GetUrlForItem(string value)
+    {
+        System.Text.StringBuilder stringBuilder = new();
+
+        var dict = Context.Request.Query.ToDictionary();
+
+        if (dict.Remove(Model.PropertyName, out var removed))
+        {
+            
+        }
+
+        dict.TryAdd(Model.PropertyName, value);
+
+        QueryCollection query = new(dict);
+
+        for (int i = 0; i < query.Count; i++)
+        {
+            char separator;
+            if (i == 0)
+            {
+                separator = '?';
+            }
+            else
+            {
+                separator = '&';
+            }
+
+            var param = query.ElementAt(i);
+
+            stringBuilder.Append(separator);
+            stringBuilder.Append($"{param.Key}={param.Value}");
+        }
+
+        return Url.RouteUrl(ViewContext.RouteData.Values) + stringBuilder.ToString();
+    }
+}
+
+<ul class="dropdown">
+    @foreach (var dropdownItem in Model.DropdownItems)
+    {
+        <li>
+            <a href="@GetUrlForItem(dropdownItem.Key)" class="@(Model.PropertyValue == dropdownItem.Key ? "active" : "")">
+                @dropdownItem.Value
+            </a>
+        </li>
+    }
+</ul>

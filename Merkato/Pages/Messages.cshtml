@@ -1,0 +1,57 @@
+﻿@page "{tradeId}"
+@model MessagesModel
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<div class="messages-main">
+    <ul>
+        @for (int i = 0; i < Model.ChatMessages.Count; i++)
+        {
+            var message = Model.ChatMessages[i];
+
+            bool isMyMessage = false;
+            if (!message.IsSystemMessage)
+            {
+                if (Model.IsDispute)
+                {
+                    isMyMessage = Model.TradeInfo.ArbitratorNodeAddress != message.SenderNodeAddress.HostName + ":" + message.SenderNodeAddress.Port;
+                }
+                else
+                {
+                    isMyMessage = Model.TradeInfo.TradePeerNodeAddress != message.SenderNodeAddress.HostName + ":" + message.SenderNodeAddress.Port;
+                }
+            }
+
+            <li class="@(isMyMessage ? "right" : "left")" id="@(i == Model.ChatMessages.Count - 1 ? "last-message" : "")">
+                <p class="date">
+                    @(message.Date.ToLocalTime())
+                </p>
+                <p class="message">@message.Message</p>
+            </li>
+        }
+    </ul>
+
+    <form class="input-container" method="post" enctype="multipart/form-data" b-y0xkcfg8aj>
+@*         <button class="button-primary" type="submit" asp-page-handler="ResolveDispute" b-y0xkcfg8aj>
+            Resolve
+        </button> *@
+        @* <a class="button-primary" href=@($"/Trade/{Model.TradeInfo.TradeId}")>View trade</a> *@
+        <input name="IsDispute" value="@Model.IsDispute" hidden />
+        <input class="input-text" name="Message" />
+        @if (Model.IsDispute)
+        {
+            <input type="file" asp-for="Attachment" b-y0xkcfg8aj />
+            <button class="send-button dispute-send" type="submit" asp-page-handler="SendDisputeMessage" b-y0xkcfg8aj>
+                <img src="/icons/send.svg" />
+            </button>
+        }
+        else
+        {
+            <button class="send-button" type="submit" asp-page-handler="SendMessage" b-y0xkcfg8aj>
+                <img src="/icons/send.svg" />
+            </button>
+        }
+    </form>
+
+</div>

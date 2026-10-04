@@ -1,0 +1,121 @@
+﻿.create-offer-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.button-continue {
+    margin-top: 10px;
+}
+
+label {
+    margin-top: 10px;
+}
+
+.step-container {
+    min-width: 400px;
+    width: 60%;
+    min-height: 200px;
+    background-color: #eef0eb;
+    padding: 10px;
+    border-radius: 10px;
+    /*    max-height: 700px;
+    overflow: auto;*/
+}
+
+.first-step {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    button {
+    }
+}
+
+.second-step {
+
+}
+
+.third-step {
+    .inputs {
+        display: flex;
+        flex-direction: column;
+
+        textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        .amounts {
+            display: flex;
+
+            .input-container {
+
+                &:first-child {
+                    margin-right: 10px;
+                }
+
+                label {
+                    display: block;
+                }
+            }
+
+            .dash-container {
+
+                .dash {
+                    margin-top: 47px;
+                    height: 2px;
+                    width: 6px;
+                    background-color: #153243;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+
+    .fiat-amount {
+        display: flex;
+
+        button {
+            width: 100px;
+            margin-left: 10px;
+        }
+    }
+
+    .fees {
+        /*background-color: #90928d;*/
+        background-color: #cbd7dd;
+        /*padding: 4px 14px 4px;*/
+        padding: 4px;
+        /*border: 2px solid #5f859b;*/
+        border-radius: 8px;
+    }
+}
+
+.fourth-step {
+
+    .review-top {
+        display: flex;
+
+        .currency-code {
+            margin-left: 10px;
+            /*width: 100px;*/
+        }
+    }
+
+    .review-offer-row {
+        display: flex;
+    }
+
+    .buttons {
+        display: flex;
+
+        button {
+
+            &:first-child {
+                margin-right: 8px;
+            }
+        }
+    }
+}

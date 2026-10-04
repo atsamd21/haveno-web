@@ -1,0 +1,87 @@
+﻿.messages-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  /**/
+  overflow: hidden;
+}
+.messages-main ul {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: scroll;
+  padding: 10px 10px 0;
+  background-size: contain;
+  border-radius: 8px;
+  margin: 0;
+  list-style: none;
+  background-image: url("/img/messager-bg-inverted.png");
+  background-repeat: repeat;
+  background-size: 400px;
+}
+.messages-main ul li {
+  width: fit-content;
+  max-width: 60%;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 8px;
+}
+.messages-main ul li .date {
+  font-size: 11px;
+}
+.messages-main ul li .message {
+  /*white-space: pre-wrap;*/
+  white-space: pre-line;
+}
+.messages-main ul .left {
+  backdrop-filter: blur(0.5);
+  border-bottom-left-radius: 2px;
+  background-color: #153243;
+  color: #fff;
+}
+.messages-main ul .right {
+  background-color: #fff;
+  color: #000;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+.messages-main .input-container {
+  position: relative;
+  /*padding-top: 10px;*/
+  padding-top: 4px;
+  display: flex;
+}
+.messages-main .input-container a {
+  width: fit-content;
+  white-space: nowrap;
+  margin-right: 8px;
+  padding: 0 10px 0;
+}
+.messages-main .input-container input {
+  /*margin-bottom: 10px;*/
+  /*margin-bottom: 2px;*/
+  padding-right: 38px;
+}
+.messages-main .input-container .send-button {
+  position: absolute;
+  right: -10px;
+  /*top: 22px;*/
+  top: 16px;
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  filter: invert(1);
+  border: none;
+}
+.messages-main .input-container .send-button:disabled {
+  opacity: 0.6;
+}
+.messages-main .input-container .dispute-send {
+  right: 92px;
+}
+.messages-main .input-container input[type=file] {
+  margin-left: 8px;
+}

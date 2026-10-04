@@ -1,0 +1,69 @@
+.info-row {
+    margin-bottom: 10px;
+    width: 100%;
+
+    .info-text {
+    }
+
+    .inner-container {
+        display: flex;
+        align-items: center;
+        border: 2px solid #153243;
+        /*padding: 10px 16px 10px;*/
+        padding: 8px 16px 8px;
+        position: relative;
+        justify-content: space-between;
+        border-radius: 8px;
+        background-color: #EEF0EB;
+        /*height: 40px;*/
+        /*min-height: 40px;*/
+
+        .data {
+            margin-right: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            /*line-height: 12px;*/
+            white-space: nowrap;
+        }
+
+        .check-container {
+            display: block;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+
+            .eye {
+                width: 20px;
+                height: 20px;
+                pointer-events: none;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-image: url("icons/eye.svg");
+                filter: invert(1);
+            }
+
+            input[type="checkbox"] {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+                width: 100%;
+                height: 100%;
+
+                &:checked ~ .eye {
+                    background-image: url("icons/eye-fill.svg");
+                }
+            }
+        }
+    }
+
+    .inner-expanded:has(:checked) {
+        height: fit-content;
+
+        .data {
+            white-space: normal;
+            overflow: initial;
+            line-break: anywhere;
+        }
+    }
+}

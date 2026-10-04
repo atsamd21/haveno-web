@@ -1,0 +1,190 @@
+﻿@page
+@inject IStringLocalizer<AccountModel> Localizer
+@inject IHtmlLocalizer<AccountModel> HtmlLocalizer
+@inject IPaymentAccountService PaymentAccountService;
+@model AccountModel
+@{
+    ViewData["Title"] = "Account";
+
+    var requestCultureFeature = HttpContext.Features.Get<IRequestCultureFeature>();
+    var requestCulture = requestCultureFeature?.RequestCulture;
+
+    var paymentAccounts = await PaymentAccountService.GetPaymentAccountsAsync();
+    var paymentMethods = await PaymentAccountService.GetPaymentMethodsAsync();
+
+    if (Model.TabIndex == 0)
+    {
+        Model.PaymentAccounts = paymentAccounts
+        .Where(x => x.PaymentMethod.Id != PaymentMethodId.BLOCK_CHAINS && x.PaymentMethod.Id != PaymentMethodId.BLOCK_CHAINS_INSTANT)
+        .ToList();
+
+        Model.PaymentMethods = paymentMethods
+        .Where(x => x.Id != PaymentMethodId.BLOCK_CHAINS && x.Id != PaymentMethodId.BLOCK_CHAINS_INSTANT)
+        .ToList();
+    }
+    else if (Model.TabIndex == 1)
+    {
+        Model.PaymentAccounts = paymentAccounts.Where(
+            x => x.PaymentMethod.Id == PaymentMethodId.BLOCK_CHAINS || x.PaymentMethod.Id == PaymentMethodId.BLOCK_CHAINS_INSTANT).ToList();
+
+        Model.PaymentMethods = paymentMethods.Where(
+            x => x.Id == PaymentMethodId.BLOCK_CHAINS || x.Id == PaymentMethodId.BLOCK_CHAINS_INSTANT).ToList();
+            
+        Model.PaymentMethods = Haveno.Api.Helpers.CurrencyHelper.CryptoCurrenciesDictionary.Select(x => new PaymentMethod
+        {
+            Id = PaymentMethodId.BLOCK_CHAINS,
+            SupportedAssetCodes = [x.Key]
+        }).ToList();
+    }
+
+    if (!string.IsNullOrEmpty(Model.PaymentMethodId))
+    {
+        if (Model.TabIndex == 0)
+        {
+            Model.PaymentAccountForm = await PaymentAccountService
+                 .GetPaymentAccountFormAsync(Enum.Parse<PaymentMethodId>(Model.PaymentMethodId));
+        }
+        else if (Model.TabIndex == 1)
+        {
+            Model.PaymentAccountForm = await PaymentAccountService
+                 .GetPaymentAccountFormAsync(PaymentMethodId.BLOCK_CHAINS);
+
+            // Should this be a separate field for crypto type?
+            var currencyField = Model.PaymentAccountForm.Fields.First(x => x.Id == Haveno.Shared.Enums.FieldId.TRADE_CURRENCIES);
+            currencyField.Value = Model.PaymentMethodId;
+        }
+    }
+
+    if (!string.IsNullOrEmpty(Model.PaymentAccountId))
+    {
+        Model.PaymentAccount = Model.PaymentAccounts.FirstOrDefault(x => x.Id == Model.PaymentAccountId);
+    }
+}
+
+<div class="account-main">
+    <div class="payment-accounts-main">
+        <partial name="_Tabs" model="Model.Tabs" />
+        <ul class="accounts-list">
+            @foreach (var paymentAccount in Model.PaymentAccounts)
+            {
+                <li>
+                    <form method="post" b-dhsxwkfnc0>
+                        <a class="@(Model.PaymentAccountId == paymentAccount.Id ? "active" : "")" href=@($"Account?tabindex={Model.TabIndex}&paymentaccountid={paymentAccount.Id}")>
+                            @paymentAccount.AccountName
+                        </a>
+                        <input name="accountId" value="@paymentAccount.Id" hidden />
+                        <button type="submit" asp-page-handler="DeleteAccount" b-dhsxwkfnc0>
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </form>
+                </li>
+            }
+        </ul>
+        <div>
+            @if (Model.PaymentAccount is not null)
+            {
+                @foreach (var keyVal in Model.PaymentAccount.PaymentAccountPayload.Convert())
+                {
+                    <partial model="@(new InfoRow(keyVal.Key, string.IsNullOrEmpty(keyVal.Value) ? "N/A" : keyVal.Value, true))" name="_InfoRow" />
+                }
+            }
+        </div>
+        <h4></h4>
+        <ul class="payment-methods-list">
+            @foreach (var paymentMethod in Model.PaymentMethods)
+            {
+                <li>
+                    @if (Model.TabIndex == 0)
+                    {
+                        <a class="@(paymentMethod.Id.ToString() == Model.PaymentMethodId ? "active" : "")" id=@paymentMethod.Id href=@($"Account?paymentmethodid={paymentMethod.Id}&tabindex={Model.TabIndex}")>
+                            @Localizer[paymentMethod.Id.ToString()]
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="@(paymentMethod.SupportedAssetCodes.FirstOrDefault() == Model.PaymentMethodId ? "active" : "")" id=@paymentMethod.SupportedAssetCodes.FirstOrDefault() href=@($"Account?paymentmethodid={paymentMethod.SupportedAssetCodes.FirstOrDefault()}&tabindex={Model.TabIndex}")>
+                            @paymentMethod.SupportedAssetCodes.FirstOrDefault()
+                        </a>
+                    }
+                </li>
+            }
+        </ul>
+        @if (Model.PaymentAccountForm is not null)
+        {
+            <form method="post" class="create-account" b-dhsxwkfnc0>
+                <input hidden name="PaymentAccountForm.Id" value="@Model.PaymentAccountForm.Id" />
+                <input hidden name="TabIndex" value="@Model.TabIndex" />
+                @for (int i = 0; i < Model.PaymentAccountForm.Fields.Count; i++)
+                {
+                    var field = Model.PaymentAccountForm.Fields[i];
+                    if (field.Id == Haveno.Shared.Enums.FieldId.SALT)
+                        continue;
+
+                    <input hidden name=@($"PaymentAccountForm.Fields[{i}].Id") value="@Model.PaymentAccountForm.Fields[i].Id" />
+                    <input hidden name=@($"PaymentAccountForm.Fields[{i}].Type") value="@Model.PaymentAccountForm.Fields[i].Type" />
+
+                    if (Model.PaymentAccountForm.Id == Haveno.Shared.Enums.FormId.BLOCK_CHAINS &&
+                    field.Id == Haveno.Shared.Enums.FieldId.TRADE_CURRENCIES)
+                    {
+                        <input hidden name=@($"PaymentAccountForm.Fields[{i}].Value") value="@Model.PaymentMethodId" />
+                        continue;
+                    }
+
+                    var required = field.MinLength > 0;
+
+                    // If iban limit to 34?
+                    // if bic limit to 8-11
+
+                    switch (field.Component)
+                    {
+                        case Haveno.Shared.Enums.Component.TEXT:
+                            <div class="account-input">
+                                <label>@field.Label</label>
+                                <input class="input-text"
+                                       value="@(field.Id == Haveno.Shared.Enums.FieldId.ACCOUNT_NAME ? Model.PaymentMethodId : "")"
+                                       minlength="@(field.MinLength == 0 ? null : field.MinLength)"
+                                       maxlength="@(field.MaxLength == 0 ? null : field.MaxLength)"
+                                       name=@($"PaymentAccountForm.Fields[{i}].Value") />
+                                @if (required)
+                                {
+                                    <p class="note">Length must be between @field.MinLength and @field.MaxLength</p>
+                                }
+                            </div>
+                            break;
+                        case Haveno.Shared.Enums.Component.TEXTAREA:
+                            <div class="account-input">
+                                <label>@field.Label</label>
+                                <textarea class="textarea"
+                                          minlength="@(field.MinLength == 0 ? null : field.MinLength)"
+                                          maxlength="@(field.MaxLength == 0 ? null : field.MaxLength)"
+                                          name=@($"PaymentAccountForm.Fields[{i}].Value")></textarea>
+                            </div>
+                            break;
+                        case Haveno.Shared.Enums.Component.SELECT_ONE:
+                            <div class="account-input">
+                                <label>@field.Label</label>
+                                <select class="select" name=@($"PaymentAccountForm.Fields[{i}].Value")
+                                        asp-items="Merkato.Extensions.SelectListExtensions.CreateSelectListForPaymentAccountFormField(field)">
+                                </select>
+                            </div>
+                            break;
+                        case Haveno.Shared.Enums.Component.SELECT_MULTIPLE:
+                            <div class="account-input">
+                                <label>@field.Label</label>
+                                <select class="select" name=@($"PaymentAccountForm.Fields[{i}].Values")
+                                        asp-items="Merkato.Extensions.SelectListExtensions.CreateSelectListForPaymentAccountFormField(field)" multiple>
+                                </select>
+                            </div>
+                            break;
+                        default: break;
+                    }
+                }
+
+                <div class="buttons">
+                    <button class="button-primary" asp-page-handler="CreateAccount" type="submit" b-dhsxwkfnc0>Save new account</button>
+                    <button class="button-secondary">Cancel</button>
+                </div>
+            </form>
+        }
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@inject Haveno.Api.Services.IWalletService WalletService
+@inject Haveno.Api.Services.IVersionService VersionService
+@inject Haveno.Api.Services.IXmrNodeService XmrNodeService
+@{
+    var version = await VersionService.GetVersionAsync();
+    var walletHeight = await WalletService.GetHeightAsync();
+
+    var a = await XmrNodeService.GetConnectionAsync();
+    var b = await XmrNodeService.GetConnectionsAsync();
+    Console.WriteLine();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Haveno Web</title>
+    <link rel="stylesheet" href="~/icons/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Merkato.styles.css" asp-append-version="true" />
+    <link rel="icon" type="image/svg" href="img/haveno.svg" />
+</head>
+<body>
+    <header>
+        <nav>
+            <a asp-area="" asp-page="/Index">Merkato</a>
+            <a asp-area="" asp-page="/Offers">Offers</a>
+            <a asp-area="" asp-page="/Trades">Trades</a>
+            <a asp-area="" asp-page="/Wallet">Wallet</a>
+            <a asp-area="" asp-page="/Account">Account</a>
+            <a asp-area="" asp-page="/Settings">Settings</a>
+        </nav>
+    </header>
+    <main role="main">
+        @RenderBody()
+    </main>
+    <footer>
+        <p class="sync">Wallet synced at block: @walletHeight.Height / @walletHeight.TargetHeight</p>
+        <p class="version">v@(version)</p>
+    </footer>
+</body>
+</html>

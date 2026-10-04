@@ -1,0 +1,18 @@
+﻿@model InfoRow
+@{
+
+}
+
+<div class="info-row">
+    <p class="info-text">@Model.Label</p>
+    <div class="inner-container inner-expanded">
+        <p class="data">@Model.Value</p>
+        @if (Model.IsExpandable)
+        {
+            <div class="check-container">
+                <input type="checkbox" />
+                <div class="eye"></div>
+            </div>
+        }
+    </div>
+</div>

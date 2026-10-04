@@ -1,0 +1,29 @@
+.dropdown {
+    height: 100px;
+    overflow-y: auto;
+    background-color: #808080;
+    margin-bottom: 10px;
+
+    li {
+
+        a {
+            color: #000;
+        }
+
+        button {
+            background-color: #ffffff;
+            border: none;
+            outline: none;
+            width: 100%;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #c6c6c6;
+            }
+        }
+
+        .active {
+            background-color: #c6c6c6;
+        }
+    }
+}
