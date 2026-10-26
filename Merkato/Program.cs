@@ -21,7 +21,12 @@ HavenoDaemon havenoDaemon = new(appsettings.HavenoDaemonPath!, appsettings.Haven
 await havenoDaemon.StartAsync();
 
 builder.Services.AddRazorPages();
-builder.Services.AddHavenoServices();
+builder.Services.AddHavenoServices(
+    new HavenoOptions 
+    { 
+        Host = $"http://127.0.0.1:{appsettings.HavenoDaemonArguments!.ApiPort}", 
+        Password = appsettings.HavenoDaemonArguments!.ApiPassword!
+    });
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
