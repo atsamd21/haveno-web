@@ -6,6 +6,8 @@
     {
         var dict = Context.Request.Query.ToDictionary();
         dict.Remove("TabIndex", out var removed);
+        dict.Remove("tabindex", out removed);
+        dict.Remove("tabIndex", out removed);
         QueryCollection queryCollection = new(dict);
         return queryCollection;
     }
