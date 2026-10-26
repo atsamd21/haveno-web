@@ -12,11 +12,10 @@ public static class AppConstants
 
     public static readonly string ApplicationVersion;
 
-    public const double MakerFeePctTraditional = 0.0015;
-    public const double TakerFeePctTraditional = 0.0075;
-    public const double MakerFeePctCrypto = 0.0015;
-    public const double TakerFeePctCrypto = 0.005;
-    public const double PenaltyFeePct = 0.25;
+    public const decimal MakerFeePctTraditional = 0.0015m;
+    public const decimal TakerFeePctTraditional = 0.0075m;
+    public const decimal MakerFeePctCrypto = 0.0015m;
+    public const decimal TakerFeePctCrypto = 0.005m;
     public const decimal MinimumTradeAmount = 0.05m;
     public const ulong MinSecurityDepositAmountPiconero = 100_000_000_000;
 
