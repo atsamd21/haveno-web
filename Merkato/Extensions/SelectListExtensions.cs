@@ -34,6 +34,10 @@ public static class SelectListExtensions
         {
             return new(paymentAccountFormField.RequiredForCountries);
         }
+        else if (paymentAccountFormField.SupportedValues.Count > 0)
+        {
+            return new(paymentAccountFormField.SupportedValues);
+        }
         else
         {
             throw new Exception();
