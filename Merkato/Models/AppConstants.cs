@@ -20,6 +20,12 @@ public static class AppConstants
     public const decimal MinimumTradeAmount = 0.05m;
     public const ulong MinSecurityDepositAmountPiconero = 100_000_000_000;
 
+#if DEBUG
+    public const bool IsDebug = true;
+#else
+        public const bool IsDebug = false;
+#endif
+
     static AppConstants()
     {
         ApplicationVersion = Assembly.GetExecutingAssembly()
