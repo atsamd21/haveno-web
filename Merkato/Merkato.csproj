@@ -50,17 +50,12 @@
 
   <ItemGroup>
     <Folder Include="Models\Input\" />
-    <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.13.0" />
     <PackageReference Include="QRCoder" Version="1.8.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\haveno-dotnet-main\haveno-dotnet\haveno-dotnet.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -72,12 +67,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\Pages\TradeModel.fr.resx">
+    <EmbeddedResource Update="Resources\Pages\AccountModel.resx">
       <SubType>Designer</SubType>
-      <LastGenOutput>TradeModel - Copy.en.Designer.cs</LastGenOutput>
+      <LastGenOutput>AccountModel.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Pages\TradeModel.en.resx">
+    <EmbeddedResource Update="Resources\Pages\Trades\TradeModel.fr.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>TradeModel.fr.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Pages\Trades\TradeModel.en.resx">
       <SubType>Designer</SubType>
       <LastGenOutput>TradeModel.en.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
