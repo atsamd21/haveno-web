@@ -54,6 +54,7 @@
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
+    <PackageReference Include="haveno-dotnet" Version="0.0.1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.13.0" />
     <PackageReference Include="QRCoder" Version="1.8.0" />
   </ItemGroup>
