@@ -4,7 +4,7 @@ using Haveno.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Merkato.Pages;
+namespace Merkato.Pages.Trades;
 
 public class MessagesModel : PageModel
 {
@@ -69,7 +69,7 @@ public class MessagesModel : PageModel
 
     public async Task<IActionResult> OnPostResolveDisputeAsync(string tradeId)
     {
-        return LocalRedirect($"/Messages/{tradeId}?isDispute=true");
+        return LocalRedirect($"/Trades/Messages/{tradeId}?isDispute=true");
     }
 
     public async Task<IActionResult> OnPostSendDisputeMessageAsync(string tradeId)
@@ -109,6 +109,6 @@ public class MessagesModel : PageModel
 
         await _disputeService.SendDisputeChatMessageAsync(request);
 
-        return LocalRedirect($"/Messages/{tradeId}?isDispute=true");
+        return LocalRedirect($"/Trades/{tradeId}/Messages?isDispute=true#last-message");
     }
 }

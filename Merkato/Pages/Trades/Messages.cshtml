@@ -1,4 +1,4 @@
-﻿@page "{tradeId}"
+﻿@page "/trades/{tradeId}/messages"
 @model MessagesModel
 @{
     ViewData["Title"] = "Messages";
@@ -23,7 +23,7 @@
                 }
             }
 
-            <li class="@(isMyMessage ? "right" : "left")" id="@(i == Model.ChatMessages.Count - 1 ? "last-message" : "")">
+            <li class="@(isMyMessage ? "right" : "left")" id="@(i == Model.ChatMessages.Count - 1 ? "last-message" : null)">
                 <p class="date">
                     @(message.Date.ToLocalTime())
                 </p>
@@ -32,23 +32,19 @@
         }
     </ul>
 
-    <form class="input-container" method="post" enctype="multipart/form-data" b-y0xkcfg8aj>
-@*         <button class="button-primary" type="submit" asp-page-handler="ResolveDispute" b-y0xkcfg8aj>
-            Resolve
-        </button> *@
-        @* <a class="button-primary" href=@($"/Trade/{Model.TradeInfo.TradeId}")>View trade</a> *@
+    <form class="input-container" method="post" enctype="multipart/form-data" b-z3juimsktr>
         <input name="IsDispute" value="@Model.IsDispute" hidden />
-        <input class="input-text" name="Message" />
+        <input class="input-text" name="Message" autocomplete="off" />
         @if (Model.IsDispute)
         {
-            <input type="file" asp-for="Attachment" b-y0xkcfg8aj />
-            <button class="send-button dispute-send" type="submit" asp-page-handler="SendDisputeMessage" b-y0xkcfg8aj>
+            <input type="file" asp-for="Attachment" b-z3juimsktr />
+            <button class="send-button dispute-send" type="submit" asp-page-handler="SendDisputeMessage" b-z3juimsktr>
                 <img src="/icons/send.svg" />
             </button>
         }
         else
         {
-            <button class="send-button" type="submit" asp-page-handler="SendMessage" b-y0xkcfg8aj>
+            <button class="send-button" type="submit" asp-page-handler="SendMessage" b-z3juimsktr>
                 <img src="/icons/send.svg" />
             </button>
         }
