@@ -4,14 +4,6 @@
     "inputFile": "wwwroot/css/site.scss"
   },
   {
-    "outputFile": "Pages/Offers.cshtml.css",
-    "inputFile": "Pages/Offers.cshtml.scss"
-  },
-  {
-    "outputFile": "Pages/Offer.cshtml.css",
-    "inputFile": "Pages/Offer.cshtml.scss"
-  },
-  {
     "outputFile": "Pages/Shared/_Modal.cshtml.css",
     "inputFile": "Pages/Shared/_Modal.cshtml.scss"
   },
@@ -20,24 +12,12 @@
     "inputFile": "Pages/Account.cshtml.scss"
   },
   {
-    "outputFile": "Pages/Trades.cshtml.css",
-    "inputFile": "Pages/Trades.cshtml.scss"
-  },
-  {
     "outputFile": "Pages/Wallet.cshtml.css",
     "inputFile": "Pages/Wallet.cshtml.scss"
   },
   {
-    "outputFile": "Pages/Trade.cshtml.css",
-    "inputFile": "Pages/Trade.cshtml.scss"
-  },
-  {
     "outputFile": "Pages/Shared/_InfoRow.cshtml.css",
     "inputFile": "Pages/Shared/_InfoRow.cshtml.scss"
-  },
-  {
-    "outputFile": "Pages/CreateOffer.cshtml.css",
-    "inputFile": "Pages/CreateOffer.cshtml.scss"
   },
   {
     "outputFile": "Pages/Shared/_Tabs.cshtml.css",
@@ -48,10 +28,6 @@
     "inputFile": "Pages/Shared/_Dropdown.cshtml.scss"
   },
   {
-    "outputFile": "Pages/Messages.cshtml.css",
-    "inputFile": "Pages/Messages.cshtml.scss"
-  },
-  {
     "outputFile": "Pages/Settings.cshtml.css",
     "inputFile": "Pages/Settings.cshtml.scss"
   },
@@ -60,7 +36,43 @@
     "inputFile": "Pages/Index.cshtml.scss"
   },
   {
-    "outputFile": "Pages/MyOffers.cshtml.css",
-    "inputFile": "Pages/MyOffers.cshtml.scss"
+    "outputFile": "Pages/Trades/Trade.cshtml.css",
+    "inputFile": "Pages/Trades/Trade.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Trades/Messages.cshtml.css",
+    "inputFile": "Pages/Trades/Messages.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Offers/Offer.cshtml.css",
+    "inputFile": "Pages/Offers/Offer.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Offers/MyOffers.cshtml.css",
+    "inputFile": "Pages/Offers/MyOffers.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Offers/CreateOffer.cshtml.css",
+    "inputFile": "Pages/Offers/CreateOffer.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Trades/Trades.cshtml.css",
+    "inputFile": "Pages/Trades/Trades.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Offers/Offers.cshtml.css",
+    "inputFile": "Pages/Offers/Offers.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Offers/EditOffer.cshtml.css",
+    "inputFile": "Pages/Offers/EditOffer.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Offers/OfferInfo.cshtml.css",
+    "inputFile": "Pages/Offers/OfferInfo.cshtml.scss"
+  },
+  {
+    "outputFile": "Pages/Shared/_TradeCard.cshtml.css",
+    "inputFile": "Pages/Shared/_TradeCard.cshtml.scss"
   }
 ]
