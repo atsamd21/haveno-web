@@ -1,9 +1,7 @@
-using Haveno.Api.Helpers;
 using Haveno.Extensions;
 using Haveno.Processes;
 using Merkato.Middleware;
 using Merkato.Models;
-using Merkato.Tor;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using System.Globalization;
