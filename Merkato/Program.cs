@@ -9,13 +9,6 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.WebHost.UseUrls("http://127.0.0.1:5000");
-
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//    builder.Configuration.GetSection("Kestrel").Bind(options);
-//});
-
 builder.Services.Configure<AppSettings>(builder.Configuration.GetRequiredSection("AppSettings"));
 
 //TorManager torManager = new();
