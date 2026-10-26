@@ -1,0 +1,16 @@
+﻿@page "/Offers/{offerId}/OfferInfo"
+@model OfferInfoModel
+@{
+    ViewData["Title"] = $"Offer {Model.OfferInfo.Id.Split("-").First()}";
+}
+
+<div class="offerinfo-main">
+    <h5>Offer info</h5>
+    <p>Please review the maker's terms and conditions.</p>
+    <p>If you do not meet the requirements do not take this trade.</p>
+    <p class="extra-info">@Model.OfferInfo.ExtraInfo</p>
+    <div class="buttons">
+        <a class="button-primary" href="@($"/Offers/{Model.OfferId}")">Confirm</a>
+        <a class="button-tertiary" href="/Offers">Go back</a>
+    </div>
+</div>

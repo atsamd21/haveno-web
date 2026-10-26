@@ -1,0 +1,29 @@
+﻿.offerinfo-main {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 8px;
+
+    h5 {
+        margin-bottom: 8px;
+    }
+
+    .extra-info {
+        height: 40px;
+        width: 100%;
+        border-radius: 8px;
+        padding: 0 10px 0;
+        border: 1px solid #153243;
+        background-color: #EEF0EB;
+        display: flex;
+        align-items: center;
+        margin: 8px 0 8px;
+    }
+
+    .buttons {
+        display: flex;
+
+        a:first-child {
+            margin-right: 8px;
+        }
+    }
+}
