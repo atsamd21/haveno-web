@@ -1,0 +1,70 @@
+﻿.edit-offer-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    .step-container {
+        min-width: 400px;
+        width: 60%;
+        min-height: 200px;
+        background-color: #eef0eb;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .first-step {
+        display: flex;
+        flex-direction: column;
+
+        .fiat-amount {
+            display: flex;
+
+            button {
+                width: 100px;
+                margin-left: 10px;
+            }
+        }
+
+        .button-continue {
+            margin-top: 10px;
+        }
+    }
+}
+
+label {
+    margin-top: 10px;
+}
+
+.last-step {
+
+    .review-top {
+        display: flex;
+
+        .currency-code {
+            margin-left: 10px;
+            /*width: 100px;*/
+        }
+    }
+
+    .review-offer-row {
+        display: flex;
+        /*align-items: flex-end;*/
+
+        .symbol {
+            align-self: center;
+            margin: 6px 8px 0;
+        }
+    }
+
+    .buttons {
+        display: flex;
+
+        button {
+
+            &:first-child {
+                margin-right: 8px;
+            }
+        }
+    }
+}
