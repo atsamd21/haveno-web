@@ -29,6 +29,8 @@ public class InteractiveToggleTagHelper : TagHelper
 
     [HtmlAttributeName("method")]
     public string Method { get; set; } = "post";
+    [HtmlAttributeName("disabled")]
+    public bool Disabled { get; set; }
 
     public InteractiveToggleTagHelper(IUrlHelperFactory urlHelperFactory, IAntiforgery antiforgery)
     {
@@ -116,7 +118,7 @@ public class InteractiveToggleTagHelper : TagHelper
                 .GetUrlHelper(ViewContext)
                 .RouteUrl(ViewContext.RouteData.Values) + $"?handler={submitMethodHandlerName}";
 
-            output.PostContent.AppendHtml("<form method=\"post\" class=\"toggle-main\">");
+            output.PostContent.AppendHtml($"<form method=\"post\" class=\"toggle-main {(Disabled ? "toggle-disabled" : "")}\">");
             var token = _antiforgery.GetAndStoreTokens(ViewContext.HttpContext);
             output.PostContent.AppendHtml($"<input name=\"{IsToggled.Name}\" value=\"{!(bool)IsToggled.Model}\" hidden/>");
             output.PostContent.AppendHtml($"<input name=\"{token.FormFieldName}\" value=\"{token.RequestToken}\" hidden/>");
@@ -133,7 +135,7 @@ public class InteractiveToggleTagHelper : TagHelper
             dict[IsToggled.Name] = (!(bool)IsToggled.Model).ToString();
             var getUrl = ViewContext.HttpContext.Request.Path + QueryString.Create(dict).ToString();
 
-            output.PostContent.AppendHtml("<div class=\"toggle-main\">");
+            output.PostContent.AppendHtml($"<div class=\"toggle-main {(Disabled ? "toggle-disabled" : "")}\">");
             output.PostContent.AppendHtml($"<input name=\"{IsToggled.Name}\" value=\"{(bool)IsToggled.Model}\" hidden/>");
             output.PostContent.AppendHtml($"<a href=\"{getUrl}\" class=\"{((bool)IsToggled.Model ? "toggle toggled" : "toggle")}\"></a>");
             output.PostContent.AppendHtml("</div>");
