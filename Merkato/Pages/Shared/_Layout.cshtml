@@ -4,10 +4,7 @@
 @{
     var version = await VersionService.GetVersionAsync();
     var walletHeight = await WalletService.GetHeightAsync();
-
-    var a = await XmrNodeService.GetConnectionAsync();
-    var b = await XmrNodeService.GetConnectionsAsync();
-    Console.WriteLine();
+    var currentPage = Context.Request.Path.Value?.Split("/").ElementAtOrDefault(1) ?? string.Empty;
 }
 
 <!DOCTYPE html>
@@ -26,12 +23,11 @@
 <body>
     <header>
         <nav>
-            <a asp-area="" asp-page="/Index">Merkato</a>
-            <a asp-area="" asp-page="/Offers">Offers</a>
-            <a asp-area="" asp-page="/Trades">Trades</a>
-            <a asp-area="" asp-page="/Wallet">Wallet</a>
-            <a asp-area="" asp-page="/Account">Account</a>
-            <a asp-area="" asp-page="/Settings">Settings</a>
+            <a href="/Offers" class="@(currentPage == "Offers" ? "active" : "")">Offers</a>
+            <a href="/Trades" class="@(currentPage == "Trades" ? "active" : "")">Trades</a>
+            <a href="/Wallet" class="@(currentPage == "Wallet" ? "active" : "")">Wallet</a>
+            <a href="/Account" class="@(currentPage == "Account" ? "active" : "")">Account</a>
+            <a href="/Settings" class="@(currentPage == "Settings" ? "active" : "")">Settings</a>
         </nav>
     </header>
     <main role="main">
