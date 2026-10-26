@@ -13,6 +13,17 @@ label {
     margin-top: 10px;
 }
 
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    label {
+        margin: 0;
+        margin-left: 8px;
+    }
+}
+
 .step-container {
     min-width: 400px;
     width: 60%;
@@ -31,13 +42,51 @@ label {
 
     button {
     }
+/*
+    .top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h5 {
+            align-self: flex-start;
+        }
+    }*/
+
+    .radio-container {
+
+    }
 }
 
 .second-step {
+    display: flex;
+    flex-direction: column;
 
+    form {
+        margin-top: 4px;
+    }
+
+    .no-deposit {
+        display: flex;
+        align-items: center;
+        /*margin-top: 4px;*/
+        margin-top: 8px;
+        margin-bottom: auto;
+        /*align-self: center;*/
+
+        img {
+            height: 18px;
+            width: 18px;
+            filter: invert(1);
+            margin-right: 4px;
+        }
+    }
 }
 
 .third-step {
+    max-height: 90%;
+    overflow: auto;
+
     .inputs {
         display: flex;
         flex-direction: column;
@@ -51,6 +100,7 @@ label {
             display: flex;
 
             .input-container {
+                width: 200px;
 
                 &:first-child {
                     margin-right: 10px;
@@ -64,7 +114,7 @@ label {
             .dash-container {
 
                 .dash {
-                    margin-top: 47px;
+                    margin-top: 43px;
                     height: 2px;
                     width: 6px;
                     background-color: #153243;
@@ -106,10 +156,17 @@ label {
 
     .review-offer-row {
         display: flex;
+        /*align-items: flex-end;*/
+
+        .symbol {
+            align-self:center;
+            margin: 6px 8px 0;
+        }
     }
 
     .buttons {
         display: flex;
+        margin-top: 8px;
 
         button {
 
@@ -118,4 +175,12 @@ label {
             }
         }
     }
+
+    .fees {
+        margin-top: 8px;
+    }
+}
+
+h5 {
+    margin-bottom: 8px;
 }

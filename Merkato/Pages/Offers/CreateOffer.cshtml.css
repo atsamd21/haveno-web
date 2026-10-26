@@ -13,6 +13,16 @@ label {
   margin-top: 10px;
 }
 
+.toggle-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.toggle-container label {
+  margin: 0;
+  margin-left: 8px;
+}
+
 .step-container {
   min-width: 400px;
   width: 60%;
@@ -28,6 +38,42 @@ label {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  /*
+      .top {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          h5 {
+              align-self: flex-start;
+          }
+      }*/
+}
+.second-step {
+  display: flex;
+  flex-direction: column;
+}
+.second-step form {
+  margin-top: 4px;
+}
+.second-step .no-deposit {
+  display: flex;
+  align-items: center;
+  /*margin-top: 4px;*/
+  margin-top: 8px;
+  margin-bottom: auto;
+  /*align-self: center;*/
+}
+.second-step .no-deposit img {
+  height: 18px;
+  width: 18px;
+  filter: invert(1);
+  margin-right: 4px;
+}
+
+.third-step {
+  max-height: 90%;
+  overflow: auto;
 }
 .third-step .inputs {
   display: flex;
@@ -40,6 +86,9 @@ label {
 .third-step .inputs .amounts {
   display: flex;
 }
+.third-step .inputs .amounts .input-container {
+  width: 200px;
+}
 .third-step .inputs .amounts .input-container:first-child {
   margin-right: 10px;
 }
@@ -47,7 +96,7 @@ label {
   display: block;
 }
 .third-step .inputs .amounts .dash-container .dash {
-  margin-top: 47px;
+  margin-top: 43px;
   height: 2px;
   width: 6px;
   background-color: #153243;
@@ -78,10 +127,23 @@ label {
 }
 .fourth-step .review-offer-row {
   display: flex;
+  /*align-items: flex-end;*/
+}
+.fourth-step .review-offer-row .symbol {
+  align-self: center;
+  margin: 6px 8px 0;
 }
 .fourth-step .buttons {
   display: flex;
+  margin-top: 8px;
 }
 .fourth-step .buttons button:first-child {
   margin-right: 8px;
+}
+.fourth-step .fees {
+  margin-top: 8px;
+}
+
+h5 {
+  margin-bottom: 8px;
 }

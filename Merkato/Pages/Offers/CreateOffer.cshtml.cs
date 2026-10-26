@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Globalization;
 
-namespace Merkato.Pages;
+namespace Merkato.Pages.Offers;
 
 public class CreateOfferModel : PageModel
 {
@@ -25,13 +25,7 @@ public class CreateOfferModel : PageModel
     #region Step 2
     [BindProperty(SupportsGet = true)]
     public int TabIndex { get; set; }
-    public Tabs Tabs { get; set; }
 
-    [BindProperty(SupportsGet = true)]
-    public bool CloseModal { get; set; }
-    public Modal? NoPaymentAccountsModal { get; set; }
-
-    public Dropdown PaymentAccountsDropdown { get; set; }
     public PaymentAccount? PaymentAccount { get; set; }
     public List<PaymentAccount> PaymentAccounts { get; set; } = [];
 
@@ -39,6 +33,8 @@ public class CreateOfferModel : PageModel
     public string? PaymentAccountId { get; set; }
     [BindProperty(SupportsGet = true)]
     public string? CurrencyCode { get; set; }
+
+    public Dictionary<string, string> PaymentAccountsDictionary { get; set; } = [];
     #endregion
 
     #region Step 3
@@ -52,8 +48,6 @@ public class CreateOfferModel : PageModel
     public decimal? PriceForOneXMR { get; set; }
     [BindProperty(SupportsGet = true)]
     public string ExtraInfo { get; set; } = string.Empty;
-    //[BindProperty(SupportsGet = true)]
-    //public decimal SecurityDepositPercent { get; set; } = 15;
     [BindProperty(SupportsGet = true)]
     public decimal? TriggerPrice { get; set; }
     [BindProperty(SupportsGet = true)]
@@ -67,27 +61,29 @@ public class CreateOfferModel : PageModel
     [BindProperty(SupportsGet = true)]
     public decimal? PriceForTotalAmount { get; set; }
 
-    // 
-    [BindProperty(SupportsGet = true)]
-    public bool UseExactReceiveAmount { get; set; }
-
-    // 
     [BindProperty(SupportsGet = true)]
     public string SecurityDepositPercent { get; set; } = "15";
     public Dictionary<string, string> SecurityDepositPercentDict { get; set; } = [];
 
     //
-    public ulong TradeFee { get; set; }
-    public ulong RequiredFunds { get; set; }
-    public ulong SecurityDepositAmount { get; set; }
+    public ulong TradeFeePiconero { get; set; }
+    public ulong SecurityDepositAmountPiconero { get; set; }
+    public ulong TotalRequiredFundsPiconero { get; set; }
     public bool UseMinimumSecurityDeposit { get; set; }
     public decimal TradeFeeInCounterCurrency { get; set; }
+    // Whats the max that the user can sell/buy when fees and deposits are included
+    public ulong MaxSpendableFunds { get; set; }
+    public ulong AvailableBalance { get; set; }
 
     #endregion
 
     // All
     [BindProperty(SupportsGet = true)]
     public int Step { get; set; }
+
+    // Fetch price once on initial
+    [BindProperty(SupportsGet = true)]
+    public decimal? Price { get; set; }
 
     public CreateOfferModel(
         ILogger<CreateOfferModel> logger,
@@ -105,7 +101,6 @@ public class CreateOfferModel : PageModel
 
     private async Task Initialize()
     {
-        // ?
         if (IsNoDepositOffer)
             IsPrivateOffer = true;
 
@@ -114,30 +109,13 @@ public class CreateOfferModel : PageModel
             SecurityDepositPercentDict.Add(i.ToString(), $"{i}%");
         }
 
-        Tabs = new(["Traditional", "Crypto"], TabIndex);
-
         var paymentAccounts = await _paymentAccountService.GetPaymentAccountsAsync();
 
         PaymentAccounts = FilterHelper.FilterCryptoOrTraditionalPaymentAccounts(
             paymentAccounts,
             TabIndex == 0 ? PaymentAccountFilter.Traditional : PaymentAccountFilter.Crypto).ToList();
 
-        if (PaymentAccounts.Count == 0)
-        {
-            if (!CloseModal && Step == 1)
-            {
-                NoPaymentAccountsModal = new Modal("No payment accounts", "RedirectToAccount")
-                {
-                    SubmitButtonText = "Set up a new trading account",
-                    Information = ["You don't have a payment account set up for the selected currency."],
-                    CloseParameters = new Dictionary<string, string> 
-                    { 
-                        { "CloseModal", "true" } 
-                    }
-                };
-            }
-        }
-        else
+        if (PaymentAccounts.Count != 0)
         {
             PaymentAccount = PaymentAccounts.FirstOrDefault(x => x.Id == PaymentAccountId);
             if (PaymentAccount is null)
@@ -149,75 +127,160 @@ public class CreateOfferModel : PageModel
             else
             {
                 PaymentAccount = PaymentAccounts.First(x => x.Id == PaymentAccountId);
+                // Other fields are supplied by hidden inputs
             }
-        }
-
-        // ?
-        if (Step == 2 || Step == 3)
-        {
-            await CalculateRequiredFundsAsync();
         }
 
         // Only needed for step 1
-        PaymentAccountsDropdown = new Dropdown(
-            PaymentAccounts.ToDictionary(x => x.Id, x => x.AccountName),
-            PaymentAccountId);
+        PaymentAccountsDictionary = PaymentAccounts.ToDictionary(x => x.Id, x => x.AccountName);
+
+        try
+        {
+            if (Price is null)
+            {
+                // This is very slow when it throws
+                Price = await _priceService.GetMarketPriceAsync(CurrencyCode);
+            }
+        }
+        catch
+        {
+            UseMarketBasedPrice = false;
+        }
+
+        if (Step == 2)
+        {
+            await CalculateMaxSpendableFundsAsync();
+
+            if (MaxAmount is not null)
+                await CalculateRequiredFundsAsync(MaxAmount.Value.ToPiconero());
+        }
     }
 
-    public async Task CalculateRequiredFundsAsync()
+    private ulong CalculateTradeFeeAmountPiconero(ulong piconeroAmount)
     {
-        if (MaxAmount is null)
+        var isFiat = TabIndex == 0;
+
+        decimal feePercent;
+        if (isFiat)
+            feePercent = AppConstants.MakerFeePctTraditional;
+        else
+            feePercent = AppConstants.MakerFeePctCrypto;
+
+        if (OfferDirection == OfferDirection.SELL && IsNoDepositOffer)
+        {
+            if (isFiat)
+                feePercent += AppConstants.TakerFeePctTraditional;
+            else
+                feePercent += AppConstants.TakerFeePctCrypto;
+        }
+
+        return (ulong)(piconeroAmount * feePercent);
+    }
+
+    private ulong CalculateDepositAmountPiconero(ulong piconeroAmount)
+    {
+        var securityDepositPercent = decimal.Parse(SecurityDepositPercent, CultureInfo.InvariantCulture) / 100m;
+        ulong securityDepositAmount = (ulong)(piconeroAmount * securityDepositPercent);
+
+        if (securityDepositAmount < AppConstants.MinSecurityDepositAmountPiconero)
+        {
+            return AppConstants.MinSecurityDepositAmountPiconero;
+        }
+
+        return securityDepositAmount;
+    }
+
+    private async Task CalculateMaxSpendableFundsAsync()
+    {
+        var balances = await _walletService.GetBalancesAsync();
+        decimal availableFundsPiconero = balances.AvailableBalance;
+        AvailableBalance = balances.AvailableBalance;
+
+        if (AvailableBalance == 0)
+        {
+            MaxSpendableFunds = 0;
             return;
+        }
 
         var isFiat = TabIndex == 0;
-        var piconeroAmount = MaxAmount.Value.ToPiconero();
-        var securityDepositPercent = decimal.Parse(SecurityDepositPercent, CultureInfo.InvariantCulture);
+
+        decimal feePercent;
+        if (isFiat)
+            feePercent = AppConstants.MakerFeePctTraditional;
+        else
+            feePercent = AppConstants.MakerFeePctCrypto;
+
+        if (OfferDirection == OfferDirection.SELL && IsNoDepositOffer)
+        {
+            if (isFiat)
+                feePercent += AppConstants.TakerFeePctTraditional;
+            else
+                feePercent += AppConstants.TakerFeePctCrypto;
+        }
+
+        var securityDepositPercent = decimal.Parse(SecurityDepositPercent, CultureInfo.InvariantCulture) / 100m;
 
         if (OfferDirection == OfferDirection.BUY)
         {
-            if (isFiat)
-                TradeFee = (ulong)(piconeroAmount * AppConstants.MakerFeePctTraditional);
+            decimal min = (availableFundsPiconero - AppConstants.MinSecurityDepositAmountPiconero) / feePercent;
+
+            decimal normal = availableFundsPiconero / (feePercent + securityDepositPercent);
+
+            var max = Math.Min(normal, min);
+            if (max < 0m)
+                MaxSpendableFunds = 0;
             else
-                TradeFee = (ulong)(piconeroAmount * AppConstants.MakerFeePctCrypto);
-
-            SecurityDepositAmount = (ulong)(piconeroAmount * (securityDepositPercent / 100m));
-
-            if (SecurityDepositAmount < AppConstants.MinSecurityDepositAmountPiconero)
-            {
-                SecurityDepositAmount = AppConstants.MinSecurityDepositAmountPiconero;
-                UseMinimumSecurityDeposit = true;
-            }
-
-            RequiredFunds = SecurityDepositAmount + TradeFee;
+                MaxSpendableFunds = (ulong)max;
         }
         else
         {
-            double tradeFeePct;
+            decimal min = (availableFundsPiconero - AppConstants.MinSecurityDepositAmountPiconero) / (1m + feePercent);
 
-            if (isFiat)
-                tradeFeePct = IsNoDepositOffer ? (AppConstants.MakerFeePctTraditional + AppConstants.TakerFeePctTraditional) : AppConstants.MakerFeePctTraditional;
+            decimal normal = availableFundsPiconero / (1m + feePercent + securityDepositPercent);
+
+            var max = Math.Min(normal, min);
+            if (max < 0m)
+                MaxSpendableFunds = 0;
             else
-                tradeFeePct = IsNoDepositOffer ? (AppConstants.MakerFeePctCrypto + AppConstants.TakerFeePctCrypto) : AppConstants.MakerFeePctCrypto;
+                MaxSpendableFunds = (ulong)max;
 
-            TradeFee = (ulong)(piconeroAmount * tradeFeePct);
-            SecurityDepositAmount = (ulong)(piconeroAmount * (securityDepositPercent / 100m));
-
-            if (SecurityDepositAmount < AppConstants.MinSecurityDepositAmountPiconero)
+            if (IsNoDepositOffer && (1.5m.ToPiconero() < MaxSpendableFunds))
             {
-                SecurityDepositAmount = AppConstants.MinSecurityDepositAmountPiconero;
-                UseMinimumSecurityDeposit = true;
+                MaxSpendableFunds = 1.5m.ToPiconero();
             }
-
-            RequiredFunds = piconeroAmount + SecurityDepositAmount + TradeFee;
         }
-
-        var price = await _priceService.GetMarketPriceAsync(CurrencyCode);
-        TradeFeeInCounterCurrency = Math.Round(TradeFee.ToMonero() * price, isFiat ? 2 : 8);
     }
 
-    public IActionResult OnPostRedirectToAccount()
+    private async Task CalculateRequiredFundsAsync(ulong piconeroAmount)
     {
-        return LocalRedirect("/Account");
+        var priceFetchTask = _priceService.GetMarketPriceAsync(CurrencyCode!);
+
+        TradeFeePiconero = CalculateTradeFeeAmountPiconero(piconeroAmount);
+        SecurityDepositAmountPiconero = CalculateDepositAmountPiconero(piconeroAmount);
+
+        if (SecurityDepositAmountPiconero == AppConstants.MinSecurityDepositAmountPiconero)
+        {
+            UseMinimumSecurityDeposit = true;
+        }
+
+        if (OfferDirection == OfferDirection.BUY)
+        {
+            TotalRequiredFundsPiconero = SecurityDepositAmountPiconero + TradeFeePiconero;
+        }
+        else
+        {
+            TotalRequiredFundsPiconero = piconeroAmount + SecurityDepositAmountPiconero + TradeFeePiconero;
+        }
+
+        try
+        {
+            var isFiat = TabIndex == 0;
+            TradeFeeInCounterCurrency = Math.Round(TradeFeePiconero.ToMonero() * await priceFetchTask, isFiat ? 2 : 8, MidpointRounding.AwayFromZero);
+        }
+        catch
+        {
+            // Could not fetch price, might have no price data
+        }
     }
 
     public async Task OnGetAsync()
@@ -225,20 +288,25 @@ public class CreateOfferModel : PageModel
         await Initialize();
     }
 
-    // ?
     public async Task OnPostLastStepAsync()
     {
         Step = 3;
-        //await Initialize();
 
-        // temp
         await OnPostCalculateAsync();
+
+        await CalculateMaxSpendableFundsAsync();
+
+        if (MaxAmount is not null)
+            await CalculateRequiredFundsAsync(MaxAmount.Value.ToPiconero());
     }
 
     public async Task OnPostPreviousStepAsync()
     {
         Step = 2;
         await Initialize();
+
+        // redirect with query params?
+        // if you naviagate back the toggles reset the form
     }
 
     public async Task<IActionResult> OnPostCalculateAsync()
@@ -261,8 +329,6 @@ public class CreateOfferModel : PageModel
             }
         }
 
-        var price = await _priceService.GetMarketPriceAsync(CurrencyCode);
-
         if (UseMarketBasedPrice)
         {
             // Already checked
@@ -272,12 +338,12 @@ public class CreateOfferModel : PageModel
             if (OfferDirection == OfferDirection.BUY)
             {
                 // Below market
-                PriceForOneXMR = (1m - (MarketPriceMarginPercent.Value / 100m)) * price;
+                PriceForOneXMR = (1m - (MarketPriceMarginPercent.Value / 100m)) * Price;
             }
             else
             {
                 // Above
-                PriceForOneXMR = (1m + (MarketPriceMarginPercent.Value / 100m)) * price;
+                PriceForOneXMR = (1m + (MarketPriceMarginPercent.Value / 100m)) * Price;
             }
         }
         else
@@ -286,21 +352,36 @@ public class CreateOfferModel : PageModel
             if (PriceForOneXMR is null)
                 throw new Exception();
 
-            MarketPriceMarginPercent = Math.Round((1m - (PriceForOneXMR.Value / price)) * 100m, 2);
+            if (Price is not null)
+            {
+                MarketPriceMarginPercent = Math.Round((1m - (PriceForOneXMR.Value / Price.Value)) * 100m, 2, MidpointRounding.AwayFromZero);
+            }
         }
 
-        // TODO Check this, should PriceForOneXMR be rounded first?
         if (TabIndex == 0)
         {
             // If traditional
-            PriceForTotalAmount = Math.Round(PriceForOneXMR.Value * MaxAmount.Value);
-            PriceForOneXMR = Math.Round(PriceForOneXMR.Value, 4);
+            PriceForOneXMR = Math.Round(PriceForOneXMR.Value, 4, MidpointRounding.AwayFromZero);
+            PriceForTotalAmount = Math.Round(PriceForOneXMR.Value * MaxAmount.Value, MidpointRounding.AwayFromZero);
+
+            var amount = Math.Round(PriceForTotalAmount.Value / PriceForOneXMR.Value, 4, MidpointRounding.AwayFromZero);
+            if (MaxAmount == MinAmount)
+            {
+                MinAmount = amount;
+            }
+            else
+            {
+                var priceForTotalAmountMinimum = Math.Round(PriceForOneXMR.Value * MinAmount.Value, MidpointRounding.AwayFromZero);
+                MinAmount = Math.Round(priceForTotalAmountMinimum / PriceForOneXMR.Value, 4, MidpointRounding.AwayFromZero);
+            }
+
+            MaxAmount = amount;
         }
         else
         {
             // Crypto
-            PriceForTotalAmount = Math.Round(PriceForOneXMR.Value * MaxAmount.Value, 8);
-            PriceForOneXMR = Math.Round(PriceForOneXMR.Value, 8);
+            PriceForOneXMR = Math.Round(PriceForOneXMR.Value, 8, MidpointRounding.AwayFromZero);
+            PriceForTotalAmount = Math.Round(PriceForOneXMR.Value * MaxAmount.Value, 8, MidpointRounding.AwayFromZero);
         }
 
         // Needed to preserve url query params for toggles
@@ -321,7 +402,9 @@ public class CreateOfferModel : PageModel
             IsNoDepositOffer,
             ReserveExactAmount,
             IsPrivateOffer,
-            PriceForTotalAmount
+            PriceForTotalAmount,
+            TabIndex,
+            Price
         });
     }
 
@@ -340,7 +423,7 @@ public class CreateOfferModel : PageModel
             SecurityDepositPercent = (double)(securityDepositPercent / 100m),
             ReserveExactAmount = ReserveExactAmount,
             ExtraInfo = ExtraInfo,
-            TriggerPrice = TriggerPrice ?? 0,
+            TriggerPrice = TriggerPrice ?? 0m,
             UseMarketBasedPrice = UseMarketBasedPrice,
             // If is no deposit its also a private offer
             IsNoDepositOffer = IsNoDepositOffer,
@@ -358,6 +441,6 @@ public class CreateOfferModel : PageModel
 
         await _offersService.PostOfferAsync(postOfferRequest);
 
-        return LocalRedirect("/MyOffers");
+        return LocalRedirect("/Offers/MyOffers");
     }
 }
