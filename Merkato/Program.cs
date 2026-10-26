@@ -1,6 +1,7 @@
 using Haveno.Api.Helpers;
 using Haveno.Extensions;
 using Haveno.Processes;
+using Merkato.Middleware;
 using Merkato.Models;
 using Merkato.Tor;
 using Microsoft.AspNetCore.Localization;
@@ -60,27 +61,6 @@ app.MapRazorPages()
 
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
-// Move this
-// Also breaks if user for some reason chooses to navigate to the settings page before any other page has loaded
-app.Use(async (context, next) =>
-{
-    if (!context.Request.Cookies.ContainsKey("currency"))
-    {
-        context.Response.Cookies.Append(
-            "currency",
-            CurrencyHelper.FiatCurrenciesDictionary.First().Key,
-            new CookieOptions
-            {
-                Expires = DateTimeOffset.UtcNow.AddYears(1),
-                IsEssential = true,
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Path = "/"
-            });
-    }
-
-    await next();
-});
+app.UsePreferences();
 
 app.Run();
