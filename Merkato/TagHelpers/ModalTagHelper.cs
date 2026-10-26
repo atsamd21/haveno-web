@@ -28,6 +28,10 @@ public class ModalTagHelper : TagHelper
     [HtmlAttributeName("can-close")]
     public bool CanClose { get; set; } = true;
 
+    // Will append these query params on close
+    [HtmlAttributeName("close-route-id-", DictionaryAttributePrefix = "close-route-id-")]
+    public Dictionary<string, string> RouteIds { get; set; } = [];
+
     public ModalTagHelper(IUrlHelperFactory urlHelperFactory, IAntiforgery antiforgery)
     {
         _urlHelperFactory = urlHelperFactory;
@@ -40,12 +44,26 @@ public class ModalTagHelper : TagHelper
 
         var dict = ViewContext.HttpContext.Request.Query.ToDictionary();
 
-        foreach(var keyValuePair in dict)
+        foreach (var keyValuePair in dict)
         {
             if (keyValuePair.Key == IsOpen.Name)
             {
                 dict.Remove(keyValuePair.Key);
             }
+            else if (keyValuePair.Key == "handler")
+            {
+                dict.Remove(keyValuePair.Key);
+            }
+        }
+
+        foreach (var keyValuePair in RouteIds)
+        {
+            if (RouteIds.ContainsKey(keyValuePair.Key))
+            {
+                dict.Remove(keyValuePair.Key);
+            }
+
+            dict.Add(keyValuePair.Key, keyValuePair.Value);
         }
 
         QueryCollection query = new(dict);
@@ -120,7 +138,7 @@ public class ModalTagHelper : TagHelper
         output.PostContent.AppendHtml($"<a href={GetCurrentUrl()} class=\"modal-background-tag\"></a>");
         output.PostContent.AppendHtml("<div class=\"modal-tag\">");
         output.PostContent.AppendHtml("<div class=\"modal-top\">");
-        output.PostContent.AppendHtml($"<img src=\"icons/info.svg\" class=\"info-icon\"/>");
+        output.PostContent.AppendHtml($"<img src=\"/icons/info.svg\" class=\"info-icon\"/>");
         output.PostContent.AppendHtml($"<p class=\"title\">{Title}</p>");
         output.PostContent.AppendHtml($"<a href={GetCurrentUrl()}>");
         output.PostContent.AppendHtml("<i class=\"bi bi-x\"></i>");
