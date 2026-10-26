@@ -1,0 +1,198 @@
+﻿@page "/Offers/{offerId}"
+@inject IStringLocalizer<AccountModel> Localizer
+@inject IHtmlLocalizer<AccountModel> HtmlLocalizer
+@inject IPriceService PriceService
+@inject IWalletService WalletService
+@model OfferModel
+
+@{
+    ViewData["Title"] = $"Offer {Model.OfferInfo.Id.Split("-").First()}";
+    var hasAmountRange = Model.OfferInfo.MinAmount != Model.OfferInfo.Amount;
+    var offer = Model.OfferInfo;
+
+    decimal price;
+
+    try
+    {
+        price = await PriceService.GetMarketPriceAsync(offer.CounterCurrencyCode);
+    }
+    catch
+    {
+        price = 0m;
+    }
+}
+
+<form method="post" class="offer-main" b-jk7phxw8gw>
+    <div class="top">
+        <h5>Take offer</h5>
+        <partial model="@(new InfoRow("Offer Id", Model.OfferInfo.Id))" name="_InfoRow" />
+        <div class="trading-account-info">
+            <label>Trading account</label>
+            <div class="trading-accounts-list-container">
+                <select class="select" name="PaymentAccountId">
+                    @foreach (var paymentAccount in Model.PaymentAccounts)
+                    {
+                        <option selected=@(@paymentAccount.Id == Model.PaymentAccountId) value="@paymentAccount.Id" b-jk7phxw8gw>
+                            @Localizer[paymentAccount.PaymentMethod.Id.ToString()]: @paymentAccount.AccountName
+                        </option>
+                    }
+                </select>
+                <div class="currency">
+                    <p>@Model.OfferInfo.CounterCurrencyCode</p>
+                </div>
+            </div>
+        </div>
+        <partial model="@(new InfoRow("Price", $"{offer.Price.ToString(offer.IsFiat() ? "0.0000" : "0.00000000")} {offer.CounterCurrencyCode} ({Math.Round((await offer.GetPricePercentageAsync(PriceService)) * 100, 2, MidpointRounding.AwayFromZero)}%)"))" name="_InfoRow" />
+    </div>
+
+    <div class="offer-amount-section">
+        <div class="offer-amount-top" style="@(Model.UseCounterCurrency ? "flex-direction:column-reverse;" : "")">
+            <div class="input-container">
+                <label>@(offer.Direction == OfferDirection.BUY ? "SELL" : "BUY")</label>
+                <input readonly="@(Model.UseCounterCurrency || !hasAmountRange)"
+                       type="number"
+                       step="0.0001"
+                       value="@Model.XmrAmount.ToString("0.0000")"
+                       min="@(hasAmountRange ? Model.OfferInfo.MinAmount.ToMonero() : null)"
+                       max="@Model.OfferInfo.Amount.ToMonero()"
+                       name="XmrAmount" />
+
+                <div class="currency">@Model.OfferInfo.BaseCurrencyCode</div>
+                @if (hasAmountRange)
+                {
+                    <p class="note">Range: @Model.OfferInfo.MinAmount.ToMonero().ToString("0.0000")ɱ - @Model.OfferInfo.Amount.ToMonero().ToString("0.0000")ɱ</p>
+                }
+            </div>
+
+            @* preserve trading account? *@
+            <a href="@($"/Offers/{Model.OfferInfo.Id}?UseCounterCurrency={!Model.UseCounterCurrency}")" class="swap-direction-button">
+                <i class="bi bi-arrow-down-up"></i>
+            </a>
+
+            <div class="input-container">
+                <label>@(offer.Direction == OfferDirection.BUY ? "RECEIVE" : "SPEND")</label>
+                <input 
+                    min="@(hasAmountRange ? Model.OfferInfo.CounterCurrencyMinVolume : null)"
+                    max="@Model.OfferInfo.CounterCurrencyVolume"
+                    readonly="@(!Model.UseCounterCurrency || !hasAmountRange)" 
+                    type="number" 
+                    name="CounterCurrencyAmount" 
+                    value="@Model.CounterCurrencyAmount.ToString(Model.OfferInfo.IsFiat() ? "0.00" : "0.00000000")" 
+                    step="@(Model.OfferInfo.IsFiat() ? "1" : "0.00000001")" />
+                <div class="currency">@Model.OfferInfo.CounterCurrencyCode</div>
+                @if (hasAmountRange)
+                {
+                    <p class="note">Range: @offer.CounterCurrencyMinVolume @offer.CounterCurrencyCode - @offer.CounterCurrencyVolume @offer.CounterCurrencyCode</p>
+                }
+            </div>
+        </div>
+
+        <input asp-for="UseCounterCurrency" hidden />
+        <input asp-for="HasLoaded" hidden />
+        <button disabled="@(!hasAmountRange)" class="button-primary" asp-page-handler="CalculatePrice" b-jk7phxw8gw>Update price</button>
+
+        <div>
+            @if (Model.OfferInfo.BuyerSecurityDepositPercent == 0)
+            {
+                <div class="no-deposit">
+                    <img src="/icons/warning.svg" />
+                    <p>No deposit offer</p>
+                </div>
+            }
+            @if (Model.OfferInfo.IsPrivateOffer)
+            {
+                <div class="no-deposit">
+                    <img src="/icons/warning.svg" />
+                    <p>Passphrase required</p>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="fees">
+        <div class="row">
+            <label>Security deposit</label>
+            <p>@($"{offer.GetTakerDepositAmount(Model.XmrAmount)}ɱ ≈{(price * offer.GetTakerDepositAmount(Model.XmrAmount)).ToString(offer.IsFiat() ? "0.00" : "0.00000000")} {offer.CounterCurrencyCode} / {Math.Round(offer.GetTakerDepositPercent(Model.XmrAmount.ToPiconero()) * 100m, 2, MidpointRounding.AwayFromZero)}%")</p>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <label>Trade fee</label>
+            <p>@($"{offer.GetTakerFeeAmount(Model.XmrAmount)}ɱ ≈{(price * (offer.TakerFeePercent * Model.XmrAmount)).ToString(offer.IsFiat() ? "0.00" : "0.00000000")} {offer.CounterCurrencyCode} / {Math.Round(offer.TakerFeePercent * 100, 2, MidpointRounding.AwayFromZero)}%")</p>
+        </div>
+    </div>
+    <button class="button-primary review-button" asp-page-handler="ReviewTakeOffer" type="submit" b-jk7phxw8gw>Review take offer</button>
+</form>
+<modal 
+    close-route-id-XmrAmount="@Model.XmrAmount"
+    close-route-id-PaymentAccountId="@Model.PaymentAccountId"
+    close-route-id-CounterCurrencyAmount="@Model.CounterCurrencyAmount"
+    close-route-id-UseCounterCurrency="@Model.UseCounterCurrency"
+    close-route-id-HasLoaded="@Model.HasLoaded"
+    is-open="@Model.IsTakeOfferModalOpen"
+    title="Review offer" 
+    submit-text="Take offer" 
+    submit-method="TakeOffer">
+    @{
+        var offer = Model.OfferInfo;
+        if (!offer.UseMarketBasedPrice)
+        {
+            offer.MarketPriceMarginPercent = (double)(await offer.GetFixedPricePercentageAsync(PriceService));
+        }
+
+        var balances = await WalletService.GetBalancesAsync();
+
+        var totalRequired = offer.GetTakerTotalRequiredAmount(Model.XmrAmount);
+
+        var differenceInMonero = balances.AvailableBalance.ToMonero() - totalRequired;
+    }
+    <input value="@Model.PaymentAccountId" name="PaymentAccountId" hidden />
+    <input value="@Model.XmrAmount" name="XmrAmount" hidden />
+    <p>ID: @offer.Id</p>
+    <p>Maker's address: @offer.OwnerNodeAddress</p>
+    <p>Account: @Model.PaymentAccount?.AccountName</p>
+    <p>Amount you are @(offer.Direction == OfferDirection.BUY ? "selling" : "buying"): @Model.XmrAmount XMR</p>
+    <p>Price: @(offer.IsFiat() ? offer.Price.ToString("0.0000") : offer.Price.ToString("0.00000000")) @offer.CounterCurrencyCode (@Math.Round(offer.MarketPriceMarginPercent * 100, offer.IsFiat() ? 2 : 8, MidpointRounding.AwayFromZero).ToString("0.00")%)</p>
+    <p>Amount in @offer.CounterCurrencyCode to @(offer.Direction == OfferDirection.BUY ? "receive" : "spend"): @((Model.XmrAmount * offer.Price).ToString("0")) @offer.CounterCurrencyCode</p>
+@*     <p>Buyer deposit: @(offer.BuyerSecurityDepositPercent * 100)%</p>
+    <p>Seller deposit: @(offer.SellerSecurityDepositPercent * 100)%</p> *@
+    <div class="divider"></div>
+    @if (offer.IsPrivateOffer)
+    {
+        <div class="no-deposit">
+            <img src="/icons/warning.svg" />
+            <p>Passphrase required</p>
+        </div>
+        <textarea required placeholder="Enter passphrase" class="textarea" value="@Model.Passphrase" name="Passphrase"></textarea>
+        <div class="space"></div>
+    }
+    <div class="fees modal-fees">
+        <div class="row">
+            <label>Security deposit</label>
+            <p>@($"{offer.GetTakerDepositAmount(Model.XmrAmount)}ɱ ≈{(price * offer.GetTakerDepositAmount(Model.XmrAmount)).ToString(offer.IsFiat() ? "0.00" : "0.00000000")} {offer.CounterCurrencyCode} / {Math.Round(offer.GetTakerDepositPercent(Model.XmrAmount.ToPiconero()) * 100m, 2, MidpointRounding.AwayFromZero)}%")</p>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <label>Trade fee</label>
+            <p>@($"{offer.GetTakerFeeAmount(Model.XmrAmount)}ɱ ≈{(price * (offer.TakerFeePercent * Model.XmrAmount)).ToString(offer.IsFiat() ? "0.00" : "0.00000000")} {offer.CounterCurrencyCode} / {Math.Round(offer.TakerFeePercent * 100, 2, MidpointRounding.AwayFromZero)}%")</p>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <label>Total required</label>
+            <p>@($"{totalRequired}ɱ ≈{(price * ((offer.TakerFeePercent * Model.XmrAmount) + offer.GetTakerDepositPercent(Model.XmrAmount.ToPiconero()))).ToString(offer.IsFiat() ? "0.00" : "0.00000000")} {offer.CounterCurrencyCode}")</p>
+        </div>
+    </div>
+    <div class="divider"></div>
+    @if (differenceInMonero < 0)
+    {
+        var address = await WalletService.GetXmrPrimaryAddressAsync();
+
+        <div class="missing-funds">
+            <div class="top">
+                <img src="/icons/warning.svg" />
+                <p>Not enough funds available to take offer</p>
+            </div>
+
+            <partial model="@(new InfoRow("Trade wallet address", address))" name="_InfoRow" />
+            <partial model="@(new InfoRow("Missing funds", $"{(Math.Abs(differenceInMonero)).ToString()}ɱ"))" name="_InfoRow" />
+        </div>
+    }
+</modal>
