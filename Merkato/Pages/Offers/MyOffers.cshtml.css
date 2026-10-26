@@ -70,3 +70,7 @@
   filter: invert(1);
   margin-right: 4px;
 }
+
+.toggle-container {
+  margin-top: 8px;
+}

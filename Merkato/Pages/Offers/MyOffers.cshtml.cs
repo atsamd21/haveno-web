@@ -1,10 +1,9 @@
 using Haveno.Api.Models;
-using Haveno.Api.Models.Requests;
 using Haveno.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Merkato.Pages;
+namespace Merkato.Pages.Offers;
 
 public class MyOffersModel : PageModel
 {
@@ -49,6 +48,26 @@ public class MyOffersModel : PageModel
     public async Task OnPostRemoveOfferAsync(string offerId)
     {
         await _offersService.CancelOfferAsync(offerId);
+        await Initialize();
+    }
+
+    public async Task OnPostDeactivateOffer(string offerId)
+    {
+        await _offersService.DeactivateOfferAsync(offerId);
+
+        IsOfferInfoModalOpen = true;
+        OfferInfo = await _offersService.GetMyOfferAsync(offerId);
+
+        await Initialize();
+    }
+
+    public async Task OnPostActivateOffer(string offerId)
+    {
+        await _offersService.ActivateOfferAsync(offerId);
+
+        IsOfferInfoModalOpen = true;
+        OfferInfo = await _offersService.GetMyOfferAsync(offerId);
+
         await Initialize();
     }
 }
