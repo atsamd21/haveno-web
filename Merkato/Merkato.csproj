@@ -8,7 +8,7 @@
 
     <SimplexLink>https://smp4.simplex.im/g#hr4lvFeBmndWMKTwqiodPz3VBo_6UmdGWocXd1SupsM</SimplexLink>
     <MatrixLink>https://matrix.to/#/#haveno:monero.social</MatrixLink>
-    <GitHubLink>https://github.com/atsamd21</GitHubLink>
+    <GitHubLink>https://github.com/atsamd21/haveno-web</GitHubLink>
     <DaemonUrl>https://github.com/atsamd21/haveno/releases/download/v1.8.0</DaemonUrl>
     <ApplicationVersion>0.0.1</ApplicationVersion>
   </PropertyGroup>
