@@ -3,7 +3,7 @@ using Haveno.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Merkato.Pages;
+namespace Merkato.Pages.Offers;
 
 public class OffersModel : PageModel
 {
@@ -63,9 +63,16 @@ public class OffersModel : PageModel
         IsPaymentAccountModalOpen = true;
     }
 
-    public IActionResult OnPostRedirectToOfferPage(string offerId)
+    public IActionResult OnPostRedirectToOfferPage(string offerId, bool hasExtraInfo)
     {
-        return LocalRedirect($"/Offer/{offerId}");
+        if (hasExtraInfo)
+        {
+            return LocalRedirect($"/Offers/{offerId}/OfferInfo");
+        }
+        else
+        {
+            return LocalRedirect($"/Offers/{offerId}");
+        }
     }
 
     public IActionResult OnPostRedirectToAccountPage()
