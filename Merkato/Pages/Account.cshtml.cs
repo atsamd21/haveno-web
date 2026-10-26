@@ -1,10 +1,8 @@
 using Haveno.Api.Models;
 using Haveno.Api.Models.Requests;
 using Haveno.Api.Services;
-using Merkato.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Transactions;
 
 namespace Merkato.Pages;
 
@@ -28,8 +26,6 @@ public class AccountModel : PageModel
     public string? PaymentAccountId { get; set; }
     public PaymentAccount? PaymentAccount { get; set; }
 
-    public Tabs Tabs { get; set; }
-
     public AccountModel(
         IAccountService accountService, 
         IPaymentAccountService paymentAccountService)
@@ -40,12 +36,19 @@ public class AccountModel : PageModel
 
     public async Task Initialize()
     {
-        Tabs = new(["Traditional", "Crypto"], TabIndex);
+
     }
 
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(bool fromRedirect)
     {
+        if (!string.IsNullOrEmpty(PaymentMethodId) && !fromRedirect)
+        {
+            return RedirectToPage("/Account", null, new { PaymentMethodId, TabIndex, FromRedirect = true }, PaymentMethodId);
+        }
+
         await Initialize();
+
+        return Page();
     }
 
     public async Task OnPostDeleteAccountAsync(string accountId)

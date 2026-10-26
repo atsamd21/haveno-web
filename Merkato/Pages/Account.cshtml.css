@@ -1,14 +1,11 @@
-﻿.account-main .payment-accounts-main .tab a {
-  color: #000;
-}
-.account-main .payment-accounts-main .tab .active {
-  background-color: #808080;
+﻿.account-main .payment-accounts-main .tabs-container {
+  margin-bottom: 10px;
 }
 .account-main .payment-accounts-main .accounts-list {
   height: 100px;
   overflow-y: auto;
   margin-bottom: 10px;
-  border: 2px solid #284B63;
+  border: 1px solid #284B63;
   border-radius: 8px;
   background-color: #EEF0EB;
   padding: 8px;
@@ -17,6 +14,9 @@
 .account-main .payment-accounts-main .accounts-list li form {
   display: flex;
   justify-content: space-between;
+  /*                    &:has(:hover) {
+                          background-color: tomato;
+                      }*/
 }
 .account-main .payment-accounts-main .accounts-list li form a {
   color: #000;
@@ -28,20 +28,30 @@
 .account-main .payment-accounts-main .accounts-list li form button {
   border: none;
 }
+.account-main .payment-accounts-main .accounts-list li form button:hover {
+  /*border-radius: 10px;*/
+  background-color: transparent;
+  opacity: 0.5;
+}
 .account-main .payment-accounts-main .payment-methods-list {
-  height: 100px;
+  height: 168px;
   overflow-y: auto;
-  border: 2px solid #284B63;
+  border: 1px solid #284B63;
   border-radius: 8px;
   background-color: #EEF0EB;
   padding: 8px;
   list-style: none;
+  margin-bottom: 10px;
 }
 .account-main .payment-accounts-main .payment-methods-list li a {
   color: #000;
 }
+.account-main .payment-accounts-main .payment-methods-list li a:focus {
+  outline: none;
+}
 .account-main .payment-accounts-main .payment-methods-list li .active {
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
+  text-decoration: underline;
 }
 .account-main .create-account .account-input {
   display: flex;
@@ -54,4 +64,24 @@
 }
 .buttons button:first-child {
   margin-right: 8px;
+}
+
+.multiselect-container {
+  display: flex;
+  flex-flow: wrap;
+  border: 1px solid #284B63;
+  border-radius: 8px;
+  background-color: #EEF0EB;
+  padding: 8px;
+  row-gap: 4px;
+  min-height: 40px;
+  align-items: center;
+}
+.multiselect-container .input-container {
+  display: flex;
+  margin-right: 10px;
+  align-items: center;
+}
+.multiselect-container .input-container input {
+  margin-right: 4px;
 }

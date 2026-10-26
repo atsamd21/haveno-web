@@ -2,22 +2,15 @@
 
     .payment-accounts-main {
 
-        .tab {
-
-            a {
-                color: #000;
-            }
-
-            .active {
-                background-color: #808080;
-            }
+        .tabs-container {
+            margin-bottom: 10px;
         }
 
         .accounts-list {
             height: 100px;
             overflow-y: auto;
             margin-bottom: 10px;
-            border: 2px solid #284B63;
+            border: 1px solid #284B63;
             border-radius: 8px;
             background-color: #EEF0EB;
             padding: 8px;
@@ -37,11 +30,17 @@
                         text-decoration: underline;
                     }
 
+/*                    &:has(:hover) {
+                        background-color: tomato;
+                    }*/
+
                     button {
                         border: none;
 
                         &:hover {
-
+                            /*border-radius: 10px;*/
+                            background-color: transparent;
+                            opacity: 0.5;
                         }
                     }
                 }
@@ -49,22 +48,28 @@
         }
 
         .payment-methods-list {
-            height: 100px;
+            height: 168px;
             overflow-y: auto;
-            border: 2px solid #284B63;
+            border: 1px solid #284B63;
             border-radius: 8px;
             background-color: #EEF0EB;
             padding: 8px;
             list-style: none;
+            margin-bottom: 10px;
 
             li {
 
                 a {
                     color: #000;
+
+                    &:focus {
+                        outline: none;
+                    }
                 }
 
                 .active {
-                    background-color: #ffffff;
+                    /*background-color: #ffffff;*/
+                    text-decoration: underline;
                 }
             }
         }
@@ -87,6 +92,31 @@
 
         &:first-child {
             margin-right: 8px;
+        }
+    }
+}
+
+.multiselect-container {
+    display: flex;
+    flex-flow: wrap;
+    border: 1px solid #284B63;
+    border-radius: 8px;
+    background-color: #EEF0EB;
+    padding: 8px;
+    row-gap: 4px;
+    min-height: 40px;
+    align-items: center;
+
+    .input-container {
+        display: flex;
+        margin-right: 10px;
+        align-items: center;
+
+        input {
+            margin-right: 4px;
+        }
+
+        label {
         }
     }
 }
