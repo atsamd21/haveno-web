@@ -60,11 +60,15 @@ body {
 }
 
 header {
+    display: flex;
+    background-color: #eef0eb;
+    align-items: center;
+    justify-content: center;
+/*    justify-content: space-between;
+    padding: 0 20px 0;*/
 
     nav {
         height: 60px;
-        /*background-color: #d4d4d4;*/
-        background-color: #eef0eb;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -74,6 +78,20 @@ header {
             margin-right: 10px;
             font-size: 10px;
             color: #000;
+        }
+
+        .active {
+            text-decoration: underline;
+        }
+    }
+
+    .wallet-balance {
+        .balance {
+            font-size: 11px;
+        }
+
+        .available {
+            font-size: 8px;
         }
     }
 }
@@ -132,7 +150,7 @@ footer {
         top: 0;
         pointer-events: none;
         margin-bottom: 10px;
-        border: 2px solid #153243;
+        border: 1px solid #153243;
         border-radius: 8px;
 
         .tab-input-visible {
@@ -191,7 +209,8 @@ footer {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    border: 2px solid #153243;
+    /*border: 2px solid #153243;*/
+    border: 1px solid #153243;
     padding: 8px;
     border-radius: 10px;
 
@@ -207,6 +226,7 @@ footer {
 
         a {
             margin-left: auto;
+            color: #000;
         }
 
         .title {
@@ -230,12 +250,19 @@ footer {
     }
 }
 
+.toggle-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .toggle-main {
     background-color: #365f7c;
     width: 40px;
     height: 20px;
     position: relative;
     border-radius: 100px;
+/*    border: 2px solid #153243;
+    box-shadow: inset 0 0 0 2px #fff;*/
 
     .toggled {
         right: 0;
@@ -253,7 +280,6 @@ footer {
         border-radius: 100px;
 
         &:active {
-
         }
     }
 }
@@ -303,6 +329,11 @@ button {
     justify-content: center;
     align-items: center;
     /*font-size: 14px;*/
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
 }
 
 .button-primary {
@@ -313,15 +344,12 @@ button {
     &:hover {
         background-color: #284B63;
     }
-
-    &:read-only {
-
-    }
 }
 
 .button-warning {
     @extend .base-button;
-    border: 2px solid #a51929;
+    /*border: 2px solid #a51929;*/
+    border: 1px solid #a51929;
     color: #a51929;
 }
 
@@ -332,7 +360,8 @@ button {
 
 .button-tertiary {
     @extend .base-button;
-    border: 2px solid #153243;
+    /*border: 2px solid #153243;*/
+    border: 1px solid #153243;
     color: #000;
 }
 
@@ -368,11 +397,15 @@ button {
     width: 100%;
     border-radius: 8px;
     padding: 0 10px 0;
-    border: 2px solid #153243;
+    /*border: 2px solid #153243;*/
+    border: 1px solid #153243;
     background-color: #EEF0EB;
+    font-family: inherit;
+    /*box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);*/
 
     &:focus {
-        outline: 2px solid #284B63;
+        /*outline: 2px solid #284B63;*/
+        outline: 1px solid #284B63;
     }
 
     &:invalid {
@@ -409,14 +442,16 @@ button {
     height: 60px;
     border-radius: 8px;
     resize: vertical;
-    border: 2px solid #153243;
+    /*border: 2px solid #153243;*/
+    border: 1px solid #153243;
     padding: 10px;
     font-family: inherit;
     font-size: 13px;
     background-color: #EEF0EB;
 
     &:focus {
-        outline: 2px solid #284B63;
+        /*outline: 2px solid #284B63;*/
+        outline: 1px solid #284B63;
     }
 }
 
@@ -436,7 +471,9 @@ button {
     position: relative;
 
     details {
-        border: 2px solid #284B63;
+        /*border: 2px solid #284B63;*/
+        /*border: 1px solid #284B63;*/
+        border: 1px solid #153243;
         border-radius: 8px;
         background-color: #EEF0EB;
         padding: 10px;
@@ -488,7 +525,8 @@ button {
     .list {
         display: none;
         flex-direction: column;
-        border: 2px solid #284B63;
+        /*border: 2px solid #284B63;*/
+        border: 1px solid #284B63;
         border-radius: 8px;
         background-color: #EEF0EB;
         padding: 4px;
@@ -559,6 +597,13 @@ h5 {
     font-size: 14px;
 }
 
+label {
+    font-size: 12px;
+}
+
+.space {
+    height: 8px;
+}
 
 @media (min-width: 768px) {
     html {

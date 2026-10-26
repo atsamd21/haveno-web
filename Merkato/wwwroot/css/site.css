@@ -55,10 +55,16 @@ body {
   flex-direction: column;
 }
 
+header {
+  display: flex;
+  background-color: #eef0eb;
+  align-items: center;
+  justify-content: center;
+  /*    justify-content: space-between;
+      padding: 0 20px 0;*/
+}
 header nav {
   height: 60px;
-  /*background-color: #d4d4d4;*/
-  background-color: #eef0eb;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,6 +74,15 @@ header nav a {
   margin-right: 10px;
   font-size: 10px;
   color: #000;
+}
+header nav .active {
+  text-decoration: underline;
+}
+header .wallet-balance .balance {
+  font-size: 11px;
+}
+header .wallet-balance .available {
+  font-size: 8px;
 }
 
 main {
@@ -121,7 +136,7 @@ footer .version {
   top: 0;
   pointer-events: none;
   margin-bottom: 10px;
-  border: 2px solid #153243;
+  border: 1px solid #153243;
   border-radius: 8px;
 }
 .eager-tabs .titles .tab-input-visible {
@@ -174,7 +189,8 @@ footer .version {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 2px solid #153243;
+  /*border: 2px solid #153243;*/
+  border: 1px solid #153243;
   padding: 8px;
   border-radius: 10px;
 }
@@ -189,6 +205,7 @@ footer .version {
 }
 .modal-tag .modal-top a {
   margin-left: auto;
+  color: #000;
 }
 .modal-tag .modal-buttons {
   margin-top: 10px;
@@ -198,12 +215,19 @@ footer .version {
   margin-right: 8px;
 }
 
+.toggle-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .toggle-main {
   background-color: #365f7c;
   width: 40px;
   height: 20px;
   position: relative;
   border-radius: 100px;
+  /*    border: 2px solid #153243;
+      box-shadow: inset 0 0 0 2px #fff;*/
 }
 .toggle-main .toggled {
   right: 0;
@@ -262,6 +286,10 @@ button:hover {
   align-items: center;
   /*font-size: 14px;*/
 }
+.base-button:disabled, .button-continue:disabled, .button-tertiary:disabled, .button-secondary:disabled, .button-warning:disabled, .button-primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
 
 .button-primary {
   background-color: #153243;
@@ -270,8 +298,10 @@ button:hover {
 .button-primary:hover {
   background-color: #284B63;
 }
+
 .button-warning {
-  border: 2px solid #a51929;
+  /*border: 2px solid #a51929;*/
+  border: 1px solid #a51929;
   color: #a51929;
 }
 
@@ -280,7 +310,8 @@ button:hover {
 }
 
 .button-tertiary {
-  border: 2px solid #153243;
+  /*border: 2px solid #153243;*/
+  border: 1px solid #153243;
   color: #000;
 }
 
@@ -313,11 +344,15 @@ button:hover {
   width: 100%;
   border-radius: 8px;
   padding: 0 10px 0;
-  border: 2px solid #153243;
+  /*border: 2px solid #153243;*/
+  border: 1px solid #153243;
   background-color: #EEF0EB;
+  font-family: inherit;
+  /*box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);*/
 }
 .input-base:focus, .select:focus, .input-password:focus, .input-number:focus, .input-text:focus {
-  outline: 2px solid #284B63;
+  /*outline: 2px solid #284B63;*/
+  outline: 1px solid #284B63;
 }
 .input-base:invalid, .select:invalid, .input-password:invalid, .input-number:invalid, .input-text:invalid {
   /*border: 2px solid #ff4025;*/
@@ -331,14 +366,16 @@ button:hover {
   height: 60px;
   border-radius: 8px;
   resize: vertical;
-  border: 2px solid #153243;
+  /*border: 2px solid #153243;*/
+  border: 1px solid #153243;
   padding: 10px;
   font-family: inherit;
   font-size: 13px;
   background-color: #EEF0EB;
 }
 .textarea:focus {
-  outline: 2px solid #284B63;
+  /*outline: 2px solid #284B63;*/
+  outline: 1px solid #284B63;
 }
 
 .select {
@@ -352,7 +389,9 @@ button:hover {
   position: relative;
 }
 .dropdown details {
-  border: 2px solid #284B63;
+  /*border: 2px solid #284B63;*/
+  /*border: 1px solid #284B63;*/
+  border: 1px solid #153243;
   border-radius: 8px;
   background-color: #EEF0EB;
   padding: 10px;
@@ -399,7 +438,8 @@ button:hover {
 .dropdown .list {
   display: none;
   flex-direction: column;
-  border: 2px solid #284B63;
+  /*border: 2px solid #284B63;*/
+  border: 1px solid #284B63;
   border-radius: 8px;
   background-color: #EEF0EB;
   padding: 4px;
@@ -465,6 +505,14 @@ h4 {
 
 h5 {
   font-size: 14px;
+}
+
+label {
+  font-size: 12px;
+}
+
+.space {
+  height: 8px;
 }
 
 @media (min-width: 768px) {
