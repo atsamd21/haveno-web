@@ -1,0 +1,621 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+<data name="NATIONAL_BANK" xml:space="preserve">
+  <value>National bank transfer</value>
+</data>
+<data name="SAME_BANK" xml:space="preserve">
+  <value>Transfer with same bank</value>
+</data>
+<data name="SPECIFIC_BANKS" xml:space="preserve">
+  <value>Transfers with specific banks</value>
+</data>
+<data name="US_POSTAL_MONEY_ORDER" xml:space="preserve">
+  <value>US Postal Money Order</value>
+</data>
+<data name="CASH_DEPOSIT" xml:space="preserve">
+  <value>Cash Deposit</value>
+</data>
+<data name="PAY_BY_MAIL" xml:space="preserve">
+  <value>Pay By Mail</value>
+</data>
+<data name="CASH_AT_ATM" xml:space="preserve">
+  <value>Cardless Cash</value>
+</data>
+<data name="MONEY_GRAM" xml:space="preserve">
+  <value>MoneyGram</value>
+</data>
+<data name="WESTERN_UNION" xml:space="preserve">
+  <value>Western Union</value>
+</data>
+<data name="F2F" xml:space="preserve">
+  <value>Face to face (in person)</value>
+</data>
+<data name="JAPAN_BANK" xml:space="preserve">
+  <value>Japan Bank Furikomi</value>
+</data>
+<data name="AUSTRALIA_PAYID" xml:space="preserve">
+  <value>Australian PayID</value>
+</data>
+<data name="NATIONAL_BANK_SHORT" xml:space="preserve">
+  <value>National banks</value>
+</data>
+<data name="SAME_BANK_SHORT" xml:space="preserve">
+  <value>Same bank</value>
+</data>
+<data name="SPECIFIC_BANKS_SHORT" xml:space="preserve">
+  <value>Specific banks</value>
+</data>
+<data name="US_POSTAL_MONEY_ORDER_SHORT" xml:space="preserve">
+  <value>US Money Order</value>
+</data>
+<data name="CASH_DEPOSIT_SHORT" xml:space="preserve">
+  <value>Cash Deposit</value>
+</data>
+<data name="PAY_BY_MAIL_SHORT" xml:space="preserve">
+  <value>Pay By Mail</value>
+</data>
+<data name="CASH_AT_ATM_SHORT" xml:space="preserve">
+  <value>Cardless Cash</value>
+</data>
+<data name="MONEY_GRAM_SHORT" xml:space="preserve">
+  <value>MoneyGram</value>
+</data>
+<data name="WESTERN_UNION_SHORT" xml:space="preserve">
+  <value>Western Union</value>
+</data>
+<data name="F2F_SHORT" xml:space="preserve">
+  <value>F2F</value>
+</data>
+<data name="JAPAN_BANK_SHORT" xml:space="preserve">
+  <value>Japan Furikomi</value>
+</data>
+<data name="AUSTRALIA_PAYID_SHORT" xml:space="preserve">
+  <value>PayID</value>
+</data>
+<data name="UPHOLD" xml:space="preserve">
+  <value>Uphold</value>
+</data>
+<data name="MONEY_BEAM" xml:space="preserve">
+  <value>MoneyBeam (N26)</value>
+</data>
+<data name="POPMONEY" xml:space="preserve">
+  <value>Popmoney</value>
+</data>
+<data name="REVOLUT" xml:space="preserve">
+  <value>Revolut</value>
+</data>
+<data name="PERFECT_MONEY" xml:space="preserve">
+  <value>Perfect Money</value>
+</data>
+<data name="ALI_PAY" xml:space="preserve">
+  <value>AliPay</value>
+</data>
+<data name="WECHAT_PAY" xml:space="preserve">
+  <value>WeChat Pay</value>
+</data>
+<data name="SEPA" xml:space="preserve">
+  <value>SEPA</value>
+</data>
+<data name="SEPA_INSTANT" xml:space="preserve">
+  <value>SEPA Instant Payments</value>
+</data>
+<data name="FASTER_PAYMENTS" xml:space="preserve">
+  <value>Faster Payments</value>
+</data>
+<data name="SWISH" xml:space="preserve">
+  <value>Swish</value>
+</data>
+<data name="ZELLE" xml:space="preserve">
+  <value>Zelle</value>
+</data>
+<data name="CHASE_QUICK_PAY" xml:space="preserve">
+  <value>Chase QuickPay</value>
+</data>
+<data name="INTERAC_E_TRANSFER" xml:space="preserve">
+  <value>Interac e-Transfer</value>
+</data>
+<data name="HAL_CASH" xml:space="preserve">
+  <value>HalCash</value>
+</data>
+<data name="BLOCK_CHAINS" xml:space="preserve">
+  <value>Cryptocurrencies</value>
+</data>
+<data name="PROMPT_PAY" xml:space="preserve">
+  <value>PromptPay</value>
+</data>
+<data name="ADVANCED_CASH" xml:space="preserve">
+  <value>Advanced Cash</value>
+</data>
+<data name="TRANSFERWISE" xml:space="preserve">
+  <value>Wise</value>
+</data>
+<data name="TRANSFERWISE_USD" xml:space="preserve">
+  <value>Wise-USD</value>
+</data>
+<data name="PAYSERA" xml:space="preserve">
+  <value>Paysera</value>
+</data>
+<data name="PAXUM" xml:space="preserve">
+  <value>Paxum</value>
+</data>
+<data name="NEFT" xml:space="preserve">
+  <value>India/NEFT</value>
+</data>
+<data name="RTGS" xml:space="preserve">
+  <value>India/RTGS</value>
+</data>
+<data name="IMPS" xml:space="preserve">
+  <value>India/IMPS</value>
+</data>
+<data name="UPI" xml:space="preserve">
+  <value>India/UPI</value>
+</data>
+<data name="PAYTM" xml:space="preserve">
+  <value>India/PayTM</value>
+</data>
+<data name="NEQUI" xml:space="preserve">
+  <value>Nequi</value>
+</data>
+<data name="MPESA" xml:space="preserve">
+  <value>M-Pesa</value>
+</data>
+<data name="MERCADO_PAGO" xml:space="preserve">
+  <value>Mercado Pago</value>
+</data>
+<data name="GCASH" xml:space="preserve">
+  <value>GCash</value>
+</data>
+<data name="MOMO" xml:space="preserve">
+  <value>MoMo</value>
+</data>
+<data name="SPEI" xml:space="preserve">
+  <value>Mexico/SPEI</value>
+</data>
+<data name="BIZUM" xml:space="preserve">
+  <value>Bizum</value>
+</data>
+<data name="PIX" xml:space="preserve">
+  <value>Pix</value>
+</data>
+<data name="AMAZON_GIFT_CARD" xml:space="preserve">
+  <value>Amazon eGift Card</value>
+</data>
+<data name="BLOCK_CHAINS_INSTANT" xml:space="preserve">
+  <value>Cryptocurrencies Instant</value>
+</data>
+<data name="CAPITUAL" xml:space="preserve">
+  <value>Capitual</value>
+</data>
+<data name="CELPAY" xml:space="preserve">
+  <value>CelPay</value>
+</data>
+<data name="MONESE" xml:space="preserve">
+  <value>Monese</value>
+</data>
+<data name="SATISPAY" xml:space="preserve">
+  <value>Satispay</value>
+</data>
+<data name="TIKKIE" xml:space="preserve">
+  <value>Tikkie</value>
+</data>
+<data name="VERSE" xml:space="preserve">
+  <value>Verse</value>
+</data>
+<data name="STRIKE" xml:space="preserve">
+  <value>Strike</value>
+</data>
+<data name="SWIFT" xml:space="preserve">
+  <value>SWIFT International Wire Transfer</value>
+</data>
+<data name="ACH_TRANSFER" xml:space="preserve">
+  <value>ACH Transfer</value>
+</data>
+<data name="DOMESTIC_WIRE_TRANSFER" xml:space="preserve">
+  <value>Domestic Wire Transfer</value>
+</data>
+<data name="OK_PAY" xml:space="preserve">
+  <value>OKPay</value>
+</data>
+<data name="CASH_APP" xml:space="preserve">
+  <value>Cash App</value>
+</data>
+<data name="VENMO" xml:space="preserve">
+  <value>Venmo</value>
+</data>
+<data name="PAYPAL" xml:space="preserve">
+  <value>PayPal</value>
+</data>
+<data name="PAYSAFE" xml:space="preserve">
+  <value>Paysafe</value>
+</data>
+<data name="UPHOLD_SHORT" xml:space="preserve">
+  <value>Uphold</value>
+</data>
+<data name="MONEY_BEAM_SHORT" xml:space="preserve">
+  <value>MoneyBeam (N26)</value>
+</data>
+<data name="POPMONEY_SHORT" xml:space="preserve">
+  <value>Popmoney</value>
+</data>
+<data name="REVOLUT_SHORT" xml:space="preserve">
+  <value>Revolut</value>
+</data>
+<data name="PERFECT_MONEY_SHORT" xml:space="preserve">
+  <value>Perfect Money</value>
+</data>
+<data name="ALI_PAY_SHORT" xml:space="preserve">
+  <value>AliPay</value>
+</data>
+<data name="WECHAT_PAY_SHORT" xml:space="preserve">
+  <value>WeChat Pay</value>
+</data>
+<data name="SEPA_SHORT" xml:space="preserve">
+  <value>SEPA</value>
+</data>
+<data name="SEPA_INSTANT_SHORT" xml:space="preserve">
+  <value>SEPA Instant</value>
+</data>
+<data name="FASTER_PAYMENTS_SHORT" xml:space="preserve">
+  <value>Faster Payments</value>
+</data>
+<data name="SWISH_SHORT" xml:space="preserve">
+  <value>Swish</value>
+</data>
+<data name="ZELLE_SHORT" xml:space="preserve">
+  <value>Zelle</value>
+</data>
+<data name="CHASE_QUICK_PAY_SHORT" xml:space="preserve">
+  <value>Chase QuickPay</value>
+</data>
+<data name="INTERAC_E_TRANSFER_SHORT" xml:space="preserve">
+  <value>Interac e-Transfer</value>
+</data>
+<data name="HAL_CASH_SHORT" xml:space="preserve">
+  <value>HalCash</value>
+</data>
+<data name="BLOCK_CHAINS_SHORT" xml:space="preserve">
+  <value>Cryptocurrencies</value>
+</data>
+<data name="PROMPT_PAY_SHORT" xml:space="preserve">
+  <value>PromptPay</value>
+</data>
+<data name="ADVANCED_CASH_SHORT" xml:space="preserve">
+  <value>Advanced Cash</value>
+</data>
+<data name="TRANSFERWISE_SHORT" xml:space="preserve">
+  <value>Wise</value>
+</data>
+<data name="TRANSFERWISE_USD_SHORT" xml:space="preserve">
+  <value>Wise-USD</value>
+</data>
+<data name="PAYSERA_SHORT" xml:space="preserve">
+  <value>Paysera</value>
+</data>
+<data name="PAXUM_SHORT" xml:space="preserve">
+  <value>Paxum</value>
+</data>
+<data name="NEFT_SHORT" xml:space="preserve">
+  <value>NEFT</value>
+</data>
+<data name="RTGS_SHORT" xml:space="preserve">
+  <value>RTGS</value>
+</data>
+<data name="IMPS_SHORT" xml:space="preserve">
+  <value>IMPS</value>
+</data>
+<data name="UPI_SHORT" xml:space="preserve">
+  <value>UPI</value>
+</data>
+<data name="PAYTM_SHORT" xml:space="preserve">
+  <value>PayTM</value>
+</data>
+<data name="NEQUI_SHORT" xml:space="preserve">
+  <value>Nequi</value>
+</data>
+<data name="MPESA_SHORT" xml:space="preserve">
+  <value>M-Pesa</value>
+</data>
+<data name="MERCADO_PAGO_SHORT" xml:space="preserve">
+  <value>Mercado Pago</value>
+</data>
+<data name="GCASH_SHORT" xml:space="preserve">
+  <value>GCash</value>
+</data>
+<data name="MOMO_SHORT" xml:space="preserve">
+  <value>MoMo</value>
+</data>
+<data name="SPEI_SHORT" xml:space="preserve">
+  <value>SPEI</value>
+</data>
+<data name="BIZUM_SHORT" xml:space="preserve">
+  <value>Bizum</value>
+</data>
+<data name="PIX_SHORT" xml:space="preserve">
+  <value>Pix</value>
+</data>
+<data name="AMAZON_GIFT_CARD_SHORT" xml:space="preserve">
+  <value>Amazon eGift Card</value>
+</data>
+<data name="BLOCK_CHAINS_INSTANT_SHORT" xml:space="preserve">
+  <value>Cryptocurrencies Instant</value>
+</data>
+<data name="CAPITUAL_SHORT" xml:space="preserve">
+  <value>Capitual</value>
+</data>
+<data name="CELPAY_SHORT" xml:space="preserve">
+  <value>CelPay</value>
+</data>
+<data name="MONESE_SHORT" xml:space="preserve">
+  <value>Monese</value>
+</data>
+<data name="SATISPAY_SHORT" xml:space="preserve">
+  <value>Satispay</value>
+</data>
+<data name="TIKKIE_SHORT" xml:space="preserve">
+  <value>Tikkie</value>
+</data>
+<data name="VERSE_SHORT" xml:space="preserve">
+  <value>Verse</value>
+</data>
+<data name="STRIKE_SHORT" xml:space="preserve">
+  <value>Strike</value>
+</data>
+<data name="SWIFT_SHORT" xml:space="preserve">
+  <value>SWIFT</value>
+</data>
+<data name="ACH_TRANSFER_SHORT" xml:space="preserve">
+  <value>ACH</value>
+</data>
+<data name="DOMESTIC_WIRE_TRANSFER_SHORT" xml:space="preserve">
+  <value>Domestic Wire</value>
+</data>
+<data name="BSQ_SWAP_SHORT" xml:space="preserve">
+  <value>BSQ Swap</value>
+</data>
+<data name="OK_PAY_SHORT" xml:space="preserve">
+  <value>OKPay</value>
+</data>
+<data name="CASH_APP_SHORT" xml:space="preserve">
+  <value>Cash App</value>
+</data>
+<data name="VENMO_SHORT" xml:space="preserve">
+  <value>Venmo</value>
+</data>
+<data name="PAYPAL_SHORT" xml:space="preserve">
+  <value>PayPal</value>
+</data>
+<data name="PAYSAFE_SHORT" xml:space="preserve">
+  <value>Paysafe</value>
+</data>
+<data name="BLIK" xml:space="preserve">
+  <value>BLIK</value>
+</data>
+<data name="BLIK_SHORT" xml:space="preserve">
+  <value>BLIK</value>
+</data>
+<data name="VIPPS_MOBILEPAY" xml:space="preserve">
+  <value>Vipps MobilePay</value>
+</data>
+<data name="VIPPS_MOBILEPAY_SHORT" xml:space="preserve">
+  <value>Vipps MobilePay</value>
+</data>
+<data name="TWINT" xml:space="preserve">
+  <value>TWINT</value>
+</data>
+<data name="TWINT_SHORT" xml:space="preserve">
+  <value>TWINT</value>
+</data>
+<data name="NIP" xml:space="preserve">
+  <value>NIP Instant Bank Transfer / OPay / PalmPay</value>
+</data>
+<data name="NIP_SHORT" xml:space="preserve">
+  <value>NIP</value>
+</data>
+<data name="PAGO_MOVIL" xml:space="preserve">
+  <value>Pago Móvil</value>
+</data>
+<data name="PAGO_MOVIL_SHORT" xml:space="preserve">
+  <value>Pago Móvil</value>
+</data>
+<data name="QRIS" xml:space="preserve">
+  <value>QRIS / BI-FAST</value>
+</data>
+<data name="QRIS_SHORT" xml:space="preserve">
+  <value>QRIS</value>
+</data>
+<data name="PAPARA" xml:space="preserve">
+  <value>Papara / FAST</value>
+</data>
+<data name="PAPARA_SHORT" xml:space="preserve">
+  <value>Papara</value>
+</data>
+<data name="RAAST" xml:space="preserve">
+  <value>Raast / Easypaisa / JazzCash</value>
+</data>
+<data name="RAAST_SHORT" xml:space="preserve">
+  <value>Raast</value>
+</data>
+<data name="PAYNOW" xml:space="preserve">
+  <value>PayNow / FAST</value>
+</data>
+<data name="PAYNOW_SHORT" xml:space="preserve">
+  <value>PayNow</value>
+</data>
+<data name="WERO" xml:space="preserve">
+  <value>Wero</value>
+</data>
+<data name="WERO_SHORT" xml:space="preserve">
+  <value>Wero</value>
+</data>
+<data name="FPS" xml:space="preserve">
+  <value>FPS / 轉數快 (Hong Kong)</value>
+</data>
+<data name="FPS_SHORT" xml:space="preserve">
+  <value>FPS</value>
+</data>
+<data name="DUITNOW" xml:space="preserve">
+  <value>DuitNow (Malaysia)</value>
+</data>
+<data name="DUITNOW_SHORT" xml:space="preserve">
+  <value>DuitNow</value>
+</data>
+<data name="MB_WAY" xml:space="preserve">
+  <value>MB WAY (Portugal)</value>
+</data>
+<data name="MB_WAY_SHORT" xml:space="preserve">
+  <value>MB WAY</value>
+</data>
+<data name="PAYPAY" xml:space="preserve">
+  <value>PayPay (Japan)</value>
+</data>
+<data name="PAYPAY_SHORT" xml:space="preserve">
+  <value>PayPay</value>
+</data>
+<data name="SBP" xml:space="preserve">
+  <value>SBP</value>
+</data>
+<data name="SBP_SHORT" xml:space="preserve">
+  <value>SBP</value>
+</data>
+<data name="MIR" xml:space="preserve">
+  <value>Mir card transfer</value>
+</data>
+<data name="MIR_SHORT" xml:space="preserve">
+  <value>Mir</value>
+</data>
+<data name="YOOMONEY" xml:space="preserve">
+  <value>YooMoney</value>
+</data>
+<data name="YOOMONEY_SHORT" xml:space="preserve">
+  <value>YooMoney</value>
+</data>
+<data name="UKRAINE_CARD" xml:space="preserve">
+  <value>Card-to-card</value>
+</data>
+<data name="UKRAINE_CARD_SHORT" xml:space="preserve">
+  <value>Card (UA)</value>
+</data>
+<data name="KASPI" xml:space="preserve">
+  <value>Kaspi (Kazakhstan)</value>
+</data>
+<data name="KASPI_SHORT" xml:space="preserve">
+  <value>Kaspi</value>
+</data>
+</root>
