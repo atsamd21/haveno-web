@@ -1,12 +1,12 @@
 using Haveno.Api.Helpers;
 using Haveno.Api.Models;
 using Haveno.Api.Services;
+using Haveno.Api.Singletons;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Merkato.Pages;
 
@@ -16,6 +16,7 @@ public class SettingsModel : PageModel
     private readonly IXmrNodeService _xmrNodeService;
     private readonly IVersionService _versionService;
     private readonly IPriceService _priceService;
+    private readonly INotificationsSingleton _notificationsSingleton;
     private readonly IOptions<RequestLocalizationOptions> _localizationOptions;
 
     public string HavenoVersion { get; set; } = string.Empty;
@@ -55,12 +56,14 @@ public class SettingsModel : PageModel
         IXmrNodeService xmrNodeService,
         IVersionService versionService,
         IPriceService priceService,
+        INotificationsSingleton notificationsSingleton,
         IOptions<RequestLocalizationOptions> localizationOptions)
     {
         _logger = logger;
         _xmrNodeService = xmrNodeService;
         _versionService = versionService;
         _priceService = priceService;
+        _notificationsSingleton = notificationsSingleton;
         _localizationOptions = localizationOptions;
     }
 
@@ -127,15 +130,17 @@ public class SettingsModel : PageModel
         await Initialize();
     }
 
-    //public async Task OnPostAutoSwitchToggleAsync(bool isToggled)
-    //{
-    //    await Initialize();
-    //    IsAutoSwitchEnabled = isToggled;
-    //}
-
     public async Task OnPostAutoSwitchToggleAsync()
     {
         await _xmrNodeService.SetAutoSwitchAsync(IsAutoSwitchEnabled);
+
+        await Initialize();
+    }
+
+    public async Task OnPostGetAlertAsync()
+    {
+        // Only gets the latest message
+        var alert = await _notificationsSingleton.GetAlert();
 
         await Initialize();
     }
