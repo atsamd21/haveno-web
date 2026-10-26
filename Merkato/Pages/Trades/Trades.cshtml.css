@@ -17,14 +17,20 @@
   align-items: center;
   margin-bottom: 10px;
 }
-.trades-main ul li .top .trade-id, .trades-main ul li .top .dispute-state, .trades-main ul li .top .action-required {
+.trades-main ul li .top .trade-id, .trades-main ul li .top .dispute-state, .trades-main ul li .top .action-required, .trades-main ul li .top .dispute {
   padding: 4px;
-  background-color: #c4c4c4;
   height: fit-content;
   border-radius: 4px;
   font-size: 12px;
+  color: #fff;
+  /*background-color: #c4c4c4;*/
+  background-color: #153243;
+  /*background-color: #284B63;*/
 }
-.trades-main ul li .top .dispute-state, .trades-main ul li .top .action-required {
+.trades-main ul li .top .dispute {
+  background-color: #a51929;
+}
+.trades-main ul li .top .dispute-state, .trades-main ul li .top .action-required, .trades-main ul li .top .dispute {
   margin-left: 4px;
 }
 .trades-main ul li .top .date {

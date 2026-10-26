@@ -1,0 +1,99 @@
+﻿@page "/Trades"
+@inject ITradeService TradeService
+@model TradesModel
+@{
+    ViewData["Title"] = "Trades";
+}
+<div class="trades-main">
+    @if (Model.Disputes.Any(x => x.State > Haveno.Shared.Enums.DisputeState.NeedsUpgrade && x.State < Haveno.Shared.Enums.DisputeState.Closed))
+    {
+        <div class="dispute-notification">
+            @Model.Disputes.Count(x => x.State > Haveno.Shared.Enums.DisputeState.NeedsUpgrade && x.State < Haveno.Shared.Enums.DisputeState.Closed)
+        </div>
+    }
+    @if (Model.OpenTrades.Any())
+    {
+        <div class="trade-notification">
+            @Model.OpenTrades.Count
+        </div>
+    }
+    <eagertabs tab-index="@Model.TabIndex">
+        <ul title="Open">
+            @foreach (var trade in Model.OpenTrades)
+            {
+                <partial name="_TradeCard" model="new TradeCard(trade, TradeService)"/>
+            }
+        </ul>
+        <ul title="Closed">
+            @foreach (var trade in Model.ClosedTrades)
+            {
+                <partial name="_TradeCard" model="new TradeCard(trade, TradeService)" />
+            }
+        </ul>
+        <ul title="Failed">
+            @foreach (var trade in Model.FailedTrades)
+            {
+                <partial name="_TradeCard" model="new TradeCard(trade, TradeService)" />
+            }
+        </ul>
+        <ul title="Disputes">
+            @foreach (var dispute in Model.Disputes)
+            {
+                NodeAddress peerAddress;
+                if (dispute.IsOpener)
+                {
+                    if (dispute.DisputeOpenerIsBuyer)
+                    {
+                        peerAddress = dispute.Contract.SellerNodeAddress;
+                    }
+                    else
+                    {
+                        peerAddress = dispute.Contract.BuyerNodeAddress;
+                    }
+                }
+                else
+                {
+                    if (dispute.DisputeOpenerIsBuyer)
+                    {
+                        peerAddress = dispute.Contract.BuyerNodeAddress;
+                    }
+                    else
+                    {
+                        peerAddress = dispute.Contract.SellerNodeAddress;
+                    }
+                }
+
+                var hashAsInt = BitConverter.ToInt32(System.Security.Cryptography.SHA1.HashData(System.Text.Encoding.UTF8.GetBytes(peerAddress.ToString())));
+                var tradeCount = await MiscHelper.GetTradedWithPeerCount(TradeService, peerAddress.ToString());
+
+                <li>
+                    <div class="top">
+                        <p class="trade-id">@dispute.TradeId.Split("-").First()</p>
+                        <p class="dispute-state">@dispute.State</p>
+                        <p class="date">@dispute.OpeningDate.ToShortDateString()</p>
+                    </div>
+                    <div class="trade-body">
+                        <div class="body-left">
+
+                        </div>
+                        <div class="body-right">
+                            <div tooltip="@peerAddress.ToString()" class="tooltip avatar-container">
+                                <img style=@($"background-color:#{new Random(hashAsInt).Next(16777215).ToString("x")}")
+                                     class="avatar"
+                                     asp-append-version="true"
+                                     src=@($"~/img/avatars/avatar_{new Random(hashAsInt).Next(15)}.png") b-d6217hmwld />
+                                @if (tradeCount > 0)
+                                {
+                                    <div class="trade-count">
+                                        @tradeCount
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <a class="button-primary" href=@($"/Trades/{dispute.TradeId}/Messages?isDispute=true#last-message")>Dispute chat</a>
+                </li>
+            }
+        </ul>
+    </eagertabs>
+</div>

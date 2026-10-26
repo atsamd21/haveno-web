@@ -3,7 +3,7 @@ using Haveno.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Merkato.Pages;
+namespace Merkato.Pages.Trades;
 
 public class TradesModel : PageModel
 {

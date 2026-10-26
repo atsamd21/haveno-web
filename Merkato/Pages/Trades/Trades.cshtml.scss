@@ -3,6 +3,7 @@
 
     ul {
 
+        // Duplicate, refactor only for disputes
         li {
             display: flex;
             flex-direction: column;
@@ -19,15 +20,22 @@
                 align-items: center;
                 margin-bottom: 10px;
 
-                .trade-id, .dispute-state, .action-required {
+                .trade-id, .dispute-state, .action-required, .dispute {
                     padding: 4px;
-                    background-color: #c4c4c4;
                     height: fit-content;
                     border-radius: 4px;
                     font-size: 12px;
+                    color: #fff;
+                    /*background-color: #c4c4c4;*/
+                    background-color: #153243;
+                    /*background-color: #284B63;*/
                 }
 
-                .dispute-state, .action-required {
+                .dispute {
+                    background-color: #a51929;
+                }
+
+                .dispute-state, .action-required, .dispute {
                     margin-left: 4px;
                 }
 
