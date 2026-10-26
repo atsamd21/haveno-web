@@ -4,7 +4,7 @@ using Haveno.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Merkato.Pages;
+namespace Merkato.Pages.Trades;
 
 public class TradeModel : PageModel
 {
@@ -13,6 +13,9 @@ public class TradeModel : PageModel
 
     public TradeInfo TradeInfo { get; set; }
     public TradeRoleAndStep TradeRoleAndStep { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public bool IsMyAccountInfoModalOpen { get; set; }
 
     public TradeModel(
         ITradeService tradeService,
@@ -33,6 +36,9 @@ public class TradeModel : PageModel
     public async Task OnPostConfirmPaymentSentAsync(string tradeId)
     {
         await _tradeService.ConfirmPaymentSentAsync(tradeId);
+
+        await Task.Delay(1_000);
+
         TradeInfo = await _tradeService.GetTradeAsync(tradeId);
         TradeRoleAndStep = TradeHelper.GetTradeRoleAndStep(TradeInfo);
 
@@ -42,6 +48,9 @@ public class TradeModel : PageModel
     public async Task OnPostConfirmPaymentReceivedAsync(string tradeId)
     {
         await _tradeService.ConfirmPaymentReceivedAsync(tradeId);
+
+        await Task.Delay(1_000);
+
         TradeInfo = await _tradeService.GetTradeAsync(tradeId);
         TradeRoleAndStep = TradeHelper.GetTradeRoleAndStep(TradeInfo);
 
@@ -57,11 +66,11 @@ public class TradeModel : PageModel
     public async Task<IActionResult> OnPostOpenDisputeAsync(string tradeId)
     {
         await _disputeService.OpenDisputeAsync(tradeId);
-        return LocalRedirect($"/Messages/{tradeId}?isDispute=true");
+        return LocalRedirect($"/Trades/{tradeId}/Messages?isDispute=true#last-message");
     }
 
     public IActionResult OnPostViewDisputeAsync(string tradeId)
     {
-        return LocalRedirect($"/Messages/{tradeId}?isDispute=true");
+        return LocalRedirect($"/Trades/{tradeId}/Messages?isDispute=true#last-message");
     }
 }

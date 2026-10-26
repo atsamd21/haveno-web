@@ -1,0 +1,187 @@
+﻿@page "/Trades/{tradeId}"
+@inject IStringLocalizer<TradeModel> Localizer
+@inject IHtmlLocalizer<TradeModel> HtmlLocalizer
+@model TradeModel
+@{
+    ViewData["Title"] = $"Trade {Model.TradeInfo.ShortId}";
+
+    var requestCultureFeature = HttpContext.Features.Get<IRequestCultureFeature>();
+    var requestCulture = requestCultureFeature?.RequestCulture;
+}
+
+<div class="trade-main">
+    @if (Model.TradeInfo.DisputeState != Haveno.Api.Models.Enums.TradeDisputeState.NO_DISPUTE)
+    {
+        <div class="dispute">
+            <div class="top">
+                <img src="/icons/warning.svg" />
+                <p>Attention</p>
+            </div>
+            @if (Model.TradeInfo.DisputeState == Haveno.Api.Models.Enums.TradeDisputeState.DISPUTE_CLOSED)
+            {
+                <p class="dispute-text">This trade was resolved by arbitration.</p>
+                <form method="post" b-keu7q5q8wh>
+                    <button class="button-primary" asp-page-handler="CompleteTrade" type="submit" b-keu7q5q8wh>Close</button>
+                </form>
+            }
+            else
+            {
+                <p class="dispute-text">A dispute has been opened. View the dispute and contact your arbitrator.</p>
+                <form method="post" b-keu7q5q8wh>
+                    <button class="button-warning" asp-page-handler="ViewDispute" b-keu7q5q8wh>View dispute</button>
+                </form>                
+            }
+        </div>        
+    }
+    <div class="trade-top">
+        <div class="trade-info">
+            <h5>Trade info</h5>
+            <div class="space"></div>
+            @{
+                bool isCrypto = Model.TradeInfo.Offer.PaymentMethodId == PaymentMethodId.BLOCK_CHAINS || Model.TradeInfo.Offer.PaymentMethodId == PaymentMethodId.BLOCK_CHAINS_INSTANT;
+            }
+
+            @if (Model.TradeRoleAndStep.Role == Haveno.Api.Helpers.Role.Buyer)
+            {
+                <h5>Buying @Model.TradeInfo.Amount.ToMonero().ToString("0.0000########") XMR for @Model.TradeInfo.TradeVolume @Model.TradeInfo.Offer.CounterCurrencyCode @(isCrypto ? string.Empty : $"using {Model.TradeInfo.Offer.PaymentMethodShortName}")</h5>
+            }
+            else
+            {
+                <h5>Selling @Model.TradeInfo.Amount.ToMonero().ToString("0.0000########") XMR for @Model.TradeInfo.TradeVolume @Model.TradeInfo.Offer.CounterCurrencyCode @(isCrypto ? string.Empty : $"using {Model.TradeInfo.Offer.PaymentMethodShortName}")</h5>
+            }
+            <div class="space"></div>
+            <div class="row">
+                <p>ID</p>
+                <p>@Model.TradeInfo.TradeId.Split('-').First()</p>
+            </div>
+            <div class="row">
+                <p>Date</p>
+                <p>@Model.TradeInfo.Date.ToLocalTime()</p>
+            </div>
+            <div class="row">
+                <p>Role</p>
+                <p>@Model.TradeInfo.Role</p>
+            </div>
+            <div class="row">
+                <p>Peer</p>
+                <p>@Model.TradeInfo.TradePeerNodeAddress</p>
+            </div>
+            <div class="row">
+                <p>Arbitrator</p>
+                <p>@Model.TradeInfo.ArbitratorNodeAddress</p>
+            </div>
+            <div class="row">
+                <p>Price</p>
+                @if (isCrypto)
+                {
+                    <p>@Model.TradeInfo.Price.ToString("0.00000000") @Model.TradeInfo.Offer.CounterCurrencyCode</p>
+                }
+                else
+                {
+                    <p>@Model.TradeInfo.Price.ToString("0.00") @Model.TradeInfo.Offer.CounterCurrencyCode</p>
+                }
+            </div>
+            <div class="space"></div>
+            <a class="button-tertiary" href="@($"/Trades/{Model.TradeInfo.TradeId}?IsMyAccountInfoModalOpen=true")">My trading account info</a>
+        </div>
+        <div class="process">
+            <h5>Trade process</h5>
+            <div class="space"></div>
+            <ul>
+                @for (int i = 0; i < 4; i++)
+                {
+                    <li class="process-step">
+                        @{
+                            var stepCompletedOrCurrent = i < Model.TradeRoleAndStep.Step;
+                        }
+
+                        @if (i + 1 < Model.TradeRoleAndStep.Step)
+                        {
+                            <i class="@($"bi bi-check-circle-fill " + (stepCompletedOrCurrent ? "completed-step" : ""))"></i>
+                        }
+                        else
+                        {
+                            <i class="@($"bi bi-{i + 1}-circle" + (stepCompletedOrCurrent ? "-fill completed-step" : ""))"></i>
+                        }
+
+                        @if (Model.TradeRoleAndStep.Role == Haveno.Api.Helpers.Role.Buyer)
+                        {
+                            <p class="@(stepCompletedOrCurrent ? "completed-step" : "")">@Localizer[$"BUYER_STEP_{i + 1}"]</p>
+                        }
+                        else
+                        {
+                            <p class="@(stepCompletedOrCurrent ? "completed-step" : "")">@Localizer[$"SELLER_STEP_{i + 1}"]</p>
+                        }
+
+                    </li>
+                }
+            </ul>
+        </div>
+        @if (Model.TradeRoleAndStep.Role == Haveno.Api.Helpers.Role.Buyer)
+        {
+            if (Model.TradeRoleAndStep.Step == 2)
+            {
+                <form method="post" class="payment-info" b-keu7q5q8wh>
+                    <h5>Send @Model.TradeInfo.TradeVolume @Model.TradeInfo.Offer.CounterCurrencyCode @(Model.TradeInfo.IsFiat() ? $"with {Model.TradeInfo.Offer.PaymentMethodShortName}" : "") </h5>
+                    <div class="space"></div>
+                    @foreach (var keyVal in Model.TradeInfo.Offer.IsMyOffer ? Model.TradeInfo.Contract.TakerPaymentAccountPayload.Convert() : Model.TradeInfo.Contract.MakerPaymentAccountPayload.Convert())
+                    {
+                        <partial model="@(new InfoRow(keyVal.Key, string.IsNullOrEmpty(keyVal.Value) ? "N/A" : keyVal.Value, true))" name="_InfoRow" />
+                    }
+                    <button class="button-primary" asp-page-handler="ConfirmPaymentSent" type="submit">Confirm payment sent</button>
+                </form>
+            }
+        }
+        else
+        {
+            if (Model.TradeRoleAndStep.Step == 3)
+            {
+                <form method="post" class="payment-info" b-keu7q5q8wh>
+                    <h5>Confirm receipt of @Model.TradeInfo.TradeVolume @Model.TradeInfo.Offer.CounterCurrencyCode</h5>
+                    <div class="space"></div>
+                    <h6>Peer's @Model.TradeInfo.Offer.PaymentMethodShortName account information</h6>
+                    @foreach (var keyVal in Model.TradeInfo.Offer.IsMyOffer ? Model.TradeInfo.Contract.TakerPaymentAccountPayload.Convert() : Model.TradeInfo.Contract.MakerPaymentAccountPayload.Convert())
+                    {
+                        <partial model="@(new InfoRow(keyVal.Key, string.IsNullOrEmpty(keyVal.Value) ? "N/A" : keyVal.Value, true))" name="_InfoRow" />
+                    }
+                    <button class="button-primary" asp-page-handler="ConfirmPaymentReceived" type="submit" b-keu7q5q8wh>Confirm payment received</button>
+                </form>
+            }
+        }
+        <div>
+            <partial model="@(new InfoRow("Your deposit transaction ID", Model.TradeInfo.Offer.IsMyOffer ? Model.TradeInfo.MakerDepositTxId : Model.TradeInfo.TakerDepositTxId, true))" name="_InfoRow" />
+            <partial model="@(new InfoRow("Peer's deposit transaction ID", Model.TradeInfo.Offer.IsMyOffer ? Model.TradeInfo.TakerDepositTxId : Model.TradeInfo.MakerDepositTxId, true))" name="_InfoRow" />
+            <partial model="@(new InfoRow("Trade deadline", (DateTime.UtcNow > Model.TradeInfo.DeadlineTime ? "Expired" : TimeHelper.FormatDuration((long)(Model.TradeInfo.DeadlineTime - DateTime.UtcNow).TotalMilliseconds)), true))" name="_InfoRow" />
+        </div>
+        <div class="space"></div>
+        <form method="post" b-keu7q5q8wh>
+            @if (Model.TradeRoleAndStep.Step == 4 && Model.TradeInfo.DisputeState != Haveno.Api.Models.Enums.TradeDisputeState.DISPUTE_CLOSED)
+            {
+                <button class="button-primary" asp-page-handler="CompleteTrade" type="submit" b-keu7q5q8wh>Close</button>
+            }
+        </form>
+        <div class="space"></div>
+    </div>
+    <div class="buttons">
+        <a class="button-tertiary" href=@($"/Trades/{Model.TradeInfo.TradeId}/Messages#last-message")>Trade chat</a>
+        @if (Model.TradeInfo.DisputeState == Haveno.Api.Models.Enums.TradeDisputeState.NO_DISPUTE)
+        {
+            <form method="post" b-keu7q5q8wh>
+                <button class="button-warning" asp-page-handler="OpenDispute" b-keu7q5q8wh>Open dispute</button>
+            </form>
+        }
+        else
+        {
+            <form method="post" b-keu7q5q8wh>
+                <button class="button-tertiary" asp-page-handler="ViewDispute" b-keu7q5q8wh>View dispute</button>
+            </form>
+        }
+    </div>
+</div>
+
+<modal title="My trading account info" is-open="@Model.IsMyAccountInfoModalOpen">
+    @foreach (var keyVal in Model.TradeInfo.Offer.IsMyOffer ? Model.TradeInfo.Contract.MakerPaymentAccountPayload.Convert() : Model.TradeInfo.Contract.TakerPaymentAccountPayload.Convert())
+    {
+        <partial model="@(new InfoRow(keyVal.Key, string.IsNullOrEmpty(keyVal.Value) ? "N/A" : keyVal.Value, true))" name="_InfoRow" />
+    }
+</modal>
