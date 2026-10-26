@@ -61,7 +61,7 @@
   width: 400px;
   max-width: 420px;
   image-rendering: pixelated;
-  border: 2px solid #153243;
+  border: 1px solid #153243;
   border-radius: 8px;
 }
 .receive .qr-container .monero-icon {
@@ -146,7 +146,7 @@
 }*/
 .monero-card {
   height: 186px;
-  /*max-width: 380px;*/
+  max-width: 400px;
   width: 100%;
   background-image: url(../img/wallet-background.svg);
   background-size: cover;
@@ -159,8 +159,8 @@
   /*border: 1px solid;*/
   position: relative;
   border-radius: 8px;
-  /*    max-width: 420px;
-      margin: auto;*/
+  /*max-width: 420px;*/
+  margin: auto;
 }
 .monero-card::before {
   content: "";

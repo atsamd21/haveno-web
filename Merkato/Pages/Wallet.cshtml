@@ -1,14 +1,15 @@
 ﻿@page
-@inject IWebHostEnvironment WebHostEnvironment;
-@inject IWalletService WalletService;
-@inject IPriceService PriceService;
+@inject IWebHostEnvironment WebHostEnvironment
+@inject IWalletService WalletService
+@inject IPriceService PriceService
 @model WalletModel
 @{
     ViewData["Title"] = "Wallet";
 
     var xmrBalanceInfo = await WalletService.GetBalancesAsync();
     var primaryAddress = await WalletService.GetXmrPrimaryAddressAsync();
-    var price = await PriceService.GetMarketPriceAsync(Request.Cookies["currency"]!);
+    // var price = await PriceService.GetMarketPriceAsync(Request.Cookies["currency"]!);
+    var price = await PriceService.GetMarketPriceAsync(new RegionInfo(CultureInfo.CurrentUICulture.Name).ISOCurrencySymbol);
     decimal availableFiat = price * xmrBalanceInfo.AvailableBalance.ToMonero();
     decimal pendingFiat = price * xmrBalanceInfo.PendingBalance.ToMonero();
 
@@ -53,6 +54,7 @@
                     <img class="qr" src=@($"data:image/png;base64,{base64}") />
                     <img class="monero-icon" src="/img/monero-icon-small.png" />
                 </a>
+                <div class="space"></div>
                 <partial name="_InfoRow" model="@(new InfoRow("Address", primaryAddress, true))" />
                 <form method="post" b-91xa8jysmm>
                     @* ? *@
@@ -63,8 +65,10 @@
             break;
         case 1:
             <form class="send" method="post" b-91xa8jysmm>
+                <div class="space"></div>
                 <label>Destination address</label>
                 <input class="input-text" minlength="95" required name="DestinationAddress" value="@Model.DestinationAddress" />
+                <div class="space"></div>
                 <label>Amount</label>
                 <div class="amount-container">
                     <input class="input-number" step="0.000000000001" type="number" name="Amount" value="@Model.Amount" max="@xmrBalanceInfo.AvailableBalance.ToMonero()" required />
@@ -82,14 +86,14 @@
                     <li class="transaction">
                         @if (transaction.IncomingTransfers?.Count > 0)
                         {
-                            <img src="icons/arrow-right.svg" class="in" />
+                            <img src="/icons/arrow-right.svg" class="in" />
                             <p class="transaction-amount">
                                 @transaction.IncomingTransfers.Aggregate(ulong.MinValue, (x, y) => x + y.Amount).ToMonero().ToString("0.0000")ɱ
                             </p>
                         }
                         else
                         {
-                            <img src="icons/arrow-right.svg" class="out" />
+                            <img src="/icons/arrow-right.svg" class="out" />
                             <p class="transaction-amount">
                                 @transaction.OutgoingTransfer?.Amount.ToMonero().ToString("0.0000")ɱ
                             </p>

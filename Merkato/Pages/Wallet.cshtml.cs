@@ -4,7 +4,6 @@ using Merkato.Helpers;
 using Merkato.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Transactions;
 
 namespace Merkato.Pages;
 
@@ -105,8 +104,8 @@ public class WalletModel : PageModel
 
     public async Task OnPostRelayTxAsync()
     {
-        await Initialize();
         var txIds = await _walletService.RelayXmrTxsAsync(Metadata);
+        await Initialize();
     }
 
     public async Task OnPostSetMaxAsync()
