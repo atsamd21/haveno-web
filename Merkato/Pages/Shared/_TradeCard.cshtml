@@ -1,0 +1,77 @@
+﻿@model TradeCard
+
+@{
+    var trade = Model.TradeInfo;
+
+    var hashAsInt = BitConverter.ToInt32(System.Security.Cryptography.SHA1.HashData(System.Text.Encoding.UTF8.GetBytes(trade.Offer.OwnerNodeAddress)));
+
+    var tradeCount = await MiscHelper.GetTradedWithPeerCount(Model.TradeService, trade.Offer.OwnerNodeAddress);
+
+    var tradeRoleAndStep = Haveno.Api.Helpers.TradeHelper.GetTradeRoleAndStep(trade);
+}
+
+<li>
+    <div class="top">
+        <p class="trade-id">@trade.ShortId</p>
+        @if (tradeRoleAndStep.Role == Haveno.Api.Helpers.Role.Buyer)
+        {
+            if (tradeRoleAndStep.Step == 2)
+            {
+                <p class="action-required">Action required</p>
+            }
+        }
+        else
+        {
+            if (tradeRoleAndStep.Step == 3)
+            {
+                <p class="action-required">Action required</p>
+            }
+        }
+        @if (tradeRoleAndStep.Step == 4)
+        {
+            <p class="action-required">Completed</p>
+        }
+        else if (trade.DisputeState != Haveno.Api.Models.Enums.TradeDisputeState.NO_DISPUTE)
+        {
+            <p class="dispute">In dispute</p>
+        }
+        <p class="date">@trade.Date.ToShortDateString()</p>
+    </div>
+    <div class="trade-body">
+        <div class="body-left">
+            @if (trade.Offer.IsMyOffer)
+            {
+                <p class="direction">@(trade.Offer.Direction == OfferDirection.SELL ? "Selling" : "Buying") XMR (@trade.Offer.PaymentMethodShortName)</p>
+            }
+            else
+            {
+                <p class="direction">@(trade.Offer.Direction == OfferDirection.BUY ? "Selling" : "Buying") XMR (@trade.Offer.PaymentMethodShortName)</p>
+            }
+
+            <p>XMR amount: @trade.Amount.ToMonero().ToString("0.0000")ɱ</p>
+            <p>@trade.Offer.CounterCurrencyCode amount: @trade.TradeVolume @trade.Offer.CounterCurrencyCode</p>
+        </div>
+        <div class="body-right">
+            <div tooltip="@trade.Offer.OwnerNodeAddress" class="tooltip avatar-container">
+                <img style=@($"background-color:#{new Random(hashAsInt).Next(16777215).ToString("x")}")
+                     class="avatar"
+                     asp-append-version="true"
+                     src=@($"~/img/avatars/avatar_{new Random(hashAsInt).Next(15)}.png") b-n7cjtolbz6 />
+                @if (tradeCount > 0)
+                {
+                    <div class="trade-count">
+                        @tradeCount
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @if (trade.IsCompleted)
+    {
+        <a class="button-primary" href=@($"/Trades?TabIndex=1")>View trade info</a>
+    }
+    else
+    {
+        <a class="button-primary" href=@($"/Trades/{trade.TradeId}")>View trade</a>
+    }
+</li>

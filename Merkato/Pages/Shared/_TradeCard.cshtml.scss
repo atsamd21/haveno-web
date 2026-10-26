@@ -1,0 +1,87 @@
+li {
+    display: flex;
+    flex-direction: column;
+    /*height: 120px;*/
+    padding: 6px;
+    background-color: #EEF0EB;
+    border: 2px solid #284B63;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    color: #000;
+
+    .top {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+
+        .trade-id, .dispute-state, .action-required, .dispute {
+            padding: 4px;
+            height: fit-content;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #fff;
+            /*background-color: #c4c4c4;*/
+            background-color: #153243;
+            /*background-color: #284B63;*/
+        }
+
+        .dispute {
+            background-color: #a51929;
+        }
+
+        .dispute-state, .action-required, .dispute {
+            margin-left: 4px;
+        }
+
+        .date {
+            margin-left: auto;
+        }
+    }
+
+    .trade-body {
+        display: flex;
+        justify-content: space-between;
+
+        .body-left {
+        }
+
+        .body-right {
+            width: 10%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+    }
+
+    .avatar-container {
+        position: relative;
+        width: fit-content;
+
+        .avatar {
+            height: 30px;
+            border-radius: 100%;
+            border: 2px solid #153243;
+        }
+
+        .trade-count {
+            position: absolute;
+            background-color: #f00;
+            width: 16px;
+            /*padding: 0 5px 0;*/
+            height: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            color: #fff;
+            top: -5px;
+            right: -5px;
+            font-size: 10px;
+        }
+    }
+
+
+    a {
+        margin-top: 10px;
+    }
+}
