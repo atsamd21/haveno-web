@@ -9,9 +9,33 @@
     <SimplexLink>https://smp4.simplex.im/g#hr4lvFeBmndWMKTwqiodPz3VBo_6UmdGWocXd1SupsM</SimplexLink>
     <MatrixLink>https://matrix.to/#/#haveno:monero.social</MatrixLink>
     <GitHubLink>https://github.com/atsamd21/haveno-web</GitHubLink>
-    <DaemonUrl>https://github.com/atsamd21/haveno/releases/download/v1.8.0</DaemonUrl>
+    <HavenoTag>v1.11.0</HavenoTag>
+    <RepoRoot>$(MSBuildThisFileDirectory)..\</RepoRoot>
     <ApplicationVersion>0.0.1</ApplicationVersion>
   </PropertyGroup>
+
+  <Target Name="BuildHaveno" BeforeTargets="BeforeBuild" Condition="'$(SkipHavenoBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
+    <Message Importance="high" Text="Running Haveno build in $(RepoRoot)" />
+    <Exec Command="dotnet run build-haveno.cs -- $(HavenoTag)" WorkingDirectory="$(RepoRoot)" StandardOutputImportance="high" />
+
+    <!--<ItemGroup>
+      <Content Include="$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar"
+               Link="haveno\daemon-all.jar"
+               CopyToOutputDirectory="PreserveNewest"
+               CopyToPublishDirectory="PreserveNewest"
+               Condition="Exists('$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar')" />
+    </ItemGroup>-->
+  </Target>
+
+  <Target Name="IncludeJar" BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <Content Include="$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar"
+               Link="haveno\daemon-all.jar"
+               CopyToOutputDirectory="PreserveNewest"
+               CopyToPublishDirectory="PreserveNewest"
+               Condition="Exists('$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar')" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadata">
