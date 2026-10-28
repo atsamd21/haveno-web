@@ -1,8 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Haveno.Processes;
+using Merkato.Tor;
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Merkato.Launcher;
 
@@ -36,7 +41,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void OnStartClick(object? sender, RoutedEventArgs e)
+    private void OnStartClick(object? sender, RoutedEventArgs e)
     {
         _semaphore.Wait();
 
@@ -44,17 +49,40 @@ public partial class MainWindow : Window
         {
             SetBothButtonsEnabled(false);
 
-            //var psi = new ProcessStartInfo
-            //{
-            //    FileName = "Merkato.exe",
-            //    WorkingDirectory = "",
-            //    UseShellExecute = true,
-            //    CreateNoWindow = true
-            //};
+            var psi = new ProcessStartInfo
+            {
+                FileName = Path.Combine(AppContext.BaseDirectory, "Merkato.exe"),
+                WorkingDirectory = AppContext.BaseDirectory,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+                ArgumentList =
+                {
+                    "UseTor=true"
+                }
+            };
 
-            //_process = Process.Start(psi);
+#if DEBUG
+            psi.Environment["ASPNETCORE_ENVIRONMENT"] = "Development";
+#endif
 
-            await Task.Delay(2000);
+            _process = ManagedProcess.Start(psi);
+
+            _process.OutputDataReceived += (_, e) =>
+            {
+                if (e.Data is not null)
+                    Debug.WriteLine(e.Data);
+            };
+
+            _process.ErrorDataReceived += (_, e) =>
+            {
+                if (e.Data is not null)
+                    Debug.WriteLine(e.Data);
+            };
+
+            _process.BeginOutputReadLine();
+            _process.BeginErrorReadLine();
         }
         finally
         {
@@ -67,7 +95,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void OnStopClick(object? sender, RoutedEventArgs e)
+    private void OnStopClick(object? sender, RoutedEventArgs e)
     {
         _semaphore.Wait();
 
@@ -75,7 +103,9 @@ public partial class MainWindow : Window
         {
             SetBothButtonsEnabled(false);
 
-            await Task.Delay(2000);
+            _process.Kill();
+            _process.WaitForExit();
+            _process.Dispose();
         }
         finally
         {
@@ -86,11 +116,81 @@ public partial class MainWindow : Window
 
             _semaphore.Release();
         }
+    }
 
+    private string? GetTorBrowserPath()
+    {
+        string[] paths;
+
+        if (OperatingSystem.IsWindows())
+        {
+            paths = [
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Desktop", "Tor Browser"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Tor Browser"),
+                Environment.GetFolderPath(Environment.SpecialFolder.Programs)
+               ];
+        }
+        else
+        {
+            paths = [
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "tor-browser", "Browser"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "share", "applications")
+                ];
+        }
+
+        string? path;
+
+        foreach (var p in paths)
+        {
+            if (!Directory.Exists(p))
+                continue;
+
+            path = Directory.GetFiles(p, OperatingSystem.IsWindows() ? "*Tor Browser*" : "*start-tor-browser*")
+                .FirstOrDefault();
+
+            if (path is not null)
+            {
+                if (path.Contains(".desktop") && OperatingSystem.IsLinux())
+                {
+                    foreach (var line in File.ReadLines(path))
+                    {
+                        if (!line.StartsWith("Exec=", StringComparison.Ordinal)) 
+                            continue;
+
+                        var match = Regex.Match(line, "(/[^\"'\\s]*start-tor-browser)(?![.\\w-])");
+                        if (match.Success && File.Exists(match.Groups[1].Value))
+                            return match.Groups[1].Value;
+                    }
+                }
+
+                return path;
+            }
+        }
+
+        return null;
     }
 
     private void OnOpenBrowserClick(object? sender, RoutedEventArgs e)
     {
+        //Process.Start(new ProcessStartInfo
+        //{
+        //    FileName = "http://localhost:5000",
+        //    UseShellExecute = true
+        //});
 
+        TorManager torManager = new();
+
+        var address = torManager.GetOnionAddress();
+
+        var torPath = GetTorBrowserPath();
+        if (torPath is not null)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = GetTorBrowserPath(),
+                Arguments = $"http://{address}",
+                UseShellExecute = true
+            });
+        }
     }
 }
