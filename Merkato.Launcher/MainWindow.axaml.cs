@@ -51,7 +51,7 @@ public partial class MainWindow : Window
 
             var psi = new ProcessStartInfo
             {
-                FileName = Path.Combine(AppContext.BaseDirectory, "Merkato.exe"),
+                FileName = Path.Combine(AppContext.BaseDirectory, OperatingSystem.IsWindows() ? "Merkato.exe" : "Merkato"),
                 WorkingDirectory = AppContext.BaseDirectory,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
