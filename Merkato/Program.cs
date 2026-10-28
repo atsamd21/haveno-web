@@ -2,6 +2,7 @@ using Haveno.Extensions;
 using Haveno.Processes;
 using Merkato.Middleware;
 using Merkato.Models;
+using Merkato.Tor;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using System.Globalization;
@@ -10,9 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetRequiredSection("AppSettings"));
 
-//TorManager torManager = new();
-//await torManager.EnsureTorInstalledAsync();
-//torManager.StartTor();
+bool useTor = builder.Configuration.GetValue<bool>(key: "UseTor");
+if (useTor)
+{
+    TorManager torManager = new();
+    await torManager.EnsureTorInstalledAsync();
+    torManager.StartTor();
+}
+
 var daemonPath = Path.Combine(AppContext.BaseDirectory, "haveno", "daemon-all.jar");
 
 var appsettings = builder.Configuration.GetRequiredSection("AppSettings").Get<AppSettings>()!;
