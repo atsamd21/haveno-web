@@ -1,0 +1,3 @@
+[submodule "haveno"]
+	path = haveno
+	url = https://github.com/atsamd21/haveno.git
