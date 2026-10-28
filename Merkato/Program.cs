@@ -13,9 +13,10 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetRequiredSection
 //TorManager torManager = new();
 //await torManager.EnsureTorInstalledAsync();
 //torManager.StartTor();
+var daemonPath = Path.Combine(AppContext.BaseDirectory, "haveno", "daemon-all.jar");
 
 var appsettings = builder.Configuration.GetRequiredSection("AppSettings").Get<AppSettings>()!;
-HavenoDaemon havenoDaemon = new(appsettings.HavenoDaemonPath!, appsettings.HavenoDaemonArguments!);
+HavenoDaemon havenoDaemon = new(daemonPath, appsettings.HavenoDaemonArguments!);
 
 await havenoDaemon.StartAsync();
 
