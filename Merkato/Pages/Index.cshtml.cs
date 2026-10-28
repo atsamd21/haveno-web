@@ -88,9 +88,14 @@ public class IndexModel : PageModel
         //    ];
     }
 
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync()
     {
+#if !DEBUG
+        return LocalRedirect("/Offers");
+#endif
         await Initialize();
+
+        return Page();
     }
 
     public async Task OnPostTestAsync(Test test)
