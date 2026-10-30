@@ -6,6 +6,13 @@
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <LangVersion>preview</LangVersion>
+    <!--<ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>-->
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,4 +33,19 @@
   <ItemGroup>
     <ProjectReference Include="..\Merkato\Merkato.csproj" />
   </ItemGroup>
+
+  <Target Name="PublishMerkato" BeforeTargets="ComputeResolvedFilesToPublishList" Condition="'$(Configuration)' == 'Release' And '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <MerkatoPublishDir>$(MSBuildProjectDirectory)\obj\merkato-publish\$(RuntimeIdentifier)\</MerkatoPublishDir>
+    </PropertyGroup>
+
+    <MSBuild Projects="..\Merkato\Merkato.csproj"
+             Targets="Restore;Publish"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=$(RuntimeIdentifier);PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;SelfContained=true;PublishDir=$(MerkatoPublishDir)" />
+
+    <ItemGroup>
+      <_MerkatoFiles Include="$(MerkatoPublishDir)**\*" />
+      <ResolvedFileToPublish Include="@(_MerkatoFiles)" RelativePath="Merkato\%(RecursiveDir)%(Filename)%(Extension)" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true"/>
+    </ItemGroup>
+  </Target>
 </Project>
