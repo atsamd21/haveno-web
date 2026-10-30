@@ -17,14 +17,6 @@
   <Target Name="BuildHaveno" BeforeTargets="BeforeBuild" Condition="'$(SkipHavenoBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
     <Message Importance="high" Text="Running Haveno build in $(RepoRoot)" />
     <Exec Command="dotnet run build-haveno.cs -- $(HavenoTag)" WorkingDirectory="$(RepoRoot)" StandardOutputImportance="high" />
-
-    <!--<ItemGroup>
-      <Content Include="$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar"
-               Link="haveno\daemon-all.jar"
-               CopyToOutputDirectory="PreserveNewest"
-               CopyToPublishDirectory="PreserveNewest"
-               Condition="Exists('$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar')" />
-    </ItemGroup>-->
   </Target>
 
   <Target Name="IncludeJar" BeforeTargets="AssignTargetPaths">
@@ -35,6 +27,10 @@
                CopyToPublishDirectory="PreserveNewest"
                Condition="Exists('$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar')" />
     </ItemGroup>
+  </Target>
+
+  <Target Name="CopyJar" AfterTargets="Publish" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar" DestinationFolder="$(PublishDir)haveno" SkipUnchangedFiles="true" />
   </Target>
 
   <ItemGroup>
