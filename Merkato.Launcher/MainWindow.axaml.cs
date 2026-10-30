@@ -1,7 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Haveno.Processes;
-using Merkato.Tor;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -49,10 +50,16 @@ public partial class MainWindow : Window
         {
             SetBothButtonsEnabled(false);
 
+#if DEBUG
+            var merkatoDirectory = AppContext.BaseDirectory;
+#else
+            var merkatoDirectory = Path.Combine(AppContext.BaseDirectory, "Merkato");
+#endif
+
             var psi = new ProcessStartInfo
             {
-                FileName = Path.Combine(AppContext.BaseDirectory, OperatingSystem.IsWindows() ? "Merkato.exe" : "Merkato"),
-                WorkingDirectory = AppContext.BaseDirectory,
+                FileName = Path.Combine(merkatoDirectory, OperatingSystem.IsWindows() ? "Merkato.exe" : "Merkato"),
+                WorkingDirectory = merkatoDirectory,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -170,27 +177,33 @@ public partial class MainWindow : Window
         return null;
     }
 
+    private static string GetOnionAddress()
+    {
+        string hostnameFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "merkato", "hidden", "hostname");
+        using var fileStream = File.Open(hostnameFile, FileMode.Open, FileAccess.Read);
+        using StreamReader reader = new(fileStream);
+        return reader.ReadToEnd();
+    }
+
     private void OnOpenBrowserClick(object? sender, RoutedEventArgs e)
     {
-        //Process.Start(new ProcessStartInfo
-        //{
-        //    FileName = "http://localhost:5000",
-        //    UseShellExecute = true
-        //});
-
-        TorManager torManager = new();
-
-        var address = torManager.GetOnionAddress();
-
         var torPath = GetTorBrowserPath();
         if (torPath is not null)
         {
             Process.Start(new ProcessStartInfo
             {
                 FileName = GetTorBrowserPath(),
-                Arguments = $"http://{address}",
+                Arguments = $"http://{GetOnionAddress()}",
                 UseShellExecute = true
             });
+        }
+    }
+
+    private void OnQuitClick(object? sender, RoutedEventArgs e)
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.Shutdown();
         }
     }
 }

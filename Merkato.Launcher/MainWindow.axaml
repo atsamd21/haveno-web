@@ -15,7 +15,7 @@
         Topmost="True"
         WindowStartupLocation="Manual">
     <Border CornerRadius="8" Background="#EEF0EB">
-        <StackPanel Spacing="0">
+        <Grid Grid.Row="0"  RowDefinitions="Auto,*">
             <Border Background="#284B63" CornerRadius="8,8,0,0" Padding="4">
                 <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
                     <Image Source="/Assets/haveno.ico"
@@ -31,8 +31,8 @@
                                VerticalAlignment="Center"/>
                 </Grid>                
             </Border>
-            <Border Padding="12">
-                <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*">
+            <Border Grid.Row="1"  Padding="12">
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
                     <Button Content="Start"
                             Grid.Row="0"
                             Margin="0,0,0,8"
@@ -42,7 +42,7 @@
                             Click="OnStartClick" />
 
                     <Button Content="Stop"
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Margin="0,0,0,8"
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
@@ -55,10 +55,18 @@
                             HorizontalContentAlignment="Center"
                             x:Name="OpenBrowserButton"
                             Click="OnOpenBrowserClick" />
+
+                    <Button Content="Quit"
+                            Classes="quit"
+                            Grid.Row="3"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Click="OnQuitClick"
+                            VerticalAlignment="Bottom" />
                 </Grid>
             </Border>
             <!--<TextBox x:Name="InputBox" Watermark="." />-->
-        </StackPanel>
+        </Grid>
     </Border>
     <Window.Styles>
         <Style Selector="Button">
@@ -69,6 +77,11 @@
         <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Foreground" Value="#fff"/>
             <Setter Property="Background" Value="#284B63"/>
+        </Style>
+
+        <Style Selector="Button.quit">
+            <Setter Property="Background" Value="#a51929" />
+            <Setter Property="Foreground" Value="#fff" />
         </Style>
     </Window.Styles>
 </Window>
