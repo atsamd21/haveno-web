@@ -68,3 +68,23 @@ jobs:
 
       - name: Build
         run: dotnet publish Merkato.Launcher/Merkato.Launcher.csproj -c Release -r linux-x64 --self-contained true -o publish/linux-x64
+
+      - name: Move files to AppDir
+        working-directory: Merkato.Launcher/Installer
+        run: |
+          cp -r ../../publish/linux-x64/. AppDir/usr/bin/
+          chmod +x AppDir/AppRun AppDir/usr/bin/Merkato.Launcher
+
+      - name: Build AppImage
+        working-directory: Merkato.Launcher/Installer
+        run: |
+          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage --appimage-extract-and-run AppDir haveno-web-linux-x86_64.AppImage
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          prerelease: true
+          files: Merkato.Launcher/Installer/haveno-web-linux-x86_64.AppImage
