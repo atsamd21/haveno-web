@@ -61,3 +61,6 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+Merkato.Launcher/Installer/AppDir/AppRun text eol=lf
+Merkato.Launcher/Installer/AppDir/haveno-web.desktop text eol=lf
