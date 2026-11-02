@@ -115,7 +115,7 @@ public partial class MainWindow : Window
 
                 if (!string.IsNullOrEmpty(res!.Status))
                 {
-                    if (res.Status != "offline")
+                    if (res.Status != "Offline")
                     {
                         StartButton.Content = res.Status;
                     }
