@@ -26,7 +26,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          cache: gradle
 
       - name: Build
         run: dotnet publish Merkato.Launcher/Merkato.Launcher.csproj -c Release -r win-x64 --self-contained true -o publish/win-x64
@@ -62,7 +61,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          cache: gradle
 
       - name: Build
         run: dotnet publish Merkato.Launcher/Merkato.Launcher.csproj -c Release -r linux-x64 --self-contained true -o publish/linux-x64
