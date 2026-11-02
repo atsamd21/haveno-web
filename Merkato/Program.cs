@@ -27,6 +27,7 @@ HavenoDaemon havenoDaemon = new(daemonPath, appsettings.HavenoDaemonArguments!);
 await havenoDaemon.StartAsync();
 
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
 builder.Services.AddHavenoServices(
     new HavenoOptions 
     { 
@@ -63,6 +64,8 @@ app.UseRouting();
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
+
+app.MapControllers();
 
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
