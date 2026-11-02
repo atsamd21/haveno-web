@@ -3,19 +3,29 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Haveno.Processes;
+using Material.Icons;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Merkato.Launcher;
 
+public class Response 
+{
+    public string? Status { get; set; }
+}
+
 public partial class MainWindow : Window
 {
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private Process? _process;
+
+    private int _page;
 
     public MainWindow()
     {
@@ -23,6 +33,8 @@ public partial class MainWindow : Window
         Deactivated += (_, _) => Hide();
 
         StopButton.IsVisible = false;
+
+        DisplayPage();
     }
 
     private void SetBothButtonsEnabled(bool enabled)
@@ -42,7 +54,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnStartClick(object? sender, RoutedEventArgs e)
+    private async void OnStartClick(object? sender, RoutedEventArgs e)
     {
         _semaphore.Wait();
 
@@ -90,6 +102,25 @@ public partial class MainWindow : Window
 
             _process.BeginOutputReadLine();
             _process.BeginErrorReadLine();
+
+            using var httpClient = new HttpClient();
+
+            while (true)
+            {
+                var response = await httpClient.GetAsync("http://localhost:5000/api/status");
+                if (response.IsSuccessStatusCode)
+                    break;
+
+                var res = await response.Content.ReadFromJsonAsync<Response>();
+
+                if (!string.IsNullOrEmpty(res!.Status))
+                {
+                    if (res.Status != "offline")
+                    {
+                        StartButton.Content = res.Status;
+                    }
+                }
+            }
         }
         finally
         {
@@ -177,12 +208,19 @@ public partial class MainWindow : Window
         return null;
     }
 
-    private static string GetOnionAddress()
+    private static string? GetOnionAddress()
     {
-        string hostnameFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "merkato", "hidden", "hostname");
-        using var fileStream = File.Open(hostnameFile, FileMode.Open, FileAccess.Read);
-        using StreamReader reader = new(fileStream);
-        return reader.ReadToEnd();
+        try
+        {
+            string hostnameFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "merkato", "hidden", "hostname");
+            using var fileStream = File.Open(hostnameFile, FileMode.Open, FileAccess.Read);
+            using StreamReader reader = new(fileStream);
+            return reader.ReadToEnd();
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private void OnOpenBrowserClick(object? sender, RoutedEventArgs e)
@@ -204,6 +242,41 @@ public partial class MainWindow : Window
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Shutdown();
+        }
+    }
+
+    private void OnSettingsClick(object? sender, RoutedEventArgs e)
+    {
+        _page = 1;
+        DisplayPage();
+    }
+
+    private void OnHomeClick(object? sender, RoutedEventArgs e)
+    {
+        _page = 0;
+        DisplayPage();
+    }
+
+    private void DisplayPage()
+    {
+        switch (_page) 
+        {
+            case 0:
+                Settings.IsVisible = false;
+                Home.IsVisible = true;
+                Icon.Kind = MaterialIconKind.Cog;
+                Nav.Click += OnSettingsClick;
+                Nav.Click -= OnHomeClick;
+                Title.Text = "Haveno Web";
+                break;
+            case 1:
+                Settings.IsVisible = true;
+                Home.IsVisible = false;
+                Icon.Kind = MaterialIconKind.ArrowBack;
+                Nav.Click += OnHomeClick;
+                Nav.Click -= OnSettingsClick;
+                Title.Text = "Settings";
+                break;
         }
     }
 }

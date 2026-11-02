@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Merkato.Launcher.MainWindow"
@@ -15,9 +16,9 @@
         Topmost="True"
         WindowStartupLocation="Manual">
     <Border CornerRadius="8" Background="#EEF0EB">
-        <Grid Grid.Row="0"  RowDefinitions="Auto,*">
-            <Border Background="#284B63" CornerRadius="8,8,0,0" Padding="4">
-                <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+        <Grid Grid.Row="0" RowDefinitions="Auto,*">
+            <Border Grid.Row="0" Background="#284B63" CornerRadius="8,8,0,0" Padding="4">
+                <Grid ColumnDefinitions="Auto,*,*" VerticalAlignment="Center">
                     <Image Source="/Assets/haveno.ico"
                            Width="24"
                            Height="24"
@@ -25,13 +26,23 @@
                            VerticalAlignment="Center"/>
 
                     <TextBlock Grid.Column="1"
-                               Text="Haveno Web"
                                FontSize="16"
                                Foreground="#fff"
+                               x:Name="Title"
                                VerticalAlignment="Center"/>
-                </Grid>                
+
+                    <Button
+                        Grid.Column="2"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Right"
+                        x:Name="Nav"
+                        Classes="transparent">
+                            <materialIcons:MaterialIcon Kind="Cog" Width="20" Height="20" x:Name="Icon"/>
+                    </Button>
+                </Grid>
             </Border>
-            <Border Grid.Row="1"  Padding="12">
+            <Border Grid.Row="1" Padding="12" x:Name="Home">
                 <Grid RowDefinitions="Auto,Auto,Auto,*">
                     <Button Content="Start"
                             Grid.Row="0"
@@ -65,7 +76,9 @@
                             VerticalAlignment="Bottom" />
                 </Grid>
             </Border>
-            <!--<TextBox x:Name="InputBox" Watermark="." />-->
+            <Border Grid.Row="1" Padding="12" x:Name="Settings">
+
+            </Border>
         </Grid>
     </Border>
     <Window.Styles>
@@ -79,9 +92,23 @@
             <Setter Property="Background" Value="#284B63"/>
         </Style>
 
+        <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Foreground" Value="#fff"/>
+            <Setter Property="Background" Value="#4e6b7f"/>
+        </Style>
+
         <Style Selector="Button.quit">
             <Setter Property="Background" Value="#a51929" />
             <Setter Property="Foreground" Value="#fff" />
+        </Style>
+
+        <Style Selector="Button.quit:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#b03644" />
+            <Setter Property="Foreground" Value="#fff" />
+        </Style>
+
+        <Style Selector="Button.transparent">
+            <Setter Property="Background" Value="transparent"/>
         </Style>
     </Window.Styles>
 </Window>
