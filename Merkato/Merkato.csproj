@@ -21,11 +21,7 @@
 
   <Target Name="IncludeJar" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
-      <Content Include="$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar"
-               Link="haveno\daemon-all.jar"
-               CopyToOutputDirectory="PreserveNewest"
-               CopyToPublishDirectory="PreserveNewest"
-               Condition="Exists('$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar')" />
+      <Content Include="$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar" Link="haveno\daemon-all.jar" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('$(RepoRoot)haveno\daemon\build\libs\daemon-all.jar')" />
     </ItemGroup>
   </Target>
 
@@ -74,7 +70,7 @@
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
-    <PackageReference Include="haveno-dotnet" Version="0.0.1" />
+    <PackageReference Include="haveno-dotnet" Version="0.0.2" />
     <PackageReference Include="HtmlAgilityPack" Version="1.13.0" />
     <PackageReference Include="QRCoder" Version="1.8.0" />
   </ItemGroup>
