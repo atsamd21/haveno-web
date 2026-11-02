@@ -1,7 +1,7 @@
 using Haveno.Extensions;
-using Haveno.Processes;
 using Merkato.Middleware;
 using Merkato.Models;
+using Merkato.Singletons;
 using Merkato.Tor;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
@@ -19,12 +19,10 @@ if (useTor)
     torManager.StartTor();
 }
 
-var daemonPath = Path.Combine(AppContext.BaseDirectory, "haveno", "daemon-all.jar");
-
 var appsettings = builder.Configuration.GetRequiredSection("AppSettings").Get<AppSettings>()!;
-HavenoDaemon havenoDaemon = new(daemonPath, appsettings.HavenoDaemonArguments!);
 
-await havenoDaemon.StartAsync();
+builder.Services.AddSingleton<HavenoDaemonSingleton>();
+builder.Services.AddHostedService(x => x.GetRequiredService<HavenoDaemonSingleton>());
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
