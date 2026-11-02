@@ -32,7 +32,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="Installer\AppDir\haveno-web.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Merkato\Merkato.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Installer\AppDir\usr\bin\" />
   </ItemGroup>
 
   <Target Name="PublishMerkato" BeforeTargets="ComputeResolvedFilesToPublishList" Condition="'$(Configuration)' == 'Release' And '$(DesignTimeBuild)' != 'true'">
@@ -40,13 +48,11 @@
       <MerkatoPublishDir>$(MSBuildProjectDirectory)\obj\merkato-publish\$(RuntimeIdentifier)\</MerkatoPublishDir>
     </PropertyGroup>
 
-    <MSBuild Projects="..\Merkato\Merkato.csproj"
-             Targets="Restore;Publish"
-             Properties="Configuration=$(Configuration);RuntimeIdentifier=$(RuntimeIdentifier);PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;SelfContained=true;PublishDir=$(MerkatoPublishDir)" />
+    <MSBuild Projects="..\Merkato\Merkato.csproj" Targets="Restore;Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=$(RuntimeIdentifier);PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;SelfContained=true;PublishDir=$(MerkatoPublishDir)" />
 
     <ItemGroup>
       <_MerkatoFiles Include="$(MerkatoPublishDir)**\*" />
-      <ResolvedFileToPublish Include="@(_MerkatoFiles)" RelativePath="Merkato\%(RecursiveDir)%(Filename)%(Extension)" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true"/>
+      <ResolvedFileToPublish Include="@(_MerkatoFiles)" RelativePath="Merkato\%(RecursiveDir)%(Filename)%(Extension)" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
     </ItemGroup>
   </Target>
 </Project>

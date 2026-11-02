@@ -1,0 +1,8 @@
+﻿[Desktop Entry]
+Comment=A launcher for Haveno Web.
+Exec=Merkato.Launcher
+Icon=haveno-web
+Categories=Office;Finance;Java;P2P;
+Name=Haveno Web
+Type=Application
+Terminal=false
