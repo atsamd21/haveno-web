@@ -72,6 +72,7 @@ jobs:
       - name: Move files to AppDir
         working-directory: Merkato.Launcher/Installer
         run: |
+          mkdir -p AppDir/usr/bin
           cp -r ../../publish/linux-x64/. AppDir/usr/bin/
           chmod +x AppDir/AppRun AppDir/usr/bin/Merkato.Launcher
 

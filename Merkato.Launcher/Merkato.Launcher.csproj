@@ -39,10 +39,6 @@
     <ProjectReference Include="..\Merkato\Merkato.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Installer\AppDir\usr\bin\" />
-  </ItemGroup>
-
   <Target Name="PublishMerkato" BeforeTargets="ComputeResolvedFilesToPublishList" Condition="'$(Configuration)' == 'Release' And '$(DesignTimeBuild)' != 'true'">
     <PropertyGroup>
       <MerkatoPublishDir>$(MSBuildProjectDirectory)\obj\merkato-publish\$(RuntimeIdentifier)\</MerkatoPublishDir>
