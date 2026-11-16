@@ -107,9 +107,14 @@ public partial class MainWindow : Window
 
             while (true)
             {
+                try
+                {
                 var response = await httpClient.GetAsync("http://localhost:5000/api/status");
                 if (response.IsSuccessStatusCode)
+                    {
+                        OnionAddress.Text = GetOnionAddress();
                     break;
+                    }
 
                 var res = await response.Content.ReadFromJsonAsync<Response>();
 
@@ -119,6 +124,11 @@ public partial class MainWindow : Window
                     {
                         StartButton.Content = res.Status;
                     }
+                    }
+                }
+                catch
+                {
+
                 }
             }
         }

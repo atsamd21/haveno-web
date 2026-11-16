@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Merkato.Launcher.MainWindow"
-        Title="MainWindow"
+        Title="Haveno Web"
         Width="240"
         Height="400"
         Background="Transparent"
@@ -15,9 +15,9 @@
         ShowInTaskbar="False"
         Topmost="True"
         WindowStartupLocation="Manual">
-    <Border CornerRadius="8" Background="#EEF0EB">
+    <Border Background="#EEF0EB">
         <Grid Grid.Row="0" RowDefinitions="Auto,*">
-            <Border Grid.Row="0" Background="#284B63" CornerRadius="8,8,0,0" Padding="4">
+            <Border Grid.Row="0" Background="#284B63" Padding="4">
                 <Grid ColumnDefinitions="Auto,*,*" VerticalAlignment="Center">
                     <Image Source="/Assets/haveno.ico"
                            Width="24"
@@ -77,7 +77,10 @@
                 </Grid>
             </Border>
             <Border Grid.Row="1" Padding="12" x:Name="Settings">
-
+                <StackPanel Spacing="4">
+                    <TextBlock Foreground="#000" Text="Onion Address" />
+                    <TextBox x:Name="OnionAddress" PlaceholderText="Address not generated" Height="30" />
+                </StackPanel>
             </Border>
         </Grid>
     </Border>
