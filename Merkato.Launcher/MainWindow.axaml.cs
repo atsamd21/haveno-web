@@ -30,7 +30,21 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Deactivated += (_, _) => Hide();
+
+        Deactivated += (_, _) =>
+        {
+            if (((App)Application.Current!).PlatformSupportsTrayIcons)
+                Hide();
+        };
+
+        Closing += (_, e) =>
+        {
+            if (!((App)Application.Current!).PlatformSupportsTrayIcons)
+            {
+                e.Cancel = true;
+                Hide();
+            }
+        };
 
         StopButton.IsVisible = false;
 
@@ -109,21 +123,21 @@ public partial class MainWindow : Window
             {
                 try
                 {
-                var response = await httpClient.GetAsync("http://localhost:5000/api/status");
-                if (response.IsSuccessStatusCode)
+                    var response = await httpClient.GetAsync("http://localhost:5000/api/status");
+                    if (response.IsSuccessStatusCode)
                     {
                         OnionAddress.Text = GetOnionAddress();
-                    break;
+                        break;
                     }
 
-                var res = await response.Content.ReadFromJsonAsync<Response>();
+                    var res = await response.Content.ReadFromJsonAsync<Response>();
 
-                if (!string.IsNullOrEmpty(res!.Status))
-                {
-                    if (res.Status != "Offline")
+                    if (!string.IsNullOrEmpty(res!.Status))
                     {
-                        StartButton.Content = res.Status;
-                    }
+                        if (res.Status != "Offline")
+                        {
+                            StartButton.Content = res.Status;
+                        }
                     }
                 }
                 catch
