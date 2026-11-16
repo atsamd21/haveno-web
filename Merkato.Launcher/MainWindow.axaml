@@ -60,7 +60,7 @@
                             x:Name="StopButton"
                             Click="OnStopClick" />
 
-                    <Button Content="Open browser"
+                    <Button Content="Open Tor browser"
                             Grid.Row="2"
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
