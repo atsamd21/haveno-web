@@ -11,7 +11,7 @@
     <GitHubLink>https://github.com/atsamd21/haveno-web</GitHubLink>
     <HavenoTag>v1.11.0</HavenoTag>
     <RepoRoot>$(MSBuildThisFileDirectory)..\</RepoRoot>
-    <ApplicationVersion>0.0.2</ApplicationVersion>
+    <ApplicationVersion>0.0.2-beta.2</ApplicationVersion>
   </PropertyGroup>
 
   <Target Name="BuildHaveno" BeforeTargets="BeforeBuild" Condition="'$(SkipHavenoBuild)' != 'true' And '$(DesignTimeBuild)' != 'true'">
