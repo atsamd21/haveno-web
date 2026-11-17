@@ -3,6 +3,7 @@
   position: absolute;
   bottom: 24px;
   width: calc(100% - 8px);
+  max-width: 1912px;
   margin-bottom: 8px;
 }
 .offers-main .buttons a:last-child {
@@ -27,6 +28,10 @@
   z-index: 10;
   box-shadow: 3px 4px 5px 0px rgba(0, 0, 0, 0.25);
 }
+.offers-main .controls .top {
+  display: flex;
+  flex-wrap: wrap;
+}
 .offers-main .controls .text-search {
   display: flex;
   align-items: center;
@@ -42,14 +47,36 @@
 }
 .offers-main .controls .currency-search {
   display: flex;
-  align-items: center;
-  margin-top: 4px;
+  /*align-items: center;*/
+  align-items: flex-end;
+  /*margin-top: 4px;*/
 }
 .offers-main .controls .input-container {
   margin-right: 4px;
 }
-.offers-main .controls .input-container:last-child {
-  margin-right: 0;
+.offers-main .controls .toggle-container {
+  margin-right: 4px;
+  border: 1px solid #153243;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  cursor: pointer;
+}
+.offers-main .controls .toggle-container:hover, .offers-main .controls .toggle-container .enabled {
+  background-color: #153243;
+}
+.offers-main .controls .toggle-container:hover img {
+  filter: invert(1);
+}
+.offers-main .controls .enabled {
+  background-color: #153243;
+}
+.offers-main .controls .enabled img {
+  filter: invert(1);
 }
 .offers-main .controls button {
   margin-top: 8px;
@@ -112,6 +139,7 @@
   margin-left: auto;
   color: #fff;
   border-radius: 4px;
+  white-space: nowrap;
 }
 .offers-main .offers-list .offer form .offer-body {
   display: flex;

@@ -477,6 +477,7 @@ button:hover {
   /*transform: translateX(-50%);*/
   opacity: 0;
   transition: opacity 0.1s;
+  pointer-events: none;
 }
 
 .tooltip:hover::after, .tooltip:active::after {

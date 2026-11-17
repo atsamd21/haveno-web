@@ -8,43 +8,46 @@
 
 <div class="offers-main">
     <form method="get" class="controls" b-n98vyzq2cd>
-        <div class="text-search">
-            <div class="input-container">
-                <label>Search</label>
-                <input class="input-text" type="text" name="TextSearch" id="TextSearch" value="@Model.TextSearch" />
+        <div class="top">
+            <div class="text-search">
+                <div class="input-container">
+                    <label>Search</label>
+                    <input class="input-text" type="text" name="TextSearch" id="TextSearch" value="@Model.TextSearch" />
+                </div>
+                <div class="input-container direction">
+                    <label>Direction</label>
+                    <select class="select" name="OfferDirection">
+                        @foreach (var direction in Enum.GetValues<OfferDirection>())
+                        {
+                            <option selected="@(Model.OfferDirection == direction)" value="@direction" b-n98vyzq2cd>
+                                @direction
+                            </option>
+                        }
+                    </select>
+                </div>
             </div>
-            <div class="input-container">
-                <label>Direction</label>
-                <select class="select" name="OfferDirection">
-                    @foreach (var direction in Enum.GetValues<OfferDirection>())
-                    {
-                        <option selected="@(Model.OfferDirection == direction)" value="@direction" b-n98vyzq2cd>
-                            @direction
-                        </option>
-                    }
-                </select>
+            <div class="currency-search">
+                <div class="input-container">
+                    <label for="currencies">Currency</label>
+                    <input class="input-text" list="currencies" name="Currency" value="@Model.Currency">
+                    <datalist id="currencies">
+                        @foreach (var currency in Enum.GetValues<Haveno.Api.Helpers.CurrencyCode>())
+                        {
+                            var c = currency.ToString().Replace("_", "-");
+                            <option value="@c" b-n98vyzq2cd>@c</option>
+                        }
+                    </datalist>
+                </div>
+                <a class="@(Model.ShowPrivateOffers ? "toggle-container tooltip enabled" : "toggle-container tooltip")" href="@(UrlHelper.GetCurrentUrlWithUpdatedQueryParams(ViewContext, new Dictionary<string, object> { { "ShowPrivateOffers", !Model.ShowPrivateOffers } }))" tooltip="Passphrase protected offers">
+                    <img src="/icons/lock-fill.svg" />
+                </a>
+                <a class="@(Model.ShowMatchingOffers ? "toggle-container tooltip enabled" : "toggle-container tooltip")" href="@(UrlHelper.GetCurrentUrlWithUpdatedQueryParams(ViewContext, new Dictionary<string, object> { { "ShowMatchingOffers", !Model.ShowMatchingOffers } }))" tooltip="Offers matching my accounts">
+                    <img src="/icons/matching.svg" />
+                </a>
             </div>
         </div>
-        <div class="currency-search">
-            <div class="input-container">
-                <label for="currencies">Currency</label>
-                <input class="input-text" list="currencies" name="Currency" value="@Model.Currency">
-                <datalist id="currencies">
-                    @foreach (var currency in Enum.GetValues<Haveno.Api.Helpers.CurrencyCode>())
-                    {
-                        <option value="@currency" b-n98vyzq2cd>@currency</option>
-                    }
-                </datalist>
-            </div>
-            <div class="input-container">
-                <label>Private offers</label>
-                <toggle method="get" is-toggled="ShowPrivateOffers"></toggle>
-            </div>
-            <div class="input-container">
-                <label>Matching offers</label>
-                <toggle method="get" is-toggled="ShowMatchingOffers"></toggle>
-            </div>
-        </div>
+        <input asp-for="ShowPrivateOffers" type="hidden" />
+        <input asp-for="ShowMatchingOffers" type="hidden" />
         <button class="button-primary" type="submit">Search</button>
     </form>
     <ul class="offers-list">
@@ -85,7 +88,7 @@
                         }
                         else
                         {
-                            <p>@offer.Price.ToString("0.00000000") @offer.CounterCurrencyCode (@((offer.MarketPriceMarginPercent * 100).ToString("0.00"))%)</p>
+                            <p>@offer.Price.ToString("0.0000") @offer.CounterCurrencyCode (@((offer.MarketPriceMarginPercent * 100).ToString("0.00"))%)</p>
                         }
                         <div class="currency-code">
                             @if (offer.IsCrypto())
