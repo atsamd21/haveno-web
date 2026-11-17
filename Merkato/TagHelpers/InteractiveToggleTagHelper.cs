@@ -101,9 +101,9 @@ public class InteractiveToggleTagHelper : TagHelper
                 submitMethodHandlerName = SubmitMethod.Method.Name
                     .Replace("OnPost", string.Empty);
 
-                if (SubmitMethod.Method.Name.EndsWith("Async"))
+                if (submitMethodHandlerName.EndsWith("Async"))
                 {
-                    submitMethodHandlerName = SubmitMethod.Method.Name
+                    submitMethodHandlerName = submitMethodHandlerName
                         .Replace("Async", string.Empty);
                 }
             }
@@ -122,7 +122,7 @@ public class InteractiveToggleTagHelper : TagHelper
             var token = _antiforgery.GetAndStoreTokens(ViewContext.HttpContext);
             output.PostContent.AppendHtml($"<input name=\"{IsToggled.Name}\" value=\"{!(bool)IsToggled.Model}\" hidden/>");
             output.PostContent.AppendHtml($"<input name=\"{token.FormFieldName}\" value=\"{token.RequestToken}\" hidden/>");
-            output.PostContent.AppendHtml($"<button class=\"{((bool)IsToggled.Model ? "toggle toggled" : "toggle")}\" formaction=\"{submitMethodHandlerName}\"></button>");
+            output.PostContent.AppendHtml($"<button class=\"{((bool)IsToggled.Model ? "toggle toggled" : "toggle")}\" formaction=\"{postUrl}\"></button>");
             output.PostContent.AppendHtml("</form>");
         }
         else if (Method.ToLower() == "get")
