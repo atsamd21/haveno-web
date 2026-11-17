@@ -6,6 +6,8 @@ using Merkato.Tor;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,21 @@ if (useTor)
 }
 
 var appsettings = builder.Configuration.GetRequiredSection("AppSettings").Get<AppSettings>()!;
+if (appsettings.HavenoDaemonArguments!.ApiPort is null)
+{
+    using var listener = new TcpListener(
+        IPAddress.Loopback, 
+        0);
+
+    listener.Start();
+
+    appsettings.HavenoDaemonArguments.ApiPort = ((IPEndPoint)listener.LocalEndpoint).Port;
+
+    builder.Services.PostConfigure<AppSettings>(x => 
+    {
+        x.HavenoDaemonArguments.ApiPort = appsettings.HavenoDaemonArguments.ApiPort;
+    });
+}
 
 builder.Services.AddSingleton<HavenoDaemonSingleton>();
 builder.Services.AddHostedService(x => x.GetRequiredService<HavenoDaemonSingleton>());
@@ -29,8 +46,8 @@ builder.Services.AddControllers();
 builder.Services.AddHavenoServices(
     new HavenoOptions 
     { 
-        Host = $"http://127.0.0.1:{appsettings.HavenoDaemonArguments!.ApiPort}", 
-        Password = appsettings.HavenoDaemonArguments!.ApiPassword!
+        Host = $"http://127.0.0.1:{appsettings.HavenoDaemonArguments.ApiPort}", 
+        Password = appsettings.HavenoDaemonArguments.ApiPassword!
     });
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
