@@ -62,9 +62,9 @@
                             break;
                     }
                     <p class="url">@urlConnection.Url</p>
-                    <form method="post" b-lpv6jm3h2x>
+                    <form method="post" b-merkato-settings>
                         <input name="url" value="@urlConnection.Url" hidden />
-                        <button disabled="@(urlConnection.Url == Model.CurrentUrlConnection.Url)" asp-page-handler="Connect" b-lpv6jm3h2x>
+                        <button disabled="@(urlConnection.Url == Model.CurrentUrlConnection.Url)" asp-page-handler="Connect" b-merkato-settings>
                             <i class="bi bi-arrow-right-circle connect-node"></i>
                         </button>
                     </form>
@@ -82,9 +82,9 @@
             <toggle submit-method="Model.OnPostAutoSwitchToggleAsync" is-toggled="IsAutoSwitchEnabled"></toggle>
             <label>Use any Monero node</label>
         </div>
-        <form method="get" b-lpv6jm3h2x>
+        <form method="get" b-merkato-settings>
             <input name="IsAddModalOpen" value="true" hidden />
-            <button class="button-primary add-node" b-lpv6jm3h2x>Add Monero node</button>
+            <button class="button-primary add-node" b-merkato-settings>Add Monero node</button>
         </form>
     </div>
     <label>Currency</label>
@@ -93,7 +93,7 @@
     <dropdown value="Language" values="Model.Languages"></dropdown>
     @if (AppConstants.IsDebug)
     {
-        <form method="post" b-lpv6jm3h2x>
+        <form method="post" b-merkato-settings>
             <button class="button-primary" asp-page-handler="GetAlert">Get alert</button>
         </form>        
     }

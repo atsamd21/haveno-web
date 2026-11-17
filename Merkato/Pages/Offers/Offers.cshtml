@@ -7,7 +7,7 @@
 }
 
 <div class="offers-main">
-    <form method="get" class="controls" b-n98vyzq2cd>
+    <form method="get" class="controls" b-merkato-offers>
         <div class="top">
             <div class="text-search">
                 <div class="input-container">
@@ -19,7 +19,7 @@
                     <select class="select" name="OfferDirection">
                         @foreach (var direction in Enum.GetValues<OfferDirection>())
                         {
-                            <option selected="@(Model.OfferDirection == direction)" value="@direction" b-n98vyzq2cd>
+                            <option selected="@(Model.OfferDirection == direction)" value="@direction" b-merkato-offers>
                                 @direction
                             </option>
                         }
@@ -34,7 +34,7 @@
                         @foreach (var currency in Enum.GetValues<Haveno.Api.Helpers.CurrencyCode>())
                         {
                             var c = currency.ToString().Replace("_", "-");
-                            <option value="@c" b-n98vyzq2cd>@c</option>
+                            <option value="@c" b-merkato-offers>@c</option>
                         }
                     </datalist>
                 </div>
@@ -75,9 +75,9 @@
             }
 
             <li class="@(canTakeOffer ? "offer" : "offer offer-disabled")">
-                <form method="post" b-n98vyzq2cd>
+                <form method="post" b-merkato-offers>
                     <div class="offer-top">
-                        <button class="id-info-button" asp-route-ShowMatchingOffers="@Model.ShowMatchingOffers" asp-route-ShowPrivateOffers="@Model.ShowPrivateOffers" asp-page-handler="ViewOfferInfo" b-n98vyzq2cd>
+                        <button class="id-info-button" asp-route-ShowMatchingOffers="@Model.ShowMatchingOffers" asp-route-ShowPrivateOffers="@Model.ShowPrivateOffers" asp-page-handler="ViewOfferInfo" b-merkato-offers>
                             <i class="bi bi-info-circle"></i>
                             <p>@offer.Id.Split("-").First()</p>
                         </button>
@@ -137,7 +137,7 @@
                                 <img style=@($"background-color:#{new Random(hashAsInt).Next(16777215).ToString("x")}")
                                      class="avatar"
                                      asp-append-version="true"
-                                     src=@($"~/img/avatars/avatar_{new Random(hashAsInt).Next(15)}.png") b-n98vyzq2cd />
+                                     src=@($"~/img/avatars/avatar_{new Random(hashAsInt).Next(15)}.png") b-merkato-offers />
                                 @if (tradeCount > 0)
                                 {
                                     <div class="trade-count">
@@ -149,7 +149,7 @@
                     </div>
                     <input name="OfferId" value="@offer.Id" hidden />
                     <input name="HasExtraInfo" value="@(string.IsNullOrEmpty(offer.ExtraInfo) ? "false" : "true")" hidden />
-                    <button class="button-primary button-bottom" asp-page-handler=@(canTakeOffer ? "RedirectToOfferPage" : "NoPaymentAccount") b-n98vyzq2cd>
+                    <button class="button-primary button-bottom" asp-page-handler=@(canTakeOffer ? "RedirectToOfferPage" : "NoPaymentAccount") b-merkato-offers>
                         @(offer.Direction == OfferDirection.BUY ? "Sell" : "Buy") XMR
                     </button>
                 </form>

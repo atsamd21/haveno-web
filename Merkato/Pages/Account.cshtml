@@ -73,12 +73,12 @@
             @foreach (var paymentAccount in Model.PaymentAccounts)
             {
                 <li>
-                    <form method="post" b-dhsxwkfnc0>
+                    <form method="post" b-merkato-account>
                         <a class="@(Model.PaymentAccountId == paymentAccount.Id ? "active" : "")" href=@($"/Account?tabindex={Model.TabIndex}&paymentaccountid={paymentAccount.Id}")>
                             @paymentAccount.AccountName
                         </a>
                         <input name="accountId" value="@paymentAccount.Id" hidden />
-                        <button type="submit" asp-page-handler="DeleteAccount" b-dhsxwkfnc0>
+                        <button type="submit" asp-page-handler="DeleteAccount" b-merkato-account>
                             <i class="bi bi-trash3"></i>
                         </button>
                     </form>
@@ -126,7 +126,7 @@
         }
         @if (Model.PaymentAccountForm is not null)
         {
-            <form method="post" class="create-account" b-dhsxwkfnc0>
+            <form method="post" class="create-account" b-merkato-account>
                 <input hidden name="PaymentAccountForm.Id" value="@Model.PaymentAccountForm.Id" />
                 <input hidden name="TabIndex" value="@Model.TabIndex" />
                 @{
@@ -235,7 +235,7 @@
                 }
 
                 <div class="buttons">
-                    <button class="button-primary" asp-page-handler="CreateAccount" type="submit" b-dhsxwkfnc0>Save new account</button>
+                    <button class="button-primary" asp-page-handler="CreateAccount" type="submit" b-merkato-account>Save new account</button>
                     <button class="button-secondary">Cancel</button>
                 </div>
             </form>

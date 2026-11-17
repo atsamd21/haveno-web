@@ -10,7 +10,7 @@
     @switch (Model.Step)
     {
         case 0:
-            <form method="post" class="first-step step-container" b-4zs7c8h0kh>
+            <form method="post" class="first-step step-container" b-merkato-editoffer>
                 <h5>Edit offer</h5>
                 <div class="space"></div>
                 @if (Model.OfferInfo.MinAmount == Model.OfferInfo.Amount)
@@ -36,7 +36,7 @@
                     <input readonly class="input-number" min="0" name="FiatPriceForAmount" value="@Model.PriceForTotalAmount" />
                     <button class="button-primary"
                             type="submit"
-                            asp-page-handler="Calculate" b-4zs7c8h0kh>
+                            asp-page-handler="Calculate" b-merkato-editoffer>
                         Calculate
                     </button>
                 </div>
@@ -53,13 +53,13 @@
 
                 <input asp-for="HasLoaded" hidden />
 
-                <button asp-page-handler="NextStep" class="button-continue" type="submit" b-4zs7c8h0kh>
+                <button asp-page-handler="NextStep" class="button-continue" type="submit" b-merkato-editoffer>
                     Continue
                 </button>
             </form>
             break;
         case 1:
-            <form method="post" class="last-step step-container" b-4zs7c8h0kh>
+            <form method="post" class="last-step step-container" b-merkato-editoffer>
 
                 <input name="MarketPriceMarginPercent" value="@Model.MarketPriceMarginPercent" hidden />
                 <input name="PriceForOneXMR" value="@Model.PriceForOneXMR" hidden />
@@ -108,10 +108,10 @@
                     <partial name="_InfoRow" model="@(new InfoRow("Total", $"{Model.PriceForTotalAmount.Value.ToString(isFiat ? "0.00" : "0.00000000")} {Model.CurrencyCode}"))" />
                 </div>
                 <div class="buttons">
-                    <button class="button-tertiary" asp-page-handler="PreviousStep" b-4zs7c8h0kh>
+                    <button class="button-tertiary" asp-page-handler="PreviousStep" b-merkato-editoffer>
                         Previous step
                     </button>
-                    <button class="button-primary" asp-page-handler="EditOffer" type="submit" b-4zs7c8h0kh>
+                    <button class="button-primary" asp-page-handler="EditOffer" type="submit" b-merkato-editoffer>
                         Post offer
                     </button>
                 </div>

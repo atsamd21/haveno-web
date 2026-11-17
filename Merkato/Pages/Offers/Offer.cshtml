@@ -22,7 +22,7 @@
     }
 }
 
-<form method="post" class="offer-main" b-jk7phxw8gw>
+<form method="post" class="offer-main" b-merkato-offer>
     <div class="top">
         <h5>Take offer</h5>
         <partial model="@(new InfoRow("Offer Id", Model.OfferInfo.Id))" name="_InfoRow" />
@@ -32,7 +32,7 @@
                 <select class="select" name="PaymentAccountId">
                     @foreach (var paymentAccount in Model.PaymentAccounts)
                     {
-                        <option selected=@(@paymentAccount.Id == Model.PaymentAccountId) value="@paymentAccount.Id" b-jk7phxw8gw>
+                        <option selected=@(@paymentAccount.Id == Model.PaymentAccountId) value="@paymentAccount.Id" b-merkato-offer>
                             @Localizer[paymentAccount.PaymentMethod.Id.ToString()]: @paymentAccount.AccountName
                         </option>
                     }
@@ -89,7 +89,7 @@
 
         <input asp-for="UseCounterCurrency" hidden />
         <input asp-for="HasLoaded" hidden />
-        <button disabled="@(!hasAmountRange)" class="button-primary" asp-page-handler="CalculatePrice" b-jk7phxw8gw>Update price</button>
+        <button disabled="@(!hasAmountRange)" class="button-primary" asp-page-handler="CalculatePrice" b-merkato-offer>Update price</button>
 
         <div>
             @if (Model.OfferInfo.BuyerSecurityDepositPercent == 0)
@@ -119,7 +119,7 @@
             <p>@($"{offer.GetTakerFeeAmount(Model.XmrAmount)}ɱ ≈{(price * (offer.TakerFeePercent * Model.XmrAmount)).ToString(offer.IsFiat() ? "0.00" : "0.00000000")} {offer.CounterCurrencyCode} / {Math.Round(offer.TakerFeePercent * 100, 2, MidpointRounding.AwayFromZero)}%")</p>
         </div>
     </div>
-    <button class="button-primary review-button" asp-page-handler="ReviewTakeOffer" type="submit" b-jk7phxw8gw>Review take offer</button>
+    <button class="button-primary review-button" asp-page-handler="ReviewTakeOffer" type="submit" b-merkato-offer>Review take offer</button>
 </form>
 <modal 
     close-route-id-XmrAmount="@Model.XmrAmount"

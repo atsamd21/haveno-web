@@ -20,15 +20,15 @@
             @if (Model.TradeInfo.DisputeState == Haveno.Api.Models.Enums.TradeDisputeState.DISPUTE_CLOSED)
             {
                 <p class="dispute-text">This trade was resolved by arbitration.</p>
-                <form method="post" b-keu7q5q8wh>
-                    <button class="button-primary" asp-page-handler="CompleteTrade" type="submit" b-keu7q5q8wh>Close</button>
+                <form method="post" b-merkato-trade>
+                    <button class="button-primary" asp-page-handler="CompleteTrade" type="submit" b-merkato-trade>Close</button>
                 </form>
             }
             else
             {
                 <p class="dispute-text">A dispute has been opened. View the dispute and contact your arbitrator.</p>
-                <form method="post" b-keu7q5q8wh>
-                    <button class="button-warning" asp-page-handler="ViewDispute" b-keu7q5q8wh>View dispute</button>
+                <form method="post" b-merkato-trade>
+                    <button class="button-warning" asp-page-handler="ViewDispute" b-merkato-trade>View dispute</button>
                 </form>                
             }
         </div>        
@@ -121,7 +121,7 @@
         {
             if (Model.TradeRoleAndStep.Step == 2)
             {
-                <form method="post" class="payment-info" b-keu7q5q8wh>
+                <form method="post" class="payment-info" b-merkato-trade>
                     <h5>Send @Model.TradeInfo.TradeVolume @Model.TradeInfo.Offer.CounterCurrencyCode @(Model.TradeInfo.IsFiat() ? $"with {Model.TradeInfo.Offer.PaymentMethodShortName}" : "") </h5>
                     <div class="space"></div>
                     @foreach (var keyVal in Model.TradeInfo.Offer.IsMyOffer ? Model.TradeInfo.Contract.TakerPaymentAccountPayload.Convert() : Model.TradeInfo.Contract.MakerPaymentAccountPayload.Convert())
@@ -136,7 +136,7 @@
         {
             if (Model.TradeRoleAndStep.Step == 3)
             {
-                <form method="post" class="payment-info" b-keu7q5q8wh>
+                <form method="post" class="payment-info" b-merkato-trade>
                     <h5>Confirm receipt of @Model.TradeInfo.TradeVolume @Model.TradeInfo.Offer.CounterCurrencyCode</h5>
                     <div class="space"></div>
                     <h6>Peer's @Model.TradeInfo.Offer.PaymentMethodShortName account information</h6>
@@ -144,7 +144,7 @@
                     {
                         <partial model="@(new InfoRow(keyVal.Key, string.IsNullOrEmpty(keyVal.Value) ? "N/A" : keyVal.Value, true))" name="_InfoRow" />
                     }
-                    <button class="button-primary" asp-page-handler="ConfirmPaymentReceived" type="submit" b-keu7q5q8wh>Confirm payment received</button>
+                    <button class="button-primary" asp-page-handler="ConfirmPaymentReceived" type="submit" b-merkato-trade>Confirm payment received</button>
                 </form>
             }
         }
@@ -154,10 +154,10 @@
             <partial model="@(new InfoRow("Trade deadline", (DateTime.UtcNow > Model.TradeInfo.DeadlineTime ? "Expired" : TimeHelper.FormatDuration((long)(Model.TradeInfo.DeadlineTime - DateTime.UtcNow).TotalMilliseconds)), true))" name="_InfoRow" />
         </div>
         <div class="space"></div>
-        <form method="post" b-keu7q5q8wh>
+        <form method="post" b-merkato-trade>
             @if (Model.TradeRoleAndStep.Step == 4 && Model.TradeInfo.DisputeState != Haveno.Api.Models.Enums.TradeDisputeState.DISPUTE_CLOSED)
             {
-                <button class="button-primary" asp-page-handler="CompleteTrade" type="submit" b-keu7q5q8wh>Close</button>
+                <button class="button-primary" asp-page-handler="CompleteTrade" type="submit" b-merkato-trade>Close</button>
             }
         </form>
         <div class="space"></div>
@@ -166,14 +166,14 @@
         <a class="button-tertiary" href=@($"/Trades/{Model.TradeInfo.TradeId}/Messages#last-message")>Trade chat</a>
         @if (Model.TradeInfo.DisputeState == Haveno.Api.Models.Enums.TradeDisputeState.NO_DISPUTE)
         {
-            <form method="post" b-keu7q5q8wh>
-                <button class="button-warning" asp-page-handler="OpenDispute" b-keu7q5q8wh>Open dispute</button>
+            <form method="post" b-merkato-trade>
+                <button class="button-warning" asp-page-handler="OpenDispute" b-merkato-trade>Open dispute</button>
             </form>
         }
         else
         {
-            <form method="post" b-keu7q5q8wh>
-                <button class="button-tertiary" asp-page-handler="ViewDispute" b-keu7q5q8wh>View dispute</button>
+            <form method="post" b-merkato-trade>
+                <button class="button-tertiary" asp-page-handler="ViewDispute" b-merkato-trade>View dispute</button>
             </form>
         }
     </div>

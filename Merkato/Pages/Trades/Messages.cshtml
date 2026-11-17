@@ -32,19 +32,19 @@
         }
     </ul>
 
-    <form class="input-container" method="post" enctype="multipart/form-data" b-z3juimsktr>
+    <form class="input-container" method="post" enctype="multipart/form-data" b-merkato-messages>
         <input name="IsDispute" value="@Model.IsDispute" hidden />
         <input class="input-text" name="Message" autocomplete="off" />
         @if (Model.IsDispute)
         {
-            <input type="file" asp-for="Attachment" b-z3juimsktr />
-            <button class="send-button dispute-send" type="submit" asp-page-handler="SendDisputeMessage" b-z3juimsktr>
+            <input type="file" asp-for="Attachment" b-merkato-messages />
+            <button class="send-button dispute-send" type="submit" asp-page-handler="SendDisputeMessage" b-merkato-messages>
                 <img src="/icons/send.svg" />
             </button>
         }
         else
         {
-            <button class="send-button" type="submit" asp-page-handler="SendMessage" b-z3juimsktr>
+            <button class="send-button" type="submit" asp-page-handler="SendMessage" b-merkato-messages>
                 <img src="/icons/send.svg" />
             </button>
         }

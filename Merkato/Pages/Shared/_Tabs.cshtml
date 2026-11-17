@@ -17,7 +17,7 @@
 <div class="tabs">
     @for (int i = 0; i < Model.TabNames.Count; i++)
     {
-        <form method="get" class="@(Model.TabIndex == i ? "tab active" : "tab")" b-azbrh5y0yc>
+        <form method="get" class="@(Model.TabIndex == i ? "tab active" : "tab")" b-merkato-tabs>
             <input name="TabIndex" value="@i" hidden />
             @foreach(var query in GetQueryCollectionWithoutTabIndex())
             {

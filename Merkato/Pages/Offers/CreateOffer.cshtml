@@ -11,7 +11,7 @@
     @switch (Model.Step)
     {
         case 0:
-            <form method="get" class="first-step step-container" b-8cum19oly9>
+            <form method="get" class="first-step step-container" b-merkato-createoffer>
                 <div class="top">
                     <h5>Offer type</h5>
                     <div class="radio-container">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <input name="Step" value="1" hidden />
-                <button class="button-continue" b-8cum19oly9>
+                <button class="button-continue" b-merkato-createoffer>
                     Continue
                 </button>
             </form>
@@ -30,7 +30,7 @@
         case 1:
             <div class="second-step step-container">
                 <h5>Select trading account</h5>
-                <partial model="@(new Tabs(["Traditional", "Crypto"], Model.TabIndex))" name="_Tabs" b-8cum19oly9 />
+                <partial model="@(new Tabs(["Traditional", "Crypto"], Model.TabIndex))" name="_Tabs" b-merkato-createoffer />
                 @if (Model.PaymentAccounts.Count == 0)
                 {
                     <div class="no-deposit">
@@ -41,7 +41,7 @@
                 }
                 else
                 {
-                    <form method="get" b-8cum19oly9>
+                    <form method="get" b-merkato-createoffer>
                         <div class="payment-accounts">
                             <dropdown value="PaymentAccountId" values="@Model.PaymentAccountsDictionary"></dropdown>
                             <select name="CurrencyCode" class="select">
@@ -49,7 +49,7 @@
                                 {
                                     foreach (var tradeCurrency in Model.PaymentAccount.TradeCurrencies)
                                     {
-                                        <option selected="@(tradeCurrency.Code == Model.CurrencyCode)" value="@tradeCurrency.Code" b-8cum19oly9>
+                                        <option selected="@(tradeCurrency.Code == Model.CurrencyCode)" value="@tradeCurrency.Code" b-merkato-createoffer>
                                             @tradeCurrency.Name
                                         </option>
                                     }
@@ -59,7 +59,7 @@
                         <input name="TabIndex" value="@Model.TabIndex" hidden />
                         <input name="Step" value="2" hidden />
                         <input name="OfferDirection" value="@Model.OfferDirection" hidden />
-                        <button class="button-continue" disabled="@(Model.PaymentAccounts.Count == 0)" b-8cum19oly9>
+                        <button class="button-continue" disabled="@(Model.PaymentAccounts.Count == 0)" b-merkato-createoffer>
                             Continue
                         </button>
                     </form>                    
@@ -67,7 +67,7 @@
             </div>
             break;
         case 2:
-            <form method="post" class="third-step step-container" b-8cum19oly9>
+            <form method="post" class="third-step step-container" b-merkato-createoffer>
                 <h5>Create offer</h5>
                 <div class="inputs">
                     <partial name="_InfoRow" model="@(new InfoRow("Trade wallet balance", $"{balance.AvailableBalance.ToMonero().ToString("0.000000000000")}ɱ"))" />
@@ -106,7 +106,7 @@
                         <button 
                             class="button-primary" 
                             type="submit"
-                            asp-page-handler="Calculate" b-8cum19oly9>
+                            asp-page-handler="Calculate" b-merkato-createoffer>
                             Calculate
                         </button>
                     </div>
@@ -152,13 +152,13 @@
 
                 <input name="Price" value="@Model.Price" hidden />
 
-                <button class="button-continue" type="submit" asp-page-handler="LastStep" b-8cum19oly9>
+                <button class="button-continue" type="submit" asp-page-handler="LastStep" b-merkato-createoffer>
                     Continue
                 </button>
             </form>
             break;
         case 3:
-            <form method="post" class="fourth-step step-container" b-8cum19oly9>
+            <form method="post" class="fourth-step step-container" b-merkato-createoffer>
                 @* for returning to previous step *@
                 <input name="Step" value="2" hidden />
                 <input name="OfferDirection" value="@Model.OfferDirection" hidden />
@@ -225,10 +225,10 @@
                     <partial name="_InfoRow" model="@(new InfoRow("Required funds", Model.TotalRequiredFundsPiconero.ToMonero() + "ɱ"))" />
                 </div>
                 <div class="buttons">
-                    <button class="button-tertiary" asp-page-handler="PreviousStep" b-8cum19oly9>
+                    <button class="button-tertiary" asp-page-handler="PreviousStep" b-merkato-createoffer>
                         Previous step
                     </button>
-                    <button class="button-primary" asp-page-handler="CreateOffer" b-8cum19oly9>
+                    <button class="button-primary" asp-page-handler="CreateOffer" b-merkato-createoffer>
                         Post offer
                     </button>
                 </div>

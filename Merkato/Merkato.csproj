@@ -105,4 +105,25 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Pages/Shared/_TradeCard.cshtml.css" CssScope="b-merkato-tradecard" />
+    <None Update="Pages/Shared/_Tabs.cshtml.css" CssScope="b-merkato-tabs" />
+    
+    <None Update="Pages/Account.cshtml.css" CssScope="b-merkato-account" />
+    <None Update="Pages/Settings.cshtml.css" CssScope="b-merkato-settings" />
+    <None Update="Pages/Wallet.cshtml.css" CssScope="b-merkato-wallet" />
+    
+    <None Update="Pages/Trades/Messages.cshtml.css" CssScope="b-merkato-messages" />
+    <None Update="Pages/Trades/Trade.cshtml.css" CssScope="b-merkato-trade" />
+    <None Update="Pages/Trades/Trades.cshtml.css" CssScope="b-merkato-trades" />
+    
+    <None Update="Pages/Offers/CreateOffer.cshtml.css" CssScope="b-merkato-createoffer" />
+    <None Update="Pages/Offers/EditOffer.cshtml.css" CssScope="b-merkato-editoffer" />
+    <None Update="Pages/Offers/MyOffers.cshtml.css" CssScope="b-merkato-myoffers" />
+    <None Update="Pages/Offers/Offer.cshtml.css" CssScope="b-merkato-offer" />
+    <None Update="Pages/Offers/OfferInfo.cshtml.css" CssScope="b-merkato-offerinfo" />
+    <None Update="Pages/Offers/Offers.cshtml.css" CssScope="b-merkato-offers" />
+    <None Update="Pages/Offers/TakeOffer.cshtml.css" CssScope="b-merkato-takeoffer" />
+  </ItemGroup>
+  
 </Project>
