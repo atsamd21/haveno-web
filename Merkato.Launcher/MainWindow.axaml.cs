@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
-using Haveno.Processes;
 using Material.Icons;
 using System;
 using System.Diagnostics;
@@ -90,6 +89,7 @@ public partial class MainWindow : Window
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
+                KillOnParentExit = true,
                 ArgumentList =
                 {
                     "UseTor=true"
@@ -100,7 +100,7 @@ public partial class MainWindow : Window
             psi.Environment["ASPNETCORE_ENVIRONMENT"] = "Development";
 #endif
 
-            _process = ManagedProcess.Start(psi);
+            _process = Process.Start(psi);
 
             _process.OutputDataReceived += (_, e) =>
             {

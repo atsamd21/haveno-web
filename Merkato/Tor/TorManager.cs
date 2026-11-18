@@ -67,6 +67,7 @@ public class TorManager
             RedirectStandardError = true,
             UseShellExecute = false,
             CreateNoWindow = true,
+            KillOnParentExit = true,
             WorkingDirectory = Path.Combine(_torDir, "tor"),
             ArgumentList =
             {
@@ -75,7 +76,7 @@ public class TorManager
             }
         };
 
-        var torProcess = ManagedProcess.Start(processStartInfo);
+        var torProcess = Process.Start(processStartInfo);
         if (torProcess is null)
             throw new Exception("...");
 
