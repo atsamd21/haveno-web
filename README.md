@@ -1,5 +1,7 @@
 ## Haveno Web
 
+**Requires Java 21**
+
 Haveno Web is a server side rendered web UI for <a href="https://github.com/haveno-dex/haveno" target="_blank">Haveno</a>. It does not use any JavaScript and can be accessed either via the Tor browser or locally at localhost:5000.
 
 This repository contains both the razor pages project for the web UI and a small launcher written in Avalonia that manages the process. The application is in beta and has been tested on latest Windows and Debian 13. 
