@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Merkato\Merkato.csproj" />
+    <ProjectReference Include="..\Merkato\Merkato.csproj" ReferenceOutputAssembly="false" Private="false" />
   </ItemGroup>
 
   <Target Name="PublishMerkato" BeforeTargets="ComputeResolvedFilesToPublishList" Condition="'$(Configuration)' == 'Release' And '$(DesignTimeBuild)' != 'true'">
