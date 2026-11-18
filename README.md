@@ -16,3 +16,35 @@ You can view your onion address on the settings page after starting the app.
 ## GNOME
 
 If you're using GNOME and want the launcher to appear as a tray icon you will need to install AppIndicator: https://extensions.gnome.org/extension/615/appindicator-support/. It will work without but is a bit more clunky.
+
+## Building from source
+
+Install the .NET 11 SDK 
+```bash
+https://dotnet.microsoft.com/en-us/download/dotnet/11.0
+```
+
+Install a Java 21 SDK
+```bash
+https://adoptium.net/temurin/releases
+```
+
+Clone the repository
+```bash
+git clone --recursive https://github.com/atsamd21/haveno-web.git
+```
+
+Publish
+```bash
+dotnet publish Merkato.Launcher/Merkato.Launcher.csproj -c Release -r [RUNTIME_IDENTIFIER] --self-contained true -o publish/[RUNTIME_IDENTIFIER]
+```
+
+**Valid RIDs: win-x64 and linux-x64, macOS is not supported yet**
+
+## Configuring for different networks
+
+- You can modify appsettings.json to switch network type and further configure the arguments that are passed to the Haveno daemon.
+
+- Update the Haveno submodule so that it points to your Haveno fork.
+
+- Change the HavenoTag property in the .csproj to a tag that exists in your Haveno repo, make sure the actual Haveno version matches.
