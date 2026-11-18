@@ -1,7 +1,7 @@
 [Setup]
 AppId={{EA9A2026-618D-42C8-8A13-6F428EDFCD9A}
 AppName=Haveno Web
-AppVersion=0.0.2-beta.2
+AppVersion=0.1.0-beta.1
 WizardStyle=modern dynamic
 DefaultDirName={autopf}\haveno-web
 DefaultGroupName=haveno-web
